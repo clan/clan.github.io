@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linux 内核签名验证 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="内核" href="kernel.html"/>
+        <link rel="next" title="ASLR" href="aslr.html"/>
+        <link rel="prev" title="Linux 内核 firmware 加载过程" href="linux-firmware-load.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">调试</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="kernel.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kernel-commits.html">有趣的内核 commit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-magic.html">Linux reboot 的魔数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-memory.html">Linux 内核内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-clocksource.html">clocksource 解释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-pktchk.html">用于网络包检查的简单内核模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-firmware-load.html">Linux 内核 firmware 加载过程</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux 内核签名验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aslr.html">ASLR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kernel.html">内核</a> &raquo;</li>
+        
+      <li>Linux 内核签名验证</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/development/kernel-verify.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux">
+<h1>Linux 内核签名验证<a class="headerlink" href="#linux" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-11-21 新版功能: </span>创建</p>
+</div>
+<p>一般校验文件的完整性是通过比较 MD5 或 SHA 系列的值，但这种方式存在 MD5 值也被
+伪造的情况（如网站漏洞等）。因此，对比较重要或敏感的文件，往往需要通过签名来
+验证文件确实没有被伪造。关于签名的原理可以参考密码学相关的书籍或文档。</p>
+<p>本文简介如何验证从 <a class="reference external" href="http://kernel.org">kernel.org</a> 下载的内核的完整性。
+命令如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># xz -cd linux-3.10.tar.xz |gpg --verify linux-3.10.tar.sign -</span>
+<span class="n">gpg</span><span class="p">:</span> <span class="n">Signature</span> <span class="n">made</span> <span class="n">Mon</span> <span class="mi">01</span> <span class="n">Jul</span> <span class="mi">2013</span> <span class="mi">06</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mi">38</span> <span class="n">AM</span> <span class="n">CST</span> <span class="n">using</span> <span class="n">RSA</span> <span class="n">key</span> <span class="n">ID</span> <span class="mi">00411886</span>
+<span class="n">gpg</span><span class="p">:</span> <span class="n">Can</span><span class="s1">&#39;t check signature: public key not found</span>
+</pre></div>
+</div>
+<p>内核的完整性是通过 <a class="reference external" href="http://www.gnupg.org">gpg</a> 来验证的，上面的例子中验证
+结果是失败，原因是找不到签名私钥对应的公钥，因此需要先导入该公钥：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># gpg --recv-keys 00411886</span>
+<span class="n">gpg</span><span class="p">:</span> <span class="n">requesting</span> <span class="n">key</span> <span class="mi">00411886</span> <span class="kn">from</span> <span class="nn">hkp</span> <span class="n">server</span> <span class="n">keys</span><span class="o">.</span><span class="n">gnupg</span><span class="o">.</span><span class="n">net</span>
+<span class="n">gpg</span><span class="p">:</span> <span class="n">key</span> <span class="mi">00411886</span><span class="p">:</span> <span class="n">public</span> <span class="n">key</span> <span class="s2">&quot;Linus Torvalds &lt;torvalds@linux-foundation.org&gt;&quot;</span> <span class="n">imported</span>
+<span class="n">gpg</span><span class="p">:</span> <span class="mi">3</span> <span class="n">marginal</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">needed</span><span class="p">,</span> <span class="mi">1</span> <span class="n">complete</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">needed</span><span class="p">,</span> <span class="n">PGP</span> <span class="n">trust</span> <span class="n">model</span>
+<span class="n">gpg</span><span class="p">:</span> <span class="n">depth</span><span class="p">:</span> <span class="mi">0</span>  <span class="n">valid</span><span class="p">:</span>   <span class="mi">1</span>  <span class="n">signed</span><span class="p">:</span>   <span class="mi">0</span>  <span class="n">trust</span><span class="p">:</span> <span class="mi">0</span><span class="o">-</span><span class="p">,</span> <span class="mi">0</span><span class="n">q</span><span class="p">,</span> <span class="mi">0</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="n">m</span><span class="p">,</span> <span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="n">u</span>
+<span class="n">gpg</span><span class="p">:</span> <span class="n">Total</span> <span class="n">number</span> <span class="n">processed</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">gpg</span><span class="p">:</span>               <span class="n">imported</span><span class="p">:</span> <span class="mi">1</span>  <span class="p">(</span><span class="n">RSA</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>从导入过程可以看到该公钥对应的签发人为 Linus。</p>
+<p>再次执行验证：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># xz -cd linux-3.10.tar.xz |gpg --verify linux-3.10.tar.sign -
+gpg: Signature made Mon 01 Jul 2013 06:47:38 AM CST using RSA key ID 00411886
+gpg: Good signature from &quot;Linus Torvalds &lt;torvalds@linux-foundation.org&gt;&quot;
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: ABAF 11C6 5A29 70B1 30AB  E3C4 79BE 3E43 0041 1886
+</pre></div>
+</div>
+<p>只要输出结果没有 &quot;BAD Signature&quot; 就基本上可以确认文件没有被篡改。</p>
+<p>上面的警告信息暂时可以忽略，如何消除该警告留在 GPG 的文档里再详细说明。
+更多信息请参考
+<a class="reference external" href="https://www.kernel.org/signature.html">Linux kernel releases PGP signatures</a>。</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="aslr.html" class="btn btn-neutral float-right" title="ASLR" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="linux-firmware-load.html" class="btn btn-neutral" title="Linux 内核 firmware 加载过程" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

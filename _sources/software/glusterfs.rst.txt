@@ -1,0 +1,101 @@
+Gluster FS 部署备忘
+===================
+
+.. versionadded:: @2013-12-23
+   创建
+
+假设有两台服务器，主机名分别为 g1，g2。最好在本地 DNS 中注册并维护这些
+主机名。
+
+在两台机器上安装服务程序： `apt-get install glusterfs-server`
+
+确认服务是否正常运行： ::
+
+  root@g1:~# service glusterfs-server status
+  glusterfs-server start/running, process 1153
+
+分别在两台机器上配置信任池，在 g1 上执行 `gluster peer probe g2`\，在 g2
+上执行 `gluster peer probe g1`\。要取消信任关系则使用
+`gluster peer detach gx`\。
+
+接下来创建并 mount GlusterFS 卷。在任一台服务器上执行如下命令
+（gvol 为该卷的名字）： ::
+
+  root@g1:~# gluster volume create gvol g1:/gfs
+  Creation of volume gvol has been successful. Please start the volume to access data.
+  root@g1:~# gluster volume start gvol
+  Starting volume gvol has been successful
+  root@g1:~# mount -t glusterfs 127.0.0.1:/gvol /mnt/gfs
+
+在 g2 上执行同样的 mount 操作也能访问该 GlusterFS 卷，尽管我们只将 g1
+加到该卷之中。增加其他的 brick 使用如下命令： ::
+
+  root@g1:~# gluster volume add-brick gvol g2:/gfs
+  Add Brick successful
+
+在上面我们使用缺省参数创建的卷其类型为 distributed，可以简单理解为 RAID0。
+在增加 g2 的 brick 后能看到 /mnt/gfs 为 g1 和 g2 上 brick 空间的和。
+显然，这种模式下的数据安全需要通过其他机制来保障。如果在创建卷时指定其他的
+选项，可以创建 Replicated 卷，更多的选择请参考官方文档。
+
+有时在增加 brick 时会碰到如下错误： ::
+
+  root@g1:~# gluster volume add-brick gvol g2:/gfs
+  /gfs or a prefix of it is already part of a volume
+
+这是因为 Glusterfs 在文件系统上设置了一些扩展属性以及目录 .glusterfs 的存在。
+对于后者，只需要删除该目录即可（`rm -rf $brick_path/.glusterfs`）。对前者
+更多的信息如下。在将 /gfs 设置为只读时添加 brick 会出现如下错误： ::
+
+  root@g1:~# gluster volume add-brick gvol g2:/gfs
+  Glusterfs is not supported on brick: g2:/gfs.
+  Setting extended attributes failed, reason: Read-only file system.
+
+使用 attr 能看到相应的属性： ::
+
+  root@g1:/gfs# attr -l /gfs
+  Attribute "glusterfs.volume-id" has a 16 byte value for /gfs
+  Attribute "gfid" has a 16 byte value for /gfs
+  Attribute "glusterfs.dht" has a 16 byte value for /gfs
+
+这种情况下最直接的处理办法是删除相应的扩展属性：
+`for i in $(attr -lq $brick_path); do setfattr -x trusted.$i $brick_path; done`
+或者将原来的文件夹改名后重新创建。在这些操作之后再来添加 brick 应该会成功。
+关于 GlusterFS 扩展属性的更多信息可以参考
+`这里 <http://hekafs.org/index.php/2011/04/glusterfs-extended-attributes/>`_\。
+
+使用 `gluster volume info` 能查看 GlusterFS 卷的相关信息： ::
+
+  root@g2:~# gluster volume info
+
+  Volume Name: gvol
+  Type: Distribute
+  Volume ID: 55ec40a1-486f-4d9a-a449-64a873dbbe5b
+  Status: Started
+  Number of Bricks: 2
+  Transport-type: tcp
+  Bricks:
+  Brick1: g1:/gfs
+  Brick2: g2:/gfs
+
+如果需要将其中一个 brick 移出 GFS，则按如下步骤操作。其中 commit 操作一定要在
+status 显示对应 brick 状态为 completed 之后进行。 ::
+
+  root@g2:~# gluster volume remove-brick gvol  g2:/gfs start
+  Remove Brick start successful
+  root@g2:~# gluster volume remove-brick gvol  g2:/gfs status
+         Node Rebalanced-files          size       scanned      failures         status
+    ---------      -----------   -----------   -----------   -----------   ------------
+    localhost               75        13.2GB          2561             0    in progress
+         g1                  0        0Bytes        125212          8924    not started
+  root@g2:~# gluster volume remove-brick gvol  g2:/gfs status
+         Node Rebalanced-files          size       scanned      failures         status
+    ---------      -----------   -----------   -----------   -----------   ------------
+    localhost            11445         2.4TB        118536             0      completed
+         g1                  0        0Bytes        125212          8924    not started
+  root@g2:~# gluster volume remove-brick gvol  g2:/gfs commit
+  Removing brick(s) can result in data loss. Do you want to Continue? (y/n) y
+  Remove Brick commit successful
+
+GlusterFS 的更多信息可以参考 `GlusterFS <http://www.gluster.org/>`_\，
+`HekaFS <http://hekafs.org/>`_\。

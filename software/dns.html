@@ -1,0 +1,516 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DNS &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="名字服务" href="nss.html"/>
+        <link rel="next" title="BIND" href="bind.html"/>
+        <link rel="prev" title="名字服务" href="nss.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="nss.html">名字服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">DNS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">公共 DNS 列表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rr">记录类型/RR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cname-mx">CNAME 和 MX 记录冲突的原因解释</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bind.html">BIND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ldap-kerberos.html">使用 LDAP + Kerberos 实现集中用户认证及授权系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webauth.html">通过 WEB 实现 kerberos 密码修改</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="nss.html">名字服务</a> &raquo;</li>
+        
+      <li>DNS</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/dns.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dns">
+<h1>DNS<a class="headerlink" href="#dns" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-09-02 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-13 版更改: </span>增加 SRV RR 解释</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-03-22 版更改: </span>增加公共 DNS 列表</p>
+</div>
+<div class="section" id="id1">
+<h2>公共 DNS 列表<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>参考 <a class="reference external" href="https://en.wikipedia.org/wiki/Public_recursive_name_server">公共递归 DNS 服务</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>1.1.1.1</td>
+<td><a class="reference external" href="https://1.1.1.1.1">https://1.1.1.1.1</a>, Cloudflare &amp; APNIC, 1.0.0.1</td>
+</tr>
+<tr class="row-even"><td>8.8.8.8</td>
+<td>Google 8.8.4.4</td>
+</tr>
+<tr class="row-odd"><td>9.9.9.9</td>
+<td><a class="reference external" href="https://www.quad9.net/">https://www.quad9.net/</a>，IBM/..., 9.9.9.10</td>
+</tr>
+<tr class="row-even"><td>114.114.114.114</td>
+<td><a class="reference external" href="https://www.114dns.com/">https://www.114dns.com/</a>，114DNS，114.114.115.115</td>
+</tr>
+<tr class="row-odd"><td>119.29.29.29</td>
+<td>腾讯公共 DNS</td>
+</tr>
+<tr class="row-even"><td>180.76.76.76</td>
+<td><a class="reference external" href="https://dudns.baidu.com/intro/publicdns/">https://dudns.baidu.com/intro/publicdns/</a>，百度公共 DNS</td>
+</tr>
+<tr class="row-odd"><td>223.5.5.5.</td>
+<td><a class="reference external" href="http://alidns.com/">http://alidns.com/</a>，阿里公共 DNS，223.6.6.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="rr">
+<h2>记录类型/RR<a class="headerlink" href="#rr" title="永久链接至标题">¶</a></h2>
+<p>参考 <a class="reference external" href="https://en.wikipedia.org/wiki/List_of_DNS_record_types">List of DNS record types</a></p>
+<ol class="arabic">
+<li><p class="first">A/AAAA</p>
+</li>
+<li><p class="first">CAA</p>
+</li>
+<li><p class="first">CNAME</p>
+</li>
+<li><p class="first">MX</p>
+</li>
+<li><p class="first">NS</p>
+</li>
+<li><p class="first">PTR</p>
+</li>
+<li><p class="first">SOA</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">@</span> <span class="n">IN</span> <span class="n">SOA</span> <span class="n">ns1</span><span class="o">.</span><span class="n">google</span><span class="o">.</span><span class="n">com</span><span class="o">.</span> <span class="n">dns</span><span class="o">-</span><span class="n">admin</span><span class="o">.</span><span class="n">google</span><span class="o">.</span><span class="n">com</span><span class="o">.</span> <span class="p">(</span>
+         <span class="mi">1999051401</span>  <span class="p">;</span> <span class="n">Serial</span>
+         <span class="mi">3600</span>        <span class="p">;</span> <span class="n">Refresh</span>
+         <span class="mi">300</span>         <span class="p">;</span> <span class="n">Retry</span>
+         <span class="mi">3600000</span>     <span class="p">;</span> <span class="n">Expire</span>
+         <span class="mi">3600</span>        <span class="p">;</span> <span class="n">Minimum</span>
+         <span class="p">)</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Serial</td>
+<td>The unsigned 32 bit version number of the original copy
+of the zone.  Zone transfers preserve this value.  This
+value wraps and should be compared using
+<a class="reference external" href="https://en.wikipedia.org/wiki/Serial_number_arithmetic">Serial number arithmetic</a>.</td>
+</tr>
+<tr class="row-even"><td>Refresh</td>
+<td>A 32 bit time interval before the zone should be refreshed</td>
+</tr>
+<tr class="row-odd"><td>Retry</td>
+<td>A 32 bit time interval that should elapse before a failed
+refresh should be retried.</td>
+</tr>
+<tr class="row-even"><td>Expire</td>
+<td>A 32 bit time value that specifies the upper limit on
+the time interval that can elapse before the zone is no
+longer authoritative.</td>
+</tr>
+<tr class="row-odd"><td>Minimum</td>
+<td>The unsigned 32 bit minimum TTL field that should be
+exported with any RR from this zone.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first">SRV</p>
+<p><code class="docutils literal notranslate"><span class="pre">_ldap._tcp.example.com.</span> <span class="pre">IN</span> <span class="pre">SRV</span> <span class="pre">10</span> <span class="pre">50</span> <span class="pre">389</span> <span class="pre">ds1.example.com.</span></code></p>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">name of record</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>an underscore, name of the network service</li>
+<li>a period</li>
+<li>an underscore, name of the protocol (tcp/udp/...)</li>
+<li>a period</li>
+<li>domain</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">priority</p>
+<p>An integer value in [0, 65535], with lower values taking precedence
+over higher values. If there are multiple servers, the priority can help
+the client decide which one it should try first. Client will fall back
+to record of higher vlue only if the connection fails.</p>
+</li>
+<li><p class="first">weight</p>
+<p>An integer value in [0, 65535], with higher weight means larger
+proportion of the traffic. If there are multiple servers with the
+same priority, then the weight is used to specify the relative ratio
+of connections that each of them should receive.</p>
+</li>
+<li><p class="first">port</p>
+<p>An integer value in [1, 65535].</p>
+</li>
+<li><p class="first">FQDN of the server</p>
+</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">TXT</p>
+</li>
+</ol>
+</div>
+<div class="section" id="cname-mx">
+<h2>CNAME 和 MX 记录冲突的原因解释<a class="headerlink" href="#cname-mx" title="永久链接至标题">¶</a></h2>
+<p>CNAME 记录是 DNS 里的一种特殊的记录类型，一般理解为“别名”记录。之所以说其
+特殊，请看下面的例子。假设为 DNS 域 demo.only 注册了下面的两条记录：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">test</span>    <span class="n">MX</span>       <span class="mi">10</span>  <span class="n">www</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">com</span><span class="o">.</span>
+<span class="n">test</span>    <span class="n">CNAME</span>        <span class="n">www</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">com</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>下面是在递归服务器（不能使用该域的授权服务器）上 dig 查询的结果（省略了部分
+不重要的信息）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ dig test.demo.only cname
+...
+;; QUESTION SECTION:
+;test.demo.only.               IN      CNAME
+
+;; ANSWER SECTION:
+test.demo.only.        600     IN      CNAME   www.test.com.
+...
+
+$ dig test.demo.only mx
+...
+;; QUESTION SECTION:
+;test.demo.only.                IN      MX
+
+;; ANSWER SECTION:
+test.demo.only.         332     IN      CNAME   www.test.com.
+www.test.com.           958     IN      CNAME   test.blockdos.com.
+...
+</pre></div>
+</div>
+<p>可以看到 MX 记录查询的结果为其 CNAME 记录值所配置的 MX 记录。
+但如果在递归服务器的 CNAME 记录 TTL 过期后再来做查询，只是把查询的顺序颠倒，
+（即先查询 MX 记录，再查询 CNAME 记录）则有可能得到正确的结果。</p>
+<p>在上面的测试过程中授权服务器和递归服务器都是有着大量用户的知名 DNS 服务提
+供商，因此，程序出现 bug 的可能性可以忽略。那么，怎么解释这种现象呢？</p>
+<p>其实在<a class="reference external" href="https://en.wikipedia.org/wiki/CNAME">维基百科</a>里已经有相关的说明。
+权威的说明则请参考相关的 RFC 文档（<span class="target" id="index-0"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc1034.html"><strong>RFC 1034</strong></a> 以及
+<span class="target" id="index-1"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc2181.html#section-10"><strong>RFC 2181#section-10</strong></a>）。部分原文摘抄如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">When</span> <span class="n">a</span> <span class="n">DNS</span> <span class="n">resolver</span> <span class="n">encounters</span> <span class="n">a</span> <span class="n">CNAME</span> <span class="n">record</span> <span class="k">while</span> <span class="n">looking</span> <span class="k">for</span> <span class="n">a</span> <span class="n">regular</span>
+<span class="n">resource</span> <span class="n">record</span><span class="p">,</span> <span class="n">it</span> <span class="n">will</span> <span class="n">restart</span> <span class="n">the</span> <span class="n">query</span> <span class="n">using</span> <span class="n">the</span> <span class="n">canonical</span> <span class="n">name</span> <span class="n">instead</span>
+<span class="n">of</span> <span class="n">the</span> <span class="n">original</span> <span class="n">name</span><span class="o">.</span> <span class="p">(</span><span class="n">If</span> <span class="n">the</span> <span class="n">resolver</span> <span class="ow">is</span> <span class="n">specifically</span> <span class="n">told</span> <span class="n">to</span> <span class="n">look</span> <span class="k">for</span>
+<span class="n">CNAME</span> <span class="n">records</span><span class="p">,</span> <span class="n">the</span> <span class="n">canonical</span> <span class="n">name</span> <span class="p">(</span><span class="n">right</span><span class="o">-</span><span class="n">hand</span> <span class="n">side</span><span class="p">)</span> <span class="ow">is</span> <span class="n">returned</span><span class="p">,</span> <span class="n">rather</span>
+<span class="n">than</span> <span class="n">restarting</span> <span class="n">the</span> <span class="n">query</span><span class="o">.</span><span class="p">)</span>
+
+<span class="n">An</span> <span class="n">alias</span> <span class="n">defined</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">CNAME</span> <span class="n">record</span> <span class="n">must</span> <span class="n">have</span> <span class="n">no</span> <span class="n">other</span> <span class="n">resource</span> <span class="n">records</span>
+<span class="n">of</span> <span class="n">other</span> <span class="n">types</span> <span class="p">(</span><span class="n">MX</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span><span class="p">)</span><span class="o">.</span> <span class="p">(</span><span class="n">RFC</span> <span class="mi">1034</span> <span class="n">section</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="n">RFC</span> <span class="mi">1912</span> <span class="n">section</span>
+<span class="mf">2.4</span><span class="p">)</span> <span class="n">The</span> <span class="n">exception</span> <span class="ow">is</span> <span class="n">when</span> <span class="n">DNSSEC</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">used</span><span class="p">,</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">case</span> <span class="n">there</span> <span class="n">can</span>
+<span class="n">be</span> <span class="n">DNSSEC</span> <span class="n">related</span> <span class="n">records</span> <span class="n">such</span> <span class="k">as</span> <span class="n">RRSIG</span><span class="p">,</span> <span class="n">NSEC</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span> <span class="p">(</span><span class="n">RFC</span> <span class="mi">2181</span> <span class="n">section</span> <span class="mf">10.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>中文说明如下：</p>
+<p>递归 DNS 服务器在查询某个常规域名记录（非 CNAME 记录）时，如果在本地 cache
+中已有该域名有对应的 CNAME 记录，则会开始用该别名记录来重启查询。
+上文中第一次 dig 查询 MX 记录即对应于这种情况。如果直接在授权服务器上查询，
+则总是能得到预期的结果。或者简单的理解为 CNAME 的优先级更高。</p>
+<p>已经注册了 CNAME 类型的域名记录不能再注册除 DNSSEC 相关类型记录
+（RRSIG， NSEC 等）之外的其他类型记录，包括（MX， A， NS 等记录）。</p>
+<p>这就是本文最开始 dig 查询 MX 记录拿不到预期结果的原因。从用户的角度来说，
+对任何记录（尤其是 &#64; 记录，因为该记录用到 MX 的可能性非常大）的配置如果
+用到了 CNAME，则需要知道该域名不可再配置 MX 等其他记录。从 DNS 服务提供
+商的角度来说，需要显示的告知用户这样配置的风险，警示和教育用户。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="bind.html" class="btn btn-neutral float-right" title="BIND" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="nss.html" class="btn btn-neutral" title="名字服务" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

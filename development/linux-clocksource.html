@@ -1,0 +1,387 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clocksource 解释 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="内核" href="kernel.html"/>
+        <link rel="next" title="用于网络包检查的简单内核模块" href="linux-pktchk.html"/>
+        <link rel="prev" title="Linux 内核内存管理" href="linux-memory.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">调试</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="kernel.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kernel-commits.html">有趣的内核 commit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-magic.html">Linux reboot 的魔数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-memory.html">Linux 内核内存管理</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">clocksource 解释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-pktchk.html">用于网络包检查的简单内核模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-firmware-load.html">Linux 内核 firmware 加载过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-verify.html">Linux 内核签名验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aslr.html">ASLR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kernel.html">内核</a> &raquo;</li>
+        
+      <li>clocksource 解释</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/development/linux-clocksource.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="clocksource">
+<h1>clocksource 解释<a class="headerlink" href="#clocksource" title="永久链接至标题">¶</a></h1>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2018-01-14 版更改: </span>创建</p>
+</div>
+<p id="index-0">内核日志：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">clocksource</span><span class="p">:</span> <span class="n">timekeeping</span> <span class="n">watchdog</span> <span class="n">on</span> <span class="n">CPU7</span><span class="p">:</span> <span class="n">Marking</span> <span class="n">clocksource</span> <span class="s1">&#39;tsc&#39;</span> <span class="k">as</span> <span class="n">unstable</span> <span class="n">because</span> <span class="n">the</span> <span class="n">skew</span> <span class="ow">is</span> <span class="n">too</span> <span class="n">large</span><span class="p">:</span>
+<span class="n">clocksource</span><span class="p">:</span>                       <span class="s1">&#39;hpet&#39;</span> <span class="n">wd_now</span><span class="p">:</span> <span class="n">ec7fd07a</span> <span class="n">wd_last</span><span class="p">:</span> <span class="n">f6240e67</span> <span class="n">mask</span><span class="p">:</span> <span class="n">ffffffff</span>
+<span class="n">clocksource</span><span class="p">:</span>                       <span class="s1">&#39;tsc&#39;</span> <span class="n">cs_now</span><span class="p">:</span> <span class="n">db522085db96</span> <span class="n">cs_last</span><span class="p">:</span> <span class="mi">9</span><span class="n">d30c4ea512c</span> <span class="n">mask</span><span class="p">:</span> <span class="n">ffffffffffffffff</span>
+<span class="n">clocksource</span><span class="p">:</span> <span class="n">Switched</span> <span class="n">to</span> <span class="n">clocksource</span> <span class="n">hpet</span>
+</pre></div>
+</div>
+<p>If system clcok source is hpet, then gettimeofday will do syscall gettimeofday,
+not for clocksource tsc. So we should add gettimeofday to seccomp too,
+otherwise:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">WARN</span><span class="o">/</span><span class="n">seccomp</span><span class="p">]</span> <span class="n">invalid</span> <span class="n">syscall</span> <span class="n">attempted</span><span class="p">:</span> <span class="n">gettimeofday</span><span class="p">(</span><span class="mi">96</span><span class="p">)</span>
+<span class="p">[</span><span class="n">CRIT</span><span class="o">/</span><span class="n">seccomp</span><span class="p">]</span> <span class="n">invalid</span> <span class="n">syscall</span> <span class="ow">not</span> <span class="n">allowed</span><span class="p">:</span> <span class="n">stop</span> <span class="n">here</span>
+</pre></div>
+</div>
+<p>如下测试代码演示差异：</p>
+<div class="highlight-c notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/time.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">struct</span> <span class="n">timeval</span> <span class="n">tv</span><span class="p">;</span>
+
+        <span class="n">gettimeofday</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tv</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">tv</span><span class="p">.</span><span class="n">tv_sec</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>下面是不同 clocksource 时 strace 的差异：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+hpet
+$ strace -f ./a.out
+execve(&quot;./a.out&quot;, [&quot;./a.out&quot;], [/* 39 vars */]) = 0
+brk(NULL)                               = 0x559844c55000
+…
+gettimeofday({tv_sec=1512111369, tv_usec=671919}, NULL) = 0
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 0), ...}) = 0
+brk(NULL)                               = 0x559844c55000
+brk(0x559844c76000)                     = 0x559844c76000
+write(1, &quot;1512111369\n&quot;, 111512111369
+)            = 11
+exit_group(0)                           = ?
++++ exited with 0 +++
+
+$ cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+tsc
+$ strace -f ./a.out
+execve(&quot;./a.out&quot;, [&quot;./a.out&quot;], [/* 47 vars */]) = 0
+brk(NULL)                               = 0x7f5b0b28e000
+…
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 96), ...}) = 0
+brk(NULL)                               = 0x7f5b0b28e000
+brk(0x7f5b0b2af000)                     = 0x7f5b0b2af000
+write(1, &quot;1512111377\n&quot;, 111512111377
+)            = 11
+exit_group(0)                           = ?
++++ exited with 0 +++
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="linux-pktchk.html" class="btn btn-neutral float-right" title="用于网络包检查的简单内核模块" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="linux-memory.html" class="btn btn-neutral" title="Linux 内核内存管理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

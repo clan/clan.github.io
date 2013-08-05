@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PXE 安装系统配置 Howto &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="初始化" href="init.html"/>
+        <link rel="next" title="存储分区" href="partition.html"/>
+        <link rel="prev" title="初始化" href="init.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="init.html">初始化</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PXE 安装系统配置 Howto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="partition.html">存储分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvm.html">LVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apt-signed-repo.html">建立本地的（可信）APT 源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html">Linux 下的 iSCSI initiator 部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offline.html">各种软件的离线版下载地址</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="init.html">初始化</a> &raquo;</li>
+        
+      <li>PXE 安装系统配置 Howto</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/pxe.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pxe-howto">
+<h1>PXE 安装系统配置 Howto<a class="headerlink" href="#pxe-howto" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-08-21 新版功能: </span>创建</p>
+</div>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Preboot_Execution_Environment">PXE</a> 使用 DHCP
+和 TFTP（简单文件传输协议）通过网络来引导操作系统。利用这个技术可以从网络接口
+运行系统安装程序或启动系统（如无盘系统）。</p>
+<p>通过 PXE 方式启动程序时 DHCP 服务器需要额外发送 TFTP 服务器的地址和 pxelinux.0
+或 gpxelinux.0 文件的位置给目标计算机。PXELINUX 是
+<a class="reference external" href="http://www.kernel.org/pub/linux/utils/boot/syslinux/">SYSLINUX</a>
+软件的一部分。gpxelinux.0（gPXE）相比 pxelinux.0 有一些额外的特性，如通过
+HTTP, iSCSI, AoE 来引导系统。由于 TFTP 使用 UDP 作为传输协议，理论上，
+在高负载网络上引导系统和传输大量数据时不使用 gPXE 时可能会遇到问题。
+如果使用 gPXE，则只有 gpxelinux.0 二进制文件和配置文件将通过 TFTP 传输。
+不过在实践上，在 ESXi 上的虚拟机上使用 gPXE 通过 HTTP 下载文件的速度反而很慢。</p>
+<p>dhcpd 服务的配置如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># gPXE options
+#option space gpxe;
+#option gpxe-encap-opts code 175 = encapsulate gpxe;
+#option gpxe.bus-id code 177 = string;
+
+class &quot;pxe&quot; {
+    match if substring (option vendor-class-identifier, 0, 9) = &quot;PXEClient&quot;;
+    filename &quot;/gpxelinux.0&quot;;
+}
+
+subnet 10.0.0.0 netmask 255.255.255.0 {
+    authoritative;
+    range 10.0.0.200 10.0.0.220;
+    option domain-name-servers 10.0.0.2;
+    option routers 10.0.0.254;
+}
+</pre></div>
+</div>
+<p>其中 gPXE 相关的选项设置的作用待补充，在测试之中不需要这些选项也能正常工作。
+另外，如果 tftp 服务器和 dhcp 服务器不是同一台机器的情况下，则需要相应的
+配置 next-server 选项。</p>
+<p>我们采用软件 <a class="reference external" href="http://www.kernel.org/pub/software/network/tftp/">tftp-hpa</a>
+来作为 tftp 服务器。配置 tftpd 启动参数为 &quot;-R 4096:32767 -s /home/pxe/&quot;。
+从 syslinux 软件中拷贝 pxelinux.0 或 gpxelinux.0 文件到 /home/pxe/ 目录下。
+如果需要用到 HTTP 方式的下载（如用到了 gPXE 或需要支持 Linux
+系统的无人值守安装），则相应的需要配置 nginx （或其他WEB服务器）。</p>
+<p>接下来需要编辑 PXE 的配置文件，配置完成后的目录结构如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.
+|-- gpxelinux.0
+|-- menu.c32
+|-- pxelinux.cfg/
+|   `-- default
+`-- ubuntu/
+    |-- 12.04/
+    |-- ks.cfg
+    `-- ubuntu.cfg
+</pre></div>
+</div>
+<p>menu.c32 是引导加载程序，在 syslinux 软件中可以找到该文件。</p>
+<p>pxelinuc.cfg 是 PXE 的配置文件所在目录。通过PXE引导系统时，配置文件的文件名
+搜索顺序如下：</p>
+<ul class="simple">
+<li>网络接口硬件类型和地址（字母小写），如，01-23-45-67-89-0a-bc。其中 01 对应以太网。</li>
+<li>以十六进制（字母大写）表示的主机 IP 地址。</li>
+<li>default</li>
+</ul>
+<p>例如，假设主机网卡为以太网，MAC 地址为 88:99:AA:BB:CC:DD，通过 DHCP 拿到的
+IP 地址为 192.0.2.91，则配置文件的搜索顺序如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="mi">01</span><span class="o">-</span><span class="mi">88</span><span class="o">-</span><span class="mi">99</span><span class="o">-</span><span class="n">aa</span><span class="o">-</span><span class="n">bb</span><span class="o">-</span><span class="n">cc</span><span class="o">-</span><span class="n">dd</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C000025B</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C000025</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C00002</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C0000</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C000</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C00</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C0</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">C</span>
+<span class="o">/</span><span class="n">pxelinux</span><span class="o">.</span><span class="n">cfg</span><span class="o">/</span><span class="n">default</span>
+</pre></div>
+</div>
+<p>了解这个特性后，我们可以针对指定的主机进行个性化的配置。</p>
+<p>pxelinux.cfg/default 文件的内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DEFAULT</span> <span class="n">menu</span><span class="o">.</span><span class="n">c32</span>
+<span class="n">MENU</span> <span class="n">TITLE</span> <span class="n">PXE</span>
+
+<span class="n">INCLUDE</span> <span class="n">ubuntu</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">.</span><span class="n">cfg</span>
+
+<span class="n">LABEL</span> <span class="n">localboot</span>
+    <span class="n">LOCALBOOT</span> <span class="mh">0x80</span>
+    <span class="n">MENU</span> <span class="n">LABEL</span> <span class="o">^</span><span class="n">Boot</span> <span class="kn">from</span> <span class="nn">local</span> <span class="n">disk</span>
+</pre></div>
+</div>
+<p>ububtu/ububtu.cfg 文件的内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MENU</span> <span class="n">BEGIN</span>
+
+<span class="n">MENU</span> <span class="n">TITLE</span> <span class="n">LINUX</span><span class="o">/</span><span class="n">Ubuntu</span>
+
+<span class="n">LABEL</span> <span class="n">Ubuntu</span><span class="o">/</span><span class="mf">12.04</span>
+    <span class="n">MENU</span> <span class="n">LABEL</span> <span class="n">Ububtu</span><span class="o">/</span><span class="mf">12.04</span>
+    <span class="n">MENU</span> <span class="n">INDENT</span> <span class="mi">1</span>
+    <span class="n">KERNEL</span> <span class="n">menu</span><span class="o">.</span><span class="n">c32</span>
+    <span class="n">KERNEL</span> <span class="n">ubuntu</span><span class="o">/</span><span class="mf">12.04</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">netboot</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">-</span><span class="n">installer</span><span class="o">/</span><span class="n">amd64</span><span class="o">/</span><span class="n">linux</span>
+    <span class="n">APPEND</span> <span class="n">vga</span><span class="o">=</span><span class="n">normal</span> <span class="n">initrd</span><span class="o">=</span><span class="n">ubuntu</span><span class="o">/</span><span class="mf">12.04</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">netboot</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">-</span><span class="n">installer</span><span class="o">/</span><span class="n">amd64</span><span class="o">/</span><span class="n">initrd</span><span class="o">.</span><span class="n">gz</span> <span class="n">ks</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span><span class="n">ks</span><span class="o">.</span><span class="n">cfg</span> <span class="o">--</span>
+
+<span class="n">MENU</span> <span class="n">SEPARATOR</span>
+
+<span class="n">LABEL</span> <span class="k">return</span>
+    <span class="n">MENU</span> <span class="n">LABEL</span> <span class="o">^</span><span class="n">Esc</span> <span class="o">-</span> <span class="n">Return</span> <span class="n">to</span> <span class="n">Main</span> <span class="n">Menu</span>
+    <span class="n">MENU</span> <span class="n">INDENT</span> <span class="mi">1</span>
+    <span class="n">MENU</span> <span class="n">EXIT</span>
+
+<span class="n">MENU</span> <span class="n">END</span>
+</pre></div>
+</div>
+<p>ububtu/ks.cfg 文件的内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">install</span>
+<span class="n">url</span> <span class="o">--</span><span class="n">url</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span><span class="mf">12.04</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>ubuntu/12.04/ 对应 ububtu 的系统安装光盘，我们是直接通过 “mount -o loop” 将
+ISO 文件挂载在该目录下。</p>
+<p>下图是配置成功后的系统截图。</p>
+<img alt="../_images/pxe-menu.png" src="../_images/pxe-menu.png" />
+<p>关于 ESXi， Ubuntu 等系统 PXE 安装的配置文件请参考相应的官方文档。</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="partition.html" class="btn btn-neutral float-right" title="存储分区" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="init.html" class="btn btn-neutral" title="初始化" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+Linux 下的 iSCSI initiator 部署
+===============================
+
+.. versionadded:: @2014-04-11
+   创建
+
+以 Ubuntu 系统上部署 :wiki:`iSCSI<ISCSI>`
+initiator 为例，首先执行 `apt-get install open-iscsi multipath-tools`
+安装必要的软件。前者为 iSCSI initiator 软件，后者提供
+:wiki:`multipath <Linux_DM_Multipath>` 支持。
+
+iSCSI initiator 的部署过程非常简单，依次如下操作即可：
+
+#. 发现 target ::
+
+     # iscsiadm -m discovery -t sendtargets -p 192.168.2.200:3260
+     192.168.2.201:3260,0 iqn.1997-05.xxxxxx:default-target
+     192.168.2.200:3260,0 iqn.1997-05.xxxxxx:default-target
+
+   这里可以看到该 target 有两个 ip 地址，可以配置 multipath 支持。
+
+#. 依次登录上一步输出的 target 和 ip 地址，并设置自动登录： ::
+
+     # iscsiadm -m node --targetname iqn.1997-05.xxxxxx:default-target -p 192.168.2.201 --login
+     Logging in to [iface: default, target: iqn.1997-05.xxxxxx:default-target, portal: 192.168.2.201,3260]
+     Login to [iface: default, target: iqn.1997-05.xxxxxx:default-target, portal: 192.168.2.201,3260]: successful
+     # iscsiadm -m node --targetname iqn.1997-05.xxxxxx:default-target --op update -n node.startup -v automatic
+
+   此时 dmesg 能看到内核的输出信息如下： ::
+
+     scsi1 : iSCSI Initiator over TCP/IP
+     scsi 1:0:0:0: Direct-Access     Proware  proIPS           120  PQ: 0 ANSI: 4
+     sd 1:0:0:0: [sdb] 2306867200 512-byte logical blocks: (1.18 TB/1.07 TiB)
+     sd 1:0:0:0: [sdb] Write Protect is off
+     sd 2:0:0:0: [sdb] Mode Sense: bb 00 00 00
+     sd 1:0:0:0: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+      sdb: sdb1
+     sd 1:0:0:0: [sdb] Attached SCSI disk
+
+   如果在发现 target 时没有多个 ip，则 iSCSI 的配置到此结束。后续可以直接对 sdb
+   进行相关操作即可。
+
+#. 多路径支持
+   如果有多个 ip，则可以继续配置多路径的支持。 ::
+
+     # multipath -ll
+     32017001378a8a9ff dm-0 Proware,proIPS
+     size=1.1T features='0' hwhandler='0' wp=rw
+     \`-+- policy='round-robin 0' prio=1 status=active
+          |- 1:0:0:0 sdb 8:16 active ready  running
+          \`- 2:0:0:0 sdc 8:32 active ready  running
+
+   此时在 /dev/mapper 下能发现名为 32017001378a8a9ff 的存储设备（该名字定义为
+   World Wide Identifier，即 WWID ）。
+   使用命令 `iptables -I OUTPUT -o eth0 -d 192.168.2.201 -j DROP` drop 本机和
+   iSCSI target 其中一个 ip 之间的通信，这时可以发现状态变化： ::
+
+     # multipath -ll
+     32017001378a8a9ff dm-0 Proware,proIPS
+     size=1.1T features='0' hwhandler='0' wp=rw
+     \`-+- policy='round-robin 0' prio=1 status=active
+          |- 2:0:0:0 sdc 8:32 active faulty running
+          \`- 1:0:0:0 sdb 8:16 active ready  running
+     # multipath -ll
+     32017001378a8a9ff dm-0 Proware,proIPS
+     size=1.1T features='0' hwhandler='0' wp=rw
+     \`-+- policy='round-robin 0' prio=1 status=active
+          |- 2:0:0:0 sdc 8:32 failed faulty running
+          \`- 1:0:0:0 sdb 8:16 active ready  running
+
+   dmesg 亦能看到相信的信息： ::
+
+     [ 5260.772369] sd 2:0:0:0: rejecting I/O to offline device
+     [ 5260.772727] sd 2:0:0:0: [sdc] killing request
+     [ 5260.772732] sd 2:0:0:0: rejecting I/O to offline device
+     [ 5260.773082] sd 2:0:0:0: [sdc] killing request
+     [ 5260.773084] sd 2:0:0:0: rejecting I/O to offline device
+     [ 5260.773434] sd 2:0:0:0: [sdc] killing request
+     [ 5260.773448] sd 2:0:0:0: [sdc] Unhandled error code
+     [ 5260.773449] sd 2:0:0:0: [sdc]
+     [ 5260.773451] Result: hostbyte=0x01 driverbyte=0x00
+     [ 5260.773453] sd 2:0:0:0: [sdc] CDB:
+     [ 5260.773455] cdb[0]=0x28: 28 00 00 00 00 00 00 00 08 00
+     [ 5260.773463] end_request: I/O error, dev sdc, sector 0
+     [ 5260.773819] sd 2:0:0:0: [sdc] Unhandled error code
+     [ 5260.773821] sd 2:0:0:0: [sdc]
+     [ 5260.773822] Result: hostbyte=0x01 driverbyte=0x00
+     [ 5260.773824] sd 2:0:0:0: [sdc] CDB:
+     [ 5260.773825] cdb[0]=0x28: 28 00 00 00 00 00 00 00 08 00
+     [ 5260.773831] end_request: I/O error, dev sdc, sector 0
+     [ 5260.774186] sd 2:0:0:0: [sdc] Unhandled error code
+     [ 5260.774187] sd 2:0:0:0: [sdc]
+     [ 5260.774188] Result: hostbyte=0x01 driverbyte=0x00
+     [ 5260.774190] sd 2:0:0:0: [sdc] CDB:
+     [ 5260.774191] cdb[0]=0x2a: 2a 00 00 01 2a e0 00 00 08 00
+     [ 5260.774197] end_request: I/O error, dev sdc, sector 76512
+     [ 5260.774562] device-mapper: multipath: Failing path 8:32.
+
+   syslog 的信息（后面两条信息为恢复通信后的输出）： ::
+
+     multipathd: iscsi_data: sdc - directio checker reports path is up
+     multipathd: 8:32: reinstated
+     multipathd: iscsi_data: remaining active paths: 2
+
+   编辑 multipath 配置文件 /etc/multipath.conf，内容如下： ::
+
+     defaults {
+         udev_dir                /dev
+         polling_interval        5
+         selector                "round-robin 0"
+         path_grouping_policy    multibus
+         getuid_callout          "/lib/udev/scsi_id --whitelisted --device=/dev/%n"
+         prio_callout            /bin/true
+         path_checker            directio
+         prio                    const
+         rr_min_io               100
+         rr_weight               priorities
+         failback                immediate
+         no_path_retry           fail
+         user_friendly_name      yes
+     }
+     blacklist {
+         devnode "^(ram|sda|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*"
+         devnode "^hd[a-z][[0-9]*]"
+         devnode "^vd[a-z]"
+         devnode "^cciss!c[0-9]d[0-9]*[p[0-9]*]"
+     }
+     multipaths {
+         multipath {
+             wwid 32017001378a8a9ff
+             alias iscsi_data
+         }
+     }
+
+   注意 blacklist 部分，其目的是把本地存储设备排除在 multipath 外。在
+   multipaths 部分，wwid 在 multipath 命令的输出中能看到，alias 为别名。
+   重启 multipath 服务后，能看到 /dev/mapper 下出现名为 iscsi_data 的存储设备。
+   之后的操作使用 /dev/mapper/iscsi_data （而不是 /dev/sdb 或 /dev/sdc）
+   即可利用到 multipath 功能。

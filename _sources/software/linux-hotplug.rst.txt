@@ -1,0 +1,35 @@
+Linux 下的 CPU 和 内存热插拔
+============================
+
+.. versionadded:: @2013-11-25
+   创建
+
+在 Linux 作为虚拟机的 Guest 系统运行时，如果内核启用了 CPU 和内存的热插拔支持，
+则可以在虚拟机的 Host 环境下动态调整 CPU 和 内存的配置。对 VMware ESXi，
+在虚拟机配置的选项里里需要打开 “内存/CPU 热插拔”选项，之后即可以在 Guest
+系统运行时调整相关配置。实际使用时随宿主机和 Guest 的配置不同会遇到不同的限制
+条件（如只能增加而不能减少内存，...），以实际使用时的情况为准。
+
+内核的相关的说明文档请参考
+:kernel:`Documentation/cpu-hotplug.txt`
+和
+:kernel:`Documentation/memory-hotplug.txt`\ 。
+
+CPU 的热插拔通过 */sys/devices/system/cpu/cpuX/online* 来控制。其中 X 对应第 X
+个 CPU。通过写入 0 或 1 即可控制启用还是禁用该 CPU。
+例如 ::
+
+    echo 0 > /sys/devices/system/cpu/cpuX/online
+
+禁用第 X 个CPU。
+
+内存的热插拔则对应文件 */sys/devices/system/memory/memory[number]/state* ，通过
+写入 online/offline 来控制。例如 ::
+
+    echo online > /sys/devices/system/memory/memory[number]/state
+
+启用相应的内存区域。 ::
+
+    find /sys/devices/system/memory -name state -exec bash -c 'echo online > {}' \;
+
+可以用来启用所有可用的内存区域。

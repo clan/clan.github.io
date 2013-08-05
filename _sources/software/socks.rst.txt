@@ -1,0 +1,17 @@
+SOCKS 代理配置
+==============
+
+.. versionadded:: @2010-08-03
+   创建
+
+Chrome 配置
+-----------
+
+创建 socks5.pac 文件如下： ::
+
+    function FindProxyForURL(url, host)
+    {
+        return "SOCKS5 localhost:1080";
+    }
+
+设置代理服务器配置 URL 为上面的文件。

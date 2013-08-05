@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>supervisor &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="服务维护/管理" href="svc.html"/>
+        <link rel="next" title="rsyslog 配置简介" href="rsyslog.html"/>
+        <link rel="prev" title="daemontools 介绍" href="daemontools.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="svc.html">服务维护/管理</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="svc_list.html">服务控制软件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daemontools.html">daemontools 介绍</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">supervisor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">程序介绍</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">配置文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog.html">rsyslog 配置简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog-queue.html">rsyslog 队列配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glusterfs.html">Gluster FS 部署备忘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvs.html">LVS 的三种部署模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cronie.html">cronie 和 pam_loginuuid 的问题解决</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html">通过 snmp 获取数据的几个方式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="svc.html">服务维护/管理</a> &raquo;</li>
+        
+      <li>supervisor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/supervisor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="supervisor">
+<h1>supervisor<a class="headerlink" href="#supervisor" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2015-06-12 新版功能: </span>创建</p>
+</div>
+<p><a class="reference external" href="http://supervisord.org/">supervisor</a> 是一个 Python 开发的进程管理工具。</p>
+<div class="section" id="id2">
+<h2>程序介绍<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>程序安装后有如下命令:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ equery files supervisor | grep &#39;bin\/&#39;
+/usr/bin/echo_supervisord_conf
+/usr/bin/pidproxy
+/usr/bin/supervisorctl
+/usr/bin/supervisord
+</pre></div>
+</div>
+<ul>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">echo_supervisord_conf</span></code> 自动生成默认配置到标准输出，无任何参数选项。</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">supervisord</span></code> 守护进程，用于控制服务的启动。</p>
+<p>supervisord -- run a set of applications as daemons。</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">supervisorctl</span></code> 控制由 supervisord 运行的程序。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># 进入交互式模式，会提示当前管理的服务状态
+$ supervisorctl
+demo2                      RUNNING   pid 18356, uptime 17:24:16
+demo3                      RUNNING   pid 13961, uptime 0:17:40
+
+# 查看可用的命令
+supervisor&gt; help
+
+default commands (type help &lt;topic&gt;):
+=====================================
+add    clear  fg        open  quit    remove  restart   start   stop  update
+avail  exit   maintail  pid   reload  reread  shutdown  status  tail  version
+
+# help &lt;cmd&gt; 查看相关命令的用法
+supervisor&gt; help status
+status &lt;name&gt;           Get status for a single process
+status &lt;gname&gt;:*        Get status for all processes in a group
+status &lt;name&gt; &lt;name&gt;    Get status for multiple named processes
+status                  Get all process status info
+
+# status 命令查看当前管理的服务状态，确认服务是正常的 RUNNING 状态
+supervisor&gt; status
+demo2                      RUNNING   pid 18356, uptime 17:24:20
+demo3                      RUNNING   pid 13961, uptime 0:17:44
+
+# 修改配置后，执行 update 命令更新
+supervisor&gt; update
+demo3: stopped
+demo3: updated process group
+
+# update 后再次确认服务状态
+supervisor&gt; status
+demo2                      RUNNING   pid 18356, uptime 17:25:03
+demo3                      RUNNING   pid 16872, uptime 0:00:03
+</pre></div>
+</div>
+<p>也可以直接在 SHELL 下执行命令:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ supervisorctl help
+
+default commands (type help &lt;topic&gt;):
+=====================================
+add    clear  fg        open  quit    remove  restart   start   stop  update
+avail  exit   maintail  pid   reload  reread  shutdown  status  tail  version
+
+$ supervisorctl status
+demo2                      RUNNING   pid 18356, uptime 17:32:56
+demo3                      RUNNING   pid 16872, uptime 0:07:56
+
+$ supervisorctl update
+demo3: stopped
+demo3: updated process group
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>配置文件<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>参考：<a class="reference external" href="http://supervisord.org/configuration.html">Configuration File</a> 。</p>
+<p>配置格式为 Windows ini 格式（Python ConfigParser）。
+初始情况下可以先用 <code class="docutils literal notranslate"><span class="pre">echo_supervisord_conf</span></code> 生成后再根据需求编辑。</p>
+<p>注释使用分号 <cite>;</cite> ，如果注释是和配置项在同一行，则分号前面必须有一个前置空格。</p>
+<p>不支持 SHELL 的环境变量，如 <cite>~</cite> 和 <cite>$HOME</cite>，可以用 <cite>%(ENV_HOME)s</cite> 替代。</p>
+<p>配置按节（section）如下：</p>
+<ul>
+<li><p class="first"><cite>unix_http_server</cite> 和 <cite>inet_http_server</cite> 是配置
+supervisor 的 http server，至少需要其一，supervisorctl 管理时用到。</p>
+</li>
+<li><p class="first"><cite>supervisord</cite> 用于对守护进程的全局性配置，
+有些配置可以在 <cite>program</cite> 块覆盖。</p>
+</li>
+<li><p class="first"><cite>supervisorctl</cite> 用于 supervisorctl 管理 supervisor 服务的配置，
+如serverurl 等，这些也可以直接命令行指定参数，比如如果在上面配置的是
+<cite>inet_http_server</cite> ，则这里配置 <cite>serverurl</cite> 为相应路径后，
+直接使用 <cite>supervisorctl</cite> 命令即可，否则要指定命令行参数。</p>
+</li>
+<li><p class="first"><cite>program</cite> 是主要的配置部分。状态详细可参考
+<a class="reference external" href="http://supervisord.org/subprocess.html#process-states">supervisor - Process States</a></p>
+<img alt="http://supervisord.org/_images/subprocess-transitions.png" src="http://supervisord.org/_images/subprocess-transitions.png" />
+<p><cite>BACKOFF</cite> 状态是启动时退出太快，根据 <cite>startretries</cite>
+达到重试次数后，会进入到 <cite>FATAL</cite> 状态。</p>
+<p>如果状态在 <cite>EXITED</cite>，且配置了 <cite>autorestart=false</cite>，
+则服务会停留在此状态不再重启；如果 <cite>autorestart=true</cite>，则会一直重启;
+如果 <cite>autorestart=unexpected</cite>，则当 exitcode 在 <cite>exitcodes</cite>
+配置的列表里时不再重启，否则重启。</p>
+<p>如果状态在 <cite>FATAL</cite> ，则永远不会再自动重启。</p>
+<p>如果执行了 <cite>supervisorctl stop</cite> 命令，则会进入 <cite>STOP</cite> 状态。
+在 <cite>stopwaitsecs</cite> 秒后服务还未停止则会发送 <cite>SIGKILL</cite> 信号。</p>
+<p>另外，在 <cite>startretries</cite> 重试次数达到之前，如果频繁在 <cite>BACKOFF</cite> 和
+<cite>STARTING</cite> 或 <cite>RUNNING</cite> 状态之间切换，则重启等待时间会逐步增大。</p>
+</li>
+<li><p class="first"><cite>include</cite> 块用于加载一些自定义配置，一般 <cite>/etc/supervisord.conf</cite>
+可以用于一些全局配置，然后每个服务一个单独的 <cite>program</cite> 配置，
+用 include 导入，类似于nginx等配置。</p>
+</li>
+<li><p class="first"><cite>group</cite> 块用于把一些 <cite>program</cite> 分为一个组，然后做一些基本配置。</p>
+</li>
+<li><p class="first"><cite>rpcinterface</cite> 用于自定义一些接口，这个一般保持默认就行，但是不能删除，
+必须保留在配置文件中。</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rsyslog.html" class="btn btn-neutral float-right" title="rsyslog 配置简介" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="daemontools.html" class="btn btn-neutral" title="daemontools 介绍" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

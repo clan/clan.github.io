@@ -1,0 +1,428 @@
+使用 LDAP + Kerberos 实现集中用户认证及授权系统
+===============================================
+
+.. versionadded:: @2013-09-27
+   创建
+
+认证体系一般包含账号，认证，授权，审计这些部分组成。本文简述如何基于 LDAP
+和Kerberos 实现集中的账号，认证及授权系统。选择的软件分别为
+`OpenLDAP <http://www.openldap..org>`_ 和
+`Kerberos <http://web.mit.edu/kerberos>`_\。
+
+LDAP 用来做账号管理，Kerberos作为认证。授权一般来说是由应用来决定的，通过在
+LDAP 数据库中配置一些属性可以让应用程序来进行授权判断。
+
+软件的安装参考相应的发行版本即可，在此不再赘述。下面的配置在 Gentoo Linux
+上测试通过。
+
+首先进行LDAP的配置，编辑LDAP服务端的配置文件 /etc/openldap/slapd.conf 如下：
+
+.. code-block:: cfg
+
+   include /etc/openldap/schema/core.schema
+   include /etc/openldap/schema/cosine.schema
+   include /etc/openldap/schema/inetorgperson.schema
+   include /etc/openldap/schema/misc.schema
+   include /etc/openldap/schema/nis.schema
+   include /etc/openldap/schema/kerberos.schema
+
+   pidfile     /var/run/openldap/slapd.pid
+   argsfile    /var/run/openldap/slapd.args
+
+   loglevel none
+   idletimeout 5
+   writetimeout 5
+
+   access to attrs=userPassword
+       by self read
+       by dn.exact="cn=ops,ou=Control,dc=demo,dc=local" write
+       by anonymous auth
+
+   access to dn.subtree="ou=Kerberos,dc=demo,dc=local"
+       by dn.exact="cn=kdc-adm,ou=Control,dc=demo,dc=local" write
+       by dn.exact="cn=kdc-srv,ou=Control,dc=demo,dc=local" read
+       by * none
+
+   access to dn.base=""
+       by * read
+
+   access to *
+       by self write
+       by dn.base="cn=ops,ou=Control,dc=demo,dc=local" write
+       by users read
+       by anonymous read
+
+   #TLSCipherSuite        HIGH:MEDIUM:-SSLv2
+   #TLSVerifyClient       never
+   #TLSCertificateFile    /etc/ssl/jsl/ldap.demo.local.pem
+   #TLSCertificateKeyFile /etc/ssl/jsl/ldap.demo.local.pem
+   #TLSCACertificateFile  /etc/ssl/jsl/ca-jsl.pem
+
+   #######################################################################
+   # BDB database definitions
+   #######################################################################
+   database    hdb
+   suffix      "dc=demo,dc=local"
+   checkpoint  32    30
+   rootdn      "cn=root,ou=Control,dc=demo,dc=local"
+   #rootpw      {SSHA}ifM5X6pQS2eO8hODguTPmjRLFyCnVWvP
+   directory   /var/lib/openldap-data
+   dbconfig    set_cachesize  0 268435456 1
+   dbconfig    set_lg_regionmax 262144
+   dbconfig    set_lg_bsize 2097152
+   index       objectClass,entryCSN,entryUUID eq
+   index       uid,uidNumber,gidNumber eq,pres
+   index       ou,krbPrincipalName eq,pres,sub
+
+替换 `dc=demo,dc=local` 为正确的域名（也可以不用域名，用 `O=xxx, C= yyy` 的形式）。
+TLS 证书相关的几个指令需要预先准备好相应的私钥和证书文件，具体的制作方法
+请参考 :doc:`ssl-ca`\。这里先不做配置。
+
+rootpw 指令后的字符串对应初始的ldap管理员密码，由命令`slappasswd -s 123456`
+生成。在替换该字符串为正确的密码后，请取消该行的注释。
+
+执行 `/etc/init.d/slapd start` 启动 LDAP 服务，此时的数据库为空。通过 `slapcat`
+验证。或者使用 ldapsearch 查询： ::
+
+  $ ldapsearch -x -D 'cn=root,ou=Control,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -b 'dc=demo,dc=local'
+  # extended LDIF
+  #
+  # LDAPv3
+  # base <dc=demo,dc=local> with scope subtree
+  # filter: (objectclass=*)
+  # requesting: ALL
+  #
+
+  # search result
+  search: 2
+  result: 32 No such object
+
+  # numResponses: 1
+
+接下来开始初始化LDAP数据库，先准备文件 demo.ldif 内容如下： ::
+
+  dn: dc=demo,dc=local
+  dc: demo
+  objectClass: domain
+  objectClass: dcObject
+
+  dn: ou=Group,dc=demo,dc=local
+  ou: Group
+  objectClass: organizationalUnit
+
+  dn: ou=Aliases,dc=demo,dc=local
+  ou: Aliases
+  objectClass: organizationalUnit
+
+  dn: ou=People,dc=demo,dc=local
+  ou: People
+  objectClass: organizationalUnit
+
+  dn: ou=Kerberos,dc=demo,dc=local
+  ou: Kerberos
+  objectClass: organizationalUnit
+
+  dn: ou=Control,dc=demo,dc=local
+  ou: Control
+  objectClass: organizationalUnit
+
+  dn: cn=kdc-srv,ou=Control,dc=demo,dc=local
+  cn: kdc-srv
+  userPassword:: e1NTSEF9VDhBaThzNGhhd2VzODViaEVBTDFkbjZRNjkzRFFqTEMK
+  objectClass: simpleSecurityObject
+  objectClass: organizationalRole
+
+  dn: cn=kdc-adm,ou=Control,dc=demo,dc=local
+  cn: kdc-adm
+  userPassword:: e1NTSEF9QnRlTEtmb0xGQmxMS255OG52cndwMEswa2hzb3RENDYK
+  objectClass: simpleSecurityObject
+  objectClass: organizationalRole
+
+  dn: cn=root,ou=Control,dc=demo,dc=local
+  cn: root
+  userPassword:: e1NTSEF9bldwZW82anIvQmo0NDhKM1hIb1gveXcxa3I1WHh5cWUK
+  objectClass: simpleSecurityObject
+  objectClass: organizationalRole
+
+  dn: cn=demo_users,ou=Group,dc=demo,dc=local
+  cn: demo_users
+  gidNumber: 20000
+  objectClass: posixGroup
+
+  dn: uid=test,ou=People,dc=demo,dc=local
+  uid: test
+  uidNumber: 10000
+  gidNumber: 20000
+  sn: Test
+  cn: Test User
+  loginShell: /bin/bash
+  homeDirectory: /home/users/test
+  objectClass: person
+  objectClass: posixAccount
+  objectClass: inetOrgPerson
+  objectClass: organizationalPerson
+
+该文件中的 userPassword 由命令 `slappasswd  -s 123456 | base64` 生成。例子中的
+userPassword 都对应密码 123456。
+
+执行命令
+`ldapadd -x -D 'cn=root,ou=Control,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -f /tmp/demo.ldif`
+将数据导入到 LDAP 数据库。 ::
+
+  # ldapadd -x -D 'cn=root,ou=Control,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -f /tmp/demo.ldif
+  adding new entry "dc=demo,dc=local"
+
+  adding new entry "ou=Group,dc=demo,dc=local"
+
+  adding new entry "ou=Aliases,dc=demo,dc=local"
+
+  adding new entry "ou=People,dc=demo,dc=local"
+
+  adding new entry "ou=Kerberos,dc=demo,dc=local"
+
+  adding new entry "ou=Control,dc=demo,dc=local"
+
+  adding new entry "cn=kdc-srv,ou=Control,dc=demo,dc=local"
+
+  adding new entry "cn=kdc-adm,ou=Control,dc=demo,dc=local"
+
+  adding new entry "cn=root,ou=Control,dc=demo,dc=local"
+
+  adding new entry "cn=demo_users,ou=Group,dc=demo,dc=local"
+
+  adding new entry "uid=test,ou=People,dc=demo,dc=local"
+
+此时再执行
+`ldapsearch -x -D 'cn=root,ou=Control,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -b 'dc=demo,dc=local'`
+应该能查询到导入的数据。
+
+在上面的 ldif 文件中配置了 rootdn 对应的密码，编辑 /etc/openldap/slapd.conf，
+注释 rootpw 所在的一行，然后 `/etc/init.d/slapd restart`\重启 ldap 服务，然后
+再次使用上面的 ldapsearch 命令执行查询，应该能得到同样的结果。
+
+至此，LDAP 的配置基本完成。如果需要采用该 LDAP 作为用户认证，只需要对用户
+（如`uid=test,ou=People,dc=demo,dc=local`）添加 userPassword 成员即可。如果通过
+命令行添加，需要先准备如下文件（userPassword 对应的密码为 123456）： ::
+
+  dn: uid=test,ou=People,dc=demo,dc=local
+  changetype: modify
+  add: userPassword
+  userPassword:: e1NTSEF9Ym0rZXloV1ExalB1aWNEVU1BaHlNM0hZVHh3REIrWU4K
+
+然后执行命令
+`ldapmodify -x -D 'cn=root,ou=Control,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -f /tmp/test.ldif`。
+命令执行成功后，通过
+`ldapsearch -x -D 'uid=test,ou=People,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -b 'ou=People,dc=demo,dc=local'`
+确认。
+
+推荐一个很好用的 LDAP 客户端
+`Apache Directory Studio <http://directory.apache.org/studio/>`_\。
+通过这个客户端可以很方面的进行 ldap 数据库的修改操作，不需要准备 ldif 文件。
+
+对大规模的用户管理则可以结合业务特性自己开发脚本来简化日常操作。
+
+单纯基于 LDAP 已经能实现集中的帐号和认证管理了，但考虑到 LDAP 里的密码信息是直
+接存储在数据库中，在认证时需要将用户名和密码直接发送给 LDAP 服务器，在不是
+安全和可信的环境下这种模式会有安全隐患。因此，接下来，我们介绍如何使用
+Kerberos 来实现用户认证。
+
+Kerberos 相关的数据也需要存储在某个数据库中，在这里我们选择使用 LDAP 作为其
+数据库，目的是为了数据备份的方便（只需要统一备份 LDAP 数据库即可）。如果需要
+使用其自身的数据库，则需要将下面的 kdb5_ldap_util 命令替换为 kdb5_util。
+
+首先编辑文件 /etc/krb5.conf 的内容如下： ::
+
+  [libdefaults]
+      debug = false
+      default_realm = DEMO.LOCAL
+
+  [realms]
+      DEMO.LOCAL = {
+          #kdc = 127.0.0.1
+          #admin_server = 127.0.0.1
+          default_domain = demo.local
+          database_module = openldap_ldapconf
+          key_stash_file = /etc/krb5.DEMO.LOCAL
+          max_life = 1d 0h 0m 0s
+          max_renewable_life = 90d 0h 0m 0s
+          dict_file = /usr/share/dict/words
+      }
+
+  [domain_realm]
+      .demo.local = DEMO.LOCAL
+      demo.local = DEMO.LOCAL
+
+  [logging]
+      default = SYSLOG
+      admin_server = FILE:/var/log/kadmind.log
+      kdc = FILE:/var/log/kdc.log
+
+  [dbdefaults]
+      ldap_kerberos_container_dn = ou=Kerberos,dc=demo,dc=local
+
+  [dbmodules]
+      openldap_ldapconf = {
+          db_library = kldap
+          ldap_servers = ldapi://
+          ldap_kerberos_container_dn = ou=Kerberos,dc=demo,dc=local
+          ldap_kdc_dn = cn=kdc-srv,ou=Control,dc=demo,dc=local
+          ldap_kadmind_dn = cn=kdc-adm,ou=Control,dc=demo,dc=local
+          ldap_service_password_file = /etc/krb5.ldap
+          ldap_conns_per_server = 5
+      }
+
+其中 ldap_kdc_dn 和 ldap_kadmind_dn 分别对应 Kerberos 访问 LDAP 数据库时的服务
+和管理帐号。前者需要有读权限，后者需要读写权限。在本文最开始的 slapd.conf 文件
+中已经配置了相关的 ACL 规则。
+
+首先初始化数据库，执行命令
+`kdb5_ldap_util -D cn=kdc-adm,ou=Control,dc=demo,dc=local -H ldapi:// create -r DEMO.LOCAL -s`
+
+::
+
+  # kdb5_ldap_util -D cn=kdc-adm,ou=Control,dc=demo,dc=local -w 123456 -H ldapi:// create -r DEMO.LOCAL -s
+  Initializing database for realm 'DEMO.LOCAL'
+  You will be prompted for the database Master Password.
+  It is important that you NOT FORGET this password.
+  Enter KDC database master key:
+  Re-enter KDC database master key to verify:
+
+现在如果尝试启动 Kerberos 服务（`/etc/init.d/mit-krb5kdc start`），
+会出现下面的错误信息： ::
+
+  krb5kdc: Error reading password from stash:  No such file or directory - while initializing database for realm DEMO.LOCAL
+
+这是因为 Kerberos 需要有 ldap_kdc_dn 和 ldap_kadmind_dn 的密码才能访问 LDAP
+数据库，执行如个命令： ::
+
+  # kdb5_ldap_util -D cn=root,ou=Control,dc=demo,dc=local -w 123456 stashsrvpw -f /etc/krb5.ldap cn=kdc-adm,ou=Control,dc=demo,dc=local
+  Password for "cn=kdc-adm,ou=Control,dc=demo,dc=local":
+  Re-enter password for "cn=kdc-adm,ou=Control,dc=demo,dc=local":
+  # kdb5_ldap_util -D cn=root,ou=Control,dc=demo,dc=local -w 123456 stashsrvpw -f /etc/krb5.ldap cn=kdc-srv,ou=Control,dc=demo,dc=local
+  Password for "cn=kdc-srv,ou=Control,dc=demo,dc=local":
+  Re-enter password for "cn=kdc-srv,ou=Control,dc=demo,dc=local":
+  # cat /etc/krb5.ldap
+  cn=kdc-adm,ou=Control,dc=demo,dc=local#{HEX}313233343536
+  cn=kdc-srv,ou=Control,dc=demo,dc=local#{HEX}313233343536
+
+可以看到，/etc/krb5.ldap 中明文保存了我们输入的两个密码，因此，该文件的权限需
+要控制为仅 root 能读写。
+
+再次执行 `/etc/init.d/mit-krb5kdc start`\，服务应能成功启动。
+
+要使用 Kerberos 认证，需要将用户的密码域做如下修改（userPassword 对应的密码由
+`echo -n "{SASL}test@DEMO.LOCAL" | base64` 生成）： ::
+
+  dn: uid=test,ou=People,dc=demo,dc=local
+  changetype: modify
+  replace: userPassword
+  userPassword:: e1NBU0x9dGVzdEBERU1PLkxPQ0FM
+
+执行
+`ldapmodify -x -D 'cn=root,ou=Control,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -f /tmp/test.ldif`
+应用该修改。
+
+可以看到，我们实际上是利用
+:wiki:`SASL<Simple_Authentication_and_Security_Layer>`
+来执行实际的认证操作，所以需要先配置相关的服务 saslauthd。编辑
+saslauthd 的服务配置文件，设置其启动选项为 "-a kerberos5 -n 0"。‘-n 0’ 参数是
+为了避免内存泄露导致的问题。执行 `/etc/init.d/saslauthd start` 启动该服务。
+通过命令 `testsaslauthd -u test -p 123456` 确认认证是否成功。
+
+在实际测试之前，先通过命令 `kadmin.local -q 'ank -pw 123456 test'` 配置 test
+用户的密码为 123456。此时，执行测试，可以看到结果为不成功。 ::
+
+  # testsaslauthd -u test -p 123456
+  0: NO "authentication failed"
+  # tail -n2 /var/log/auth.log
+  Sep 27 12:50:39 localhost saslauthd[18347]: auth_krb5: krb5_get_init_creds_password: -1765328164
+  Sep 27 12:50:39 localhost saslauthd[18347]: do_auth         : auth failure: [user=test] [service=imap] [realm=] [mech=kerberos5] [reason=saslauthd internal error]
+  # grep -- "-1765328164" /usr/include/krb5/krb5.h
+  #define KRB5_REALM_CANT_RESOLVE                  (-1765328164L)
+
+从 auth.log 可以看到错误原因，但 -1765328164 是什么意思呢？
+`grep -- "-1765328164" /usr/include/krb5/krb5.h` 可以看到该错误代码对应的意思。
+在这里 -1765328164 表示无法解析 Kerberos 的 realm，或者简单的说，客户端无法找到
+Kerberos 服务器。在我们的生产环境中 Kerberos 相关的服务器是通过配置 DNS 实现
+的，对应的 bind 配置文件如下： ::
+
+  $ORIGIN _tcp.demo.local.
+  _kerberos                        SRV      0 0  88 scms.demo.local.
+  _kerberos-adm                    SRV      0 0 749 scms.demo.local.
+  _kpasswd                         SRV      0 0 464 scms.demo.local.
+  $ORIGIN _udp.demo.local.
+  _kerberos                        SRV      0 0  88 scms.demo.local.
+  _kerberos-master                 SRV      0 0  88 scms.demo.local.
+  _kpasswd                         SRV      0 0 464 scms.demo.local.
+  $ORIGIN demo.local.
+  _kerberos                        TXT      "DEMO.LOCAL"
+
+其中 scms.demo.local 即为 Kerberos 服务器。在这里，我们先用更简单的方式来完成
+测试验证。修改 /etc/krb5.conf 文件，取消 [realms] 内 kdc 和 admin_server 两行的
+注释，然后再次执行测试命令。 ::
+
+  # testsaslauthd -u test -p 123456
+  0: NO "authentication failed"
+  linux-64 openldap # tail -n3 /var/log/auth.log
+  Sep 27 13:02:10 localhost saslauthd[18381]: auth_krb5: krb5_kt_read_service_key(): Key table file '/etc/krb5.keytab' not found (2)
+  Sep 27 13:02:10 localhost saslauthd[18381]: auth_krb5: k5support_verify_tgt
+  Sep 27 13:02:10 localhost saslauthd[18381]: do_auth         : auth failure: [user=test] [service=imap] [realm=] [mech=kerberos5] [reason=saslauthd internal error]
+
+这次的错误原因改变了，继续执行如下命令。 ::
+
+  # kadmin.local -q "ank -clearpolicy -randkey host/localhost"
+  Authenticating as principal root/admin@DEMO.LOCAL with password.
+  Principal "host/localhost@DEMO.LOCAL" created.
+  # kadmin.local -q "ktadd host/localhost"
+  Authenticating as principal root/admin@DEMO.LOCAL with password.
+  Entry for principal host/localhost with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab FILE:/etc/krb5.keytab.
+  Entry for principal host/localhost with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab FILE:/etc/krb5.keytab.
+  Entry for principal host/localhost with kvno 2, encryption type des3-cbc-sha1 added to keytab FILE:/etc/krb5.keytab.
+  Entry for principal host/localhost with kvno 2, encryption type arcfour-hmac added to keytab FILE:/etc/krb5.keytab.
+  # testsaslauthd -u test -p 123456
+  0: OK "Success."
+
+至此， Kerberos 认证测试成功。
+
+接下来，我们测试执行 ldapsearch 看通过 LDAP 认证是否成功： ::
+
+  $ ldapsearch -x -D 'uid=test,ou=People,dc=demo,dc=local' -w 123456 -h 127.0.0.1 -b 'dc=demo,dc=local'
+  ldap_bind: Invalid credentials (49)
+
+这是因为我们还没有配置 LDAP 使用 SASL 认证， ::
+
+  # cat /etc/sasl2/slapd.conf
+  pwcheck_method: saslauthd
+  # /etc/init.d/slapd restart
+
+再次执行 ldapsearch， 此时应该返回正确的结果。
+
+到现在为止， 我们的目标：集中用户管理和认证已经完成。
+
+至于集中授权，可以在LDAP中对用户添加相应的属性，然后通过 LDAP 查询的 filter
+参数来进行控制。例如：
+ldapi:///ou=People,dc=demo,dc=local?uid?sub?(&(objectClass=posixAccount)(ou=$group))，
+可以选择只授权给指定组的用户。
+
+应用程序要采用 LDAP 认证，一般需要配置这些参数即可：
+
+* LDAP 服务器地址：
+* LDAP 服务器端口：
+* LDAP 服务器协议： SSL或TLS，或无加密
+* LDAP BASE DN： 如 ou=People,dc=demo,dc=local
+* LDAP 过滤器：
+* 登录名属性： 如 uid
+
+认证的过程即可通过组合登录名属性和BASEDN做为登录 DN，加上用户提供的密码尝试
+连接 LDAP 服务器，如果认证成功即可。授权方面则结合 LDAP 过滤器即可。
+
+Linux 系统的用户和帐号认证也可以通过配置 nss_ldap，pam_ldap，pam_krb5 等来实现。
+
+Kerberos 中存储的密码可以设置一定的策略，例如
+`kadmin.local -q 'addpol -maxlife "90day" -minlength 8 -minclasses 3 -history 3 default'`
+及设置了密码的缺省策略（最长有效期 90 天， 最小长度 8， 最少字符类别 3 等）。
+
+P.S. 本文中没有配置 kadmin 服务，如果启动了相关的服务，则在启动 kadmin 时有可能
+会碰到该服务不能正常关闭的情况，抛开配置错误的情况，一个可能的原因是 kadmin
+使用 /dev/random 获取真随机数，但系统的熵不够，导致 kadmin 阻塞在 /dev/random
+的读取上。可以通过在另一台主机上执行 `ping -f` 来增加熵。

@@ -1,0 +1,245 @@
+Bash
+====
+
+内置命令
+--------
+
+.. versionadded:: @2019-02-20
+   创建，set
+.. versionchanged:: @2019-02-24
+   增加 set -eox
+
+set
+^^^
+
+* -e
+
+  同 `set -o errexit`\。一旦命令退出值非 0，则立刻中断脚本执行。
+  **对管道无效，参考 **`set -o pipefail`**。**
+
+* -o
+
+  * pipefail 如果未设置（缺省情况），则管道组合命令的最后一个命令为返回值。
+    如果设置了，则只要管道中的某个子命令失败，则整个组合命令也失败。例如： ::
+
+      $ bash -c 'set -e; foo | echo "a"; echo $?; echo ">> done"'
+      a
+      bash: foo: 未找到命令
+      0
+      >> done
+
+      $ bash -c 'set -e; set -o pipefail; foo | echo "a"; echo $?; echo ">> done"'
+      a
+      bash: foo: 未找到命令
+
+* -u
+
+  如果变量未定义，则尝试显示该变量时会报错（非交互式 shell 会退出）。 ::
+
+    $ bash -c 'set -u; echo $u; echo "done"'
+    bash: u: unbound variable
+
+* -x
+
+  同 `set -o xtrace`\。先输出 $PS4（+）以及要执行的命令和参数，然后执行命令。
+  对调试很有帮助。
+
+tips w/ examples
+----------------
+
+.. versionadded:: @2019-02-22
+   创建
+
+cd ::
+
+  $ pwd
+  /
+  $ cd /tmp
+  $ cd -
+  /
+  $ cd -
+  /tmp
+
+Loop ::
+
+  $ for i in {1..2}; do echo $i; done
+  1
+  2
+
+
+扩展 bash 内置命令
+------------------
+
+.. versionadded:: @2014-01-01
+   创建
+
+一些常用的操作如 sleep，cat 等一般是通过调用单独的外部命令来执行。
+在对一些 shell 脚本做优化时，或者让系统进程树更清晰，或者尽可能的减少进程 fork
+的次数时总是想尽可能的通过调用 bash 的内置命令来实现类似的功能，在使用内置
+命令实现过于复杂时通过编写扩展编译出动态库来扩展 bash 内置命令也是一个办法。
+
+对于 sleep，可以通过 bash 内置的 read 命令的超时功能来实现，如下的例子通过创建
+命名管道后读写该管道来实现 sleep 的功能：
+
+.. code-block:: shell
+
+   waitfifo=/tmp/fifo-demo-only
+   [ -p ${waitfifo} ] || mkfifo ${waitfifo}
+   while true ; do
+       read -t 1 <>${waitfifo}
+   done
+
+其他的功能则需要尽可能的利用 bash 已有的内置命令结合一些技巧来实现。这里我们
+介绍另一种方法，通过 bash 内置的 enable 命令的 “-f” 参数能动态加载代码来实现
+任意内置命令。还是以 sleep 为例，假设其源代码（附在本节最后）为
+sleep.c，参考如下过程演示： ::
+
+  $ enable -n sleep # 禁止 sleep 内置命令，如果有
+  $ type sleep
+  sleep 是 /usr/bin/sleep
+  $ gcc -DHAVE_CONFIG_H -fPIC -shared -Wl,-soname,sleep sleep.c -o sleep.so
+  $ enable -f ./sleep.so  sleep
+  $ type sleep
+  sleep 是 shell 内嵌
+  $ sleep -h
+  sleep: 用法:sleep seconds[.fraction]
+
+事实上，对于 Gentoo 系统，只需要对 bash 的 USE flags 加上 plugins 即可拥有
+bash 源代码里已经实现了的动态加载内置命令，查看目录 */usr/lib/bash/*\。 ::
+
+  $ equery uses bash
+  ...
+   * Found these USE flags for app-shells/bash-4.2_p45:
+  ...
+   + + plugins      : Add support for loading builtins at runtime via 'enable'
+  ...
+
+对 Ubuntu 则需要先通过 `apt-get install bash-builtins` 安装相应的头文件后再来
+编译相关的代码。
+
+sleep.c 的源代码如下：
+
+.. code-block:: c
+
+   /**
+    * @file
+    * @brief sleep -- sleep for bash builtin
+    */
+   #include <unistd.h>
+
+   // for Gentoo, replace bash-plugins w/ bash if Ubuntu
+   #include <bash-plugins/shell.h>
+   #include <bash-plugins/builtins.h>
+
+   int sleep_builtin (WORD_LIST *list)
+   {
+       long    sec, usec;
+       struct timespec tv;
+
+       if (list == 0) {
+           builtin_usage();
+           return(EX_USAGE);
+       }
+
+       if (*list->word->word == '-' || list->next) {
+           builtin_usage ();
+           return (EX_USAGE);
+       }
+
+       if (uconvert(list->word->word, &sec, &usec)) {
+           tv.tv_sec = sec;
+           tv.tv_nsec = usec * 1000;
+
+           nanosleep(&tv, NULL);
+           return(EXECUTION_SUCCESS);
+       }
+
+       builtin_error("%s: bad sleep interval", list->word->word);
+       return (EXECUTION_FAILURE);
+   }
+
+   static char *sleep_doc[] = {
+       "Suspend execution for specified period.",
+       "sleep suspends execution for a minimum of SECONDS[.FRACTION] seconds.",
+       (char *)NULL
+   };
+
+   struct builtin sleep_struct = {
+       "sleep",
+       sleep_builtin,
+       BUILTIN_ENABLED,
+       sleep_doc,
+       "sleep seconds[.fraction]",
+       0
+   };
+
+
+受限的 BASH (rbash)
+-------------------
+
+.. versionadded:: @2013-09-05
+   创建
+
+如果 bash 以 rbash 为程序名启动或者命令行参数有 -r 选项，则启动的这个 shell
+会在某些功能上受限制．具体表现为如下操作都不能做：
+
+- 通过 cd 来改变工作目录
+- 设置或取消环境变量： SHELL， PATH， ENV， BASH_ENV
+- 命令名中不能包含目录分隔符 ‘/’
+- 包含有 ‘/’ 的文件名作为内置命令 ‘.’ 的参数
+- hash 内置命令有 -p 选项时的文件名参数包含 '/'
+- 在启动时通过 shell 环境导入函数定义
+- 在启动时通过 shell 环境解析 SHELLOPTS 的值
+- 使用 <，<\|， <>， >&， &>， >>; 等重定向操作符
+- 使用 exec 内置命令
+- 通过 enable 内置命令的 -f 和 -d 选项增加或删除内置命令
+- 使用 enable 内置命令来禁用或启用 shell 内置命令
+- 执行 command 内置命令时加上 -p 选项
+- 通过 `set +r` 或 `set +o restricted` 关闭受限模式
+
+rbash 一般是指向 bash 的符号链接，如下： ::
+
+  $ ls -l /bin/rbash
+  lrwxrwxrwx 1 root root 4 May  3 13:04 /bin/rbash -> bash
+
+通过设置 PATH 环境变量为指定的目录，可以控制用户只能执行这些目录下的命令。
+
+需要注意的是， rbash 提供的受限环境的安全程度取决于用户能执行的命令，很多
+命令都能调用外部命令，从而导致逃逸出受限环境。例如：
+
+- `more -1 /etc/passwd`\，然后 `!bash`\。 对 less， man 等命令同样有效。
+- vi 等编辑器能通过 : 执行外部命令
+- `awk 'BEGIN {system("/bin/sh")}'`
+- `find /etc/ -name passwd -exec /usr/bin/awk 'BEGIN {system("/bin/sh")}' \;`
+- `echo "evil script code" | tee script.sh`
+
+如果能执行脚本，如 python， perl 等则有很多种方式启动一个 shell。
+
+因此，通过 rbash 构建一个安全的受限环境需要花不少功夫，需要严格控制用户能
+使用的命令。更安全的做法还是通过 chroot jail 等方式。
+
+坑
+--
+
+cd 的前向不兼容行为
+^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: @2018-04-18
+   创建
+
+::
+
+  $ ls -F/
+  a/  ab
+  $ cd a*
+  -bash: cd: too many arguments
+
+然而在之前的版本这个 cd 操作是可以正常切换到 `a/` 目录的。原因在\
+`这 <http://git.savannah.gnu.org/cgit/bash.git/commit/config-top.h?id=a0c0a00fc419b7bc08202a79134fcd5bc0427071>`_\： ::
+
+  +/* Define CD_COMPLAINS if you want the non-standard, but sometimes-desired
+  +   error messages about multiple directory arguments to `cd'. */
+  +#define CD_COMPLAINS
+  +
+
+新增的宏 `CD_COMPLAINS` 如果定义了，那么在 cd 后接多个参数时就会直接报错。

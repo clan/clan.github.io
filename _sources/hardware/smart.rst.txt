@@ -1,0 +1,172 @@
+通过 SMART 查看和跟踪硬盘健康状态
+=================================
+
+.. versionadded:: @2014-12-19
+   创建
+
+:wiki:`S.M.A.R.T.<S.M.A.R.T.>`
+的全称为 Self-Monitoring, Analysis and Reporting Technology，一般简写为 SMART。
+这是硬盘（HDD 或 SSD）内置提供的状态监控系统，通过它可以及时了解硬盘驱动器的
+可用性状态，提前预测可能的失败。不过，需要说明的是， **在 SMART 没有报告任何异常
+时硬盘也可能会失败**\。因此，在任何情况下数据备份都是非常重要的，不能省略。
+
+本文仅对 SMART 数据的查看及监控软件
+`smartmontools <http://www.smartmontools.org/>`_ 做简单的介绍，
+关于 SMART 的更多说明请参考维基百科及相关的参考文献。
+
+SMART 数据是硬盘驱动器内置的，首先通过如下命令获取系统支持的硬盘设备： ::
+
+  # lsblk
+  NAME                       MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+  sda                          8:0    0 465.8G  0 disk
+  ├─sda1                       8:1    0    16G  0 part /
+  └─sda2                       8:2    0 449.8G  0 part
+    ├─vg_data-lv_home (dm-0) 254:0    0   800G  0 lvm  /home
+    └─vg_data-lv_swap (dm-1) 254:1    0     4G  0 lvm  [SWAP]
+  sdb                          8:16   0 465.8G  0 disk
+  └─sdb1                       8:17   0 465.8G  0 part
+    └─vg_data-lv_home (dm-0) 254:0    0   800G  0 lvm  /home
+  sdc                          8:32   0 465.8G  0 disk
+  └─sdc1                       8:33   0 465.8G  0 part
+  sdd                          8:48   0 465.8G  0 disk
+  └─sdd1                       8:49   0 465.8G  0 part
+
+`smartctl -a /dev/sda` 可以输出该硬盘的所有 SMART 信息， ::
+
+  # smartctl -a /dev/sda
+  smartctl 6.3 2014-07-26 r3976 [x86_64-linux-3.17.7-gentoo] (local build)
+  Copyright (C) 2002-14, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  === START OF INFORMATION SECTION ===
+  ...
+
+  === START OF READ SMART DATA SECTION ===
+  SMART overall-health self-assessment test result: PASSED
+
+  ...
+
+  SMART Attributes Data Structure revision number: 10
+
+  ...
+
+  SMART Error Log Version: 1
+  ...
+
+  SMART Self-test log structure revision number 1
+  ...
+
+  SMART Selective self-test log data structure revision number 1
+  ...
+
+省略的内容可以分别使用以下命令单独输出，命令和内容分别解释如下。
+
+查看设备 SMART 信息： ::
+
+  # smartctl -i /dev/sda
+
+  smartctl 6.3 2014-07-26 r3976 [x86_64-linux-3.17.7-gentoo] (local build)
+  Copyright (C) 2002-14, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  === START OF INFORMATION SECTION ===
+  Model Family:     Seagate Barracuda 7200.10
+  Device Model:     ST3160815AS
+  Serial Number:    9RX39P8Q
+  Firmware Version: 3.ADA
+  User Capacity:    160,000,000,000 bytes [160 GB]
+  Sector Size:      512 bytes logical/physical
+  Device is:        In smartctl database [for details use: -P show]
+  ATA Version is:   ATA/ATAPI-7 (minor revision not indicated)
+  Local Time is:    Fri Dec 19 14:27:55 2014 CST
+  SMART support is: Available - device has SMART capability.
+  SMART support is: Enabled
+
+如果出现 “SMART support is: Disabled”，则需要通过
+`smartctl -s on /dev/sda` 打开 SMART 功能。
+
+查看硬盘健康状态查询结果： ::
+
+  # smartctl -Hc /dev/sda
+
+  smartctl 6.3 2014-07-26 r3976 [x86_64-linux-3.17.7-gentoo] (local build)
+  Copyright (C) 2002-14, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  === START OF READ SMART DATA SECTION ===
+  SMART overall-health self-assessment test result: PASSED
+
+  ...
+
+PASSED 表示测试结果。如果该值为 FAILING，则需要立即备份数据。
+
+查看硬盘的各种属性值： ::
+
+  # smartctl -A /dev/sda
+  smartctl 6.3 2014-07-26 r3976 [x86_64-linux-3.17.7-gentoo] (local build)
+  Copyright (C) 2002-14, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  === START OF READ SMART DATA SECTION ===
+  SMART Attributes Data Structure revision number: 10
+  Vendor Specific SMART Attributes with Thresholds:
+  ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+  ...
+
+需要说明的是，属性不再是 ATA 标准的一部分。具体属性的解释因厂商而异。每一个
+属性都有 RAW_VALUE 和 VALUE，前者完全由厂商指定，没有任何规范约束。后者是
+标准化之后的值，其范围为 1 到 253。如果该值小于或等于阈值（THRESH），则表示
+失败（即该值越大越好），对应 WHEN_FAILED 列会有显示（例如 FAILING_NOW 或
+In_the_past 或 -）。属性类型分别为 Pre-fail 和 Old_age，前者表示该属性很关键，
+如果其值低于阈值则意味着设备很快会故障，后者表示设备达到或超过设计寿命。
+WORST 栏对应该属性所记录到的最小值。
+
+查看硬盘错误日志： ::
+
+  # smartctl -l error /dev/sda
+  smartctl 6.3 2014-07-26 r3976 [x86_64-linux-3.17.7-gentoo] (local build)
+  Copyright (C) 2002-14, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  === START OF READ SMART DATA SECTION ===
+  SMART Error Log Version: 1
+  No Errors Logged
+
+完全正常的情况下日志为空。如果有大量的错误日志出现，则需要引起关注。
+
+硬盘自测试日志查看： ::
+
+  # smartctl -l selftest /dev/sda
+
+  smartctl 6.3 2014-07-26 r3976 [x86_64-linux-3.17.7-gentoo] (local build)
+  Copyright (C) 2002-14, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  === START OF READ SMART DATA SECTION ===
+  SMART Self-test log structure revision number 1
+  Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+  # 1  Short offline       Completed without error       00%      4771         -
+
+如果没有相关的日志，则可以通过 `smartctl -t [short|long] /dev/sda` 执行。
+该命令不会破坏硬盘上的数据。`smartctl -t offline /dev/sda` 能用来执行离线
+测试，也可以通过 `smartctl -o on /dev/sda` 打开自动离线测试。离线测试的结果
+不会显示在自测试日志中。
+
+SMART 标准提供了硬盘测试和监控硬盘性能的机制，但在故障发生时并不会主动通知
+操作系统。因此需要通过 smartd 这个守护进程来定期主动查询并反馈。缺省情况下，
+smartd 会每 30 分钟查询硬盘属性，如果有失败的属性或健康状态或错误/自测试日志
+增加，则相应的信息会记录到 SYSLOG，也可以配置为发送邮件到相关的负责人。smartd
+的配置细节请参考手册，本文不再介绍。
+
+在系统配置了硬件 RAID 卡的情况下，操作系统看到的是 RAID 卡虚拟出来的虚拟硬盘，
+这种情况下需要显示指明物理硬盘的类型，例如： ::
+
+  # smartctl -Hc -d cciss,0 /dev/sda
+  smartctl 5.41 2011-06-09 r3365 [x86_64-linux-3.10.20] (local build)
+  Copyright (C) 2002-11 by Bruce Allen, http://smartmontools.sourceforge.net
+
+  SMART Health Status: OK
+
+或 ::
+
+  # smartctl -Hc -d megaraid,0 /dev/sda
+  smartctl 5.41 2011-06-09 r3365 [x86_64-linux-3.10.20] (local build)
+  Copyright (C) 2002-11 by Bruce Allen, http://smartmontools.sourceforge.net
+
+  SMART Health Status: OK
+
+更多的参数配置请参考\ :manpage:`smartctl(8)`\。

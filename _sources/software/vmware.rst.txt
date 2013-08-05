@@ -1,0 +1,256 @@
+VMWARE
+======
+
+vCenter
+-------
+
+* vCenter Server Appliance 5.0 GA with embedded DB2 database fails
+
+  .. versionadded:: @2012-07-17
+     创建
+
+  参考： `VMware vCenter Server Appliance 5.0 GA with embedded DB2 database fails <http://kb.vmware.com/kb/2006812>`_
+
+* vCenter Server 恢复
+
+  .. versionadded:: @2014-05-04
+     创建
+
+  由于停电或其他原因导致的 vCenter Server 非正常关机后，使用 vSphere Client
+  连接时总是会出错。一个快速解决办法如下：
+
+  #. 登录 https://vcenter.xxxxx.xxxxxxxx.xxx:5480/ ，确认 Server 的运行状态
+     应该是 Stopped。
+
+  #. 选择 Utilities 处的 “Setup wizard”，单击 Launch，如果之前没有特殊配置则全部
+     按缺省配置完成该过程。该过程的最后阶段会重新启动 Server 成功。
+
+  #. 通过 vSphere Client 连接，应该可以成功。vCenter Server 的许可证可能需要重新
+     关联。
+
+ESXi
+----
+
+.. versionadded:: @2014-05-15
+   创建
+.. versionchanged:: @2019-02-13
+   增加更多命令及示例
+
+通过 ssh 登录到 ESXi 系统后, 可以通过 `passwd root` 来修改密码
+
+配置 SSH 公钥登录，可能需要修改 SSHD 配置文件并重启 SSHD 服务以允许 root 登录：
+
+* ESXi 5.0, 修改文件 `/etc/ssh/keys-<username>/authorized_keys`
+
+很多命令的 `-h` 都包含了详细的例子。
+
+# esxcfg-*
+^^^^^^^^^^
+
+    - `esxcfg-advcfg`
+    - `esxcfg-dumppart`
+    - `esxcfg-fcoe`
+    - `esxcfg-hwiscsi`
+    - `esxcfg-info`
+    - `esxcfg-init`
+    - `esxcfg-ipsec`
+    - `esxcfg-module`
+    - `esxcfg-mpath`
+    - `esxcfg-nas`
+    - `esxcfg-nics` ：网卡配置
+    - `esxcfg-rescan`
+    - `esxcfg-resgrp`
+    - `esxcfg-route` ：路由配置
+    - `esxcfg-scsidevs`
+    - `esxcfg-swiscsi`
+    - `esxcfg-vmknic`
+    - `esxcfg-volume`
+    - `esxcfg-vswitch`
+
+
+# esxcli
+^^^^^^^^
+
+Usage: esxcli [options] {namespace}+ {cmd} [cmd options]
+
+Options:
+
+  * --formatter=FORMATTER
+
+    - Override the formatter to use for a given command.
+      Available formatter: xml, csv, keyvalue
+
+  * --debug
+
+    - Enable debug or internal use options
+
+  * --version
+
+    - Display version information for the script
+
+  * -?, --help
+
+    - Display usage information for the script
+
+Available Namespaces:
+
+  * esxcli
+
+    Commands that operate on the esxcli system itself allowing users to get additional information.
+
+    - `esxcli esxcli command list` 列出所有可用的命令
+
+  * fcoe
+
+    VMware FCOE commands.
+
+  * hardware
+
+    VMKernel hardware properties and commands for configuring hardware. ::
+
+        # esxcli esxcli command list|grep hardware
+        hardware.bootdevice                                     list
+        hardware.clock                                          get
+        hardware.clock                                          set
+        hardware.cpu.cpuid                                      get
+        hardware.cpu.global                                     get
+        hardware.cpu.global                                     set
+        hardware.cpu                                            list
+        hardware.ipmi.fru                                       get
+        hardware.ipmi.fru                                       list
+        hardware.ipmi.sdr                                       get
+        hardware.ipmi.sdr                                       list
+        hardware.ipmi.sel                                       get
+        hardware.ipmi.sel                                       list
+        hardware.memory                                         get
+        hardware.pci                                            list
+        hardware.platform                                       get
+        hardware.trustedboot                                    get
+
+  * iscsi
+
+    VMware iSCSI commands.
+
+  * network
+
+    Operations that pertain to the maintenance of networking on an ESX host. This includes a wide variety of
+    commands to manipulate virtual networking components (vswitch, portgroup, etc) as well as local host IP, DNS
+    and general host networking settings.
+
+    - `esxcli network nic list` 查看网卡信息
+    - `esxcli network ip route ipv4 list` 查看路由（ipv4）
+    - `esxcli network ip dns server list` 查看 dns
+    - `esxcli network ip interface ipv4 get` 查看 ip 配置（ipv4）
+
+  * sched
+
+    VMKernel system properties and commands for configuring scheduling related functionality.
+
+  * software
+
+    Manage the ESXi software image and packages
+
+  * storage
+
+    VMware storage commands.
+
+  * system
+
+    VMKernel system properties and commands for configuring properties of the kernel core system.
+
+  * vm
+
+    A small number of operations that allow a user to Control Virtual Machine operations.
+
+    - `esxcli vm process list` 显示开机的虚拟机列表
+    - `esxcli vm process kill --type=[soft,hard,force] --world-id=WorldNumber`
+      关机，wordld-id 对应上一条命令的输出。
+      参考： `KB1014165 <http://kb.vmware.com/kb/1014165>`_
+
+# tcpdump-uw
+^^^^^^^^^^^^
+
+ESXi 的抓包工具
+
+# vim-cmd
+^^^^^^^^^
+
+::
+
+    # vim-cmd
+    Commands available under /:
+    hbrsvc/       internalsvc/  solo/         vmsvc/
+    hostsvc/      proxysvc/     vimsvc/       help
+
+* vmsvc/
+
+    * `vim-cmd vmsvc/getallvms` 第一列显示 vmid
+    * `vim-cmd vmsvc/power.getstate <vmid>` 查看虚拟机的电源状态
+    * `vim-cmd vmsvc/power.on <vmid>` 开机
+    * `vim-cmd vmsvc/power.off <vmid>` 关机
+
+    参考 `KB1038043 <http://kb.vmware.com/kb/1038043>`_
+
+# vsish
+^^^^^^^
+
+VMkernel Sys Info Shell ::
+
+    /> help
+            cd       - change working directory
+            ls       - list nodes
+            dir      - list nodes
+            pwd      - print working directory
+            get      - perform GET operation
+            cat      - synonym for GET
+            set      - perform SET operation
+            typeget  - get type information
+            typels   - list type-level nodes
+            loglevel         - set debugging log level
+            exit     - quit shell
+            quit     - quit shell
+            q        - quit shell
+            help     - print help
+    /> ls
+    tpm/
+    statsRegistry/
+    killswitches/
+    vmkAccess/
+    worldlets/
+    power/
+    perf/
+    timer/
+    storage/
+    vmkModules/
+    system/
+    userworld/
+    sched/
+    hardware/
+    reliability/
+    config/
+    worldGroups/
+    world/
+    vm/
+    rpcStats/
+    memory/
+    net/
+    sysInfoNodeHashes
+
+.. warning:: `set /reliability/crashMe/Panic` 让 ESXi 崩溃。
+
+完整的配置项请参考 `这里 <https://s3.amazonaws.com/virtuallyghetto-download/complete_vsish_config.html>`_
+
+问题解决汇总
+^^^^^^^^^^^^
+
+孤立的虚拟机
+""""""""""""
+
+.. versionadded:: @2015-06-05
+   创建
+
+ESXi 非正常重启后有时会出现虚拟机为 ``孤立的`` 的情况，修复方案如下：
+
+* 可能是 `/etc/vmware/hostd/vmInventory.xml` 文件损坏，例如该文件内显示为
+  ``孤立的`` 几个虚拟机的路径有错。修复该文件后重启 ESXi。
+* 使用原虚拟机的虚拟磁盘重建虚拟机。

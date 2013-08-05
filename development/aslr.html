@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ASLR &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="内核" href="kernel.html"/>
+        <link rel="next" title="API" href="api.html"/>
+        <link rel="prev" title="Linux 内核签名验证" href="kernel-verify.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">调试</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="kernel.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kernel-commits.html">有趣的内核 commit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-magic.html">Linux reboot 的魔数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-memory.html">Linux 内核内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-clocksource.html">clocksource 解释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-pktchk.html">用于网络包检查的简单内核模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-firmware-load.html">Linux 内核 firmware 加载过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-verify.html">Linux 内核签名验证</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ASLR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kernel.html">内核</a> &raquo;</li>
+        
+      <li>ASLR</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/development/aslr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="aslr">
+<h1>ASLR<a class="headerlink" href="#aslr" title="永久链接至标题">¶</a></h1>
+<p>地址空间随机化（Address Space Layout Randomization） 是一种防范缓冲区溢出攻击
+的内存机制。其有效性依赖于整个地址空间布局是否对于攻击者保持未知。
+只有编译时作为位置无关可执行文件（PIE：Position Independent Executable）
+的可执行程序才能得到 ASLR 技术的保护，</p>
+<p>ASLR 并不能：</p>
+<ul class="simple">
+<li>修复漏洞，而是增加漏洞利用的难度</li>
+<li>对编译时没有开启 ASLR 支持的二进制文件提供保护</li>
+</ul>
+<p>绕过 ASLR 的攻击大致如下：</p>
+<ul class="simple">
+<li>地址泄露</li>
+<li>访问与特定地址关联的数据</li>
+<li>猜测地址，例如系统熵过低或 ASLR 实现问题</li>
+<li>利用侧信道攻击</li>
+</ul>
+<p>通过内核参数 kernel.randomize_va_space 来配置 ASLR 功能：:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /proc/sys/kernel/randomize_va_space</span>
+<span class="mi">2</span>
+<span class="c1"># sysctl -a --pattern randomize</span>
+<span class="n">kernel</span><span class="o">.</span><span class="n">randomize_va_space</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://www.kernel.org/doc/Documentation/sysctl/kernel.txt">官方文档</a>如下：:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">option</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">select</span> <span class="n">the</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">process</span> <span class="n">address</span>
+<span class="n">space</span> <span class="n">randomization</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">system</span><span class="p">,</span> <span class="k">for</span> <span class="n">architectures</span>
+<span class="n">that</span> <span class="n">support</span> <span class="n">this</span> <span class="n">feature</span><span class="o">.</span>
+
+<span class="mi">0</span> <span class="o">-</span> <span class="n">Turn</span> <span class="n">the</span> <span class="n">process</span> <span class="n">address</span> <span class="n">space</span> <span class="n">randomization</span> <span class="n">off</span><span class="o">.</span>  <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span>
+    <span class="n">default</span> <span class="k">for</span> <span class="n">architectures</span> <span class="n">that</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">this</span> <span class="n">feature</span> <span class="n">anyways</span><span class="p">,</span>
+    <span class="ow">and</span> <span class="n">kernels</span> <span class="n">that</span> <span class="n">are</span> <span class="n">booted</span> <span class="k">with</span> <span class="n">the</span> <span class="s2">&quot;norandmaps&quot;</span> <span class="n">parameter</span><span class="o">.</span>
+
+<span class="mi">1</span> <span class="o">-</span> <span class="n">Make</span> <span class="n">the</span> <span class="n">addresses</span> <span class="n">of</span> <span class="n">mmap</span> <span class="n">base</span><span class="p">,</span> <span class="n">stack</span> <span class="ow">and</span> <span class="n">VDSO</span> <span class="n">page</span> <span class="n">randomized</span><span class="o">.</span>
+    <span class="n">This</span><span class="p">,</span> <span class="n">among</span> <span class="n">other</span> <span class="n">things</span><span class="p">,</span> <span class="n">implies</span> <span class="n">that</span> <span class="n">shared</span> <span class="n">libraries</span> <span class="n">will</span> <span class="n">be</span>
+    <span class="n">loaded</span> <span class="n">to</span> <span class="n">random</span> <span class="n">addresses</span><span class="o">.</span>  <span class="n">Also</span> <span class="k">for</span> <span class="n">PIE</span><span class="o">-</span><span class="n">linked</span> <span class="n">binaries</span><span class="p">,</span> <span class="n">the</span>
+    <span class="n">location</span> <span class="n">of</span> <span class="n">code</span> <span class="n">start</span> <span class="ow">is</span> <span class="n">randomized</span><span class="o">.</span>  <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">default</span> <span class="k">if</span> <span class="n">the</span>
+    <span class="n">CONFIG_COMPAT_BRK</span> <span class="n">option</span> <span class="ow">is</span> <span class="n">enabled</span><span class="o">.</span>
+
+<span class="mi">2</span> <span class="o">-</span> <span class="n">Additionally</span> <span class="n">enable</span> <span class="n">heap</span> <span class="n">randomization</span><span class="o">.</span>  <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">default</span> <span class="k">if</span>
+    <span class="n">CONFIG_COMPAT_BRK</span> <span class="ow">is</span> <span class="n">disabled</span><span class="o">.</span>
+
+    <span class="n">There</span> <span class="n">are</span> <span class="n">a</span> <span class="n">few</span> <span class="n">legacy</span> <span class="n">applications</span> <span class="n">out</span> <span class="n">there</span> <span class="p">(</span><span class="n">such</span> <span class="k">as</span> <span class="n">some</span> <span class="n">ancient</span>
+    <span class="n">versions</span> <span class="n">of</span> <span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">5</span> <span class="kn">from</span> <span class="mi">1996</span><span class="p">)</span> <span class="n">that</span> <span class="n">assume</span> <span class="n">that</span> <span class="n">brk</span> <span class="n">area</span> <span class="n">starts</span>
+    <span class="n">just</span> <span class="n">after</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">code</span><span class="o">+</span><span class="n">bss</span><span class="o">.</span>  <span class="n">These</span> <span class="n">applications</span> <span class="k">break</span> <span class="n">when</span>
+    <span class="n">start</span> <span class="n">of</span> <span class="n">the</span> <span class="n">brk</span> <span class="n">area</span> <span class="ow">is</span> <span class="n">randomized</span><span class="o">.</span>  <span class="n">There</span> <span class="n">are</span> <span class="n">however</span> <span class="n">no</span> <span class="n">known</span>
+    <span class="n">non</span><span class="o">-</span><span class="n">legacy</span> <span class="n">applications</span> <span class="n">that</span> <span class="n">would</span> <span class="n">be</span> <span class="n">broken</span> <span class="n">this</span> <span class="n">way</span><span class="p">,</span> <span class="n">so</span> <span class="k">for</span> <span class="n">most</span>
+    <span class="n">systems</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">safe</span> <span class="n">to</span> <span class="n">choose</span> <span class="n">full</span> <span class="n">randomization</span><span class="o">.</span>
+
+    <span class="n">Systems</span> <span class="k">with</span> <span class="n">ancient</span> <span class="ow">and</span><span class="o">/</span><span class="ow">or</span> <span class="n">broken</span> <span class="n">binaries</span> <span class="n">should</span> <span class="n">be</span> <span class="n">configured</span>
+    <span class="k">with</span> <span class="n">CONFIG_COMPAT_BRK</span> <span class="n">enabled</span><span class="p">,</span> <span class="n">which</span> <span class="n">excludes</span> <span class="n">the</span> <span class="n">heap</span> <span class="kn">from</span> <span class="nn">process</span>
+    <span class="n">address</span> <span class="n">space</span> <span class="n">randomization</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>关闭 ASLR 并执行 ldd，会看到两次的输出完全一致：:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># sysctl -w kernel.randomize_va_space=0</span>
+<span class="n">kernel</span><span class="o">.</span><span class="n">randomize_va_space</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="c1"># diff &lt;(ldd /bin/bash) &lt;(ldd /bin/bash)</span>
+</pre></div>
+</div>
+<p>重新设置为 2 启用 ASLR 后会看到两次执行输出的内存地址不同：:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># sysctl -w kernel.randomize_va_space=2</span>
+<span class="n">kernel</span><span class="o">.</span><span class="n">randomize_va_space</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c1"># diff &lt;(ldd /bin/bash) &lt;(ldd /bin/bash)</span>
+<span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="n">c1</span><span class="p">,</span><span class="mi">6</span>
+<span class="o">&lt;</span>       <span class="n">linux</span><span class="o">-</span><span class="n">vdso</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">1</span> <span class="p">(</span><span class="mh">0x00007ffd09963000</span><span class="p">)</span>
+<span class="o">&lt;</span>       <span class="n">libreadline</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">7</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libreadline</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">7</span> <span class="p">(</span><span class="mh">0x00007f205edf2000</span><span class="p">)</span>
+<span class="o">&lt;</span>       <span class="n">libdl</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libdl</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span> <span class="p">(</span><span class="mh">0x00007f205ebee000</span><span class="p">)</span>
+<span class="o">&lt;</span>       <span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="mh">0x00007f205e820000</span><span class="p">)</span>
+<span class="o">&lt;</span>       <span class="n">libncurses</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libncurses</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="mh">0x00007f205e5c6000</span><span class="p">)</span>
+<span class="o">&lt;</span>       <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span> <span class="p">(</span><span class="mh">0x0000561fc213b000</span><span class="p">)</span>
+<span class="o">---</span>
+<span class="o">&gt;</span>       <span class="n">linux</span><span class="o">-</span><span class="n">vdso</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">1</span> <span class="p">(</span><span class="mh">0x00007ffc4f781000</span><span class="p">)</span>
+<span class="o">&gt;</span>       <span class="n">libreadline</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">7</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libreadline</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">7</span> <span class="p">(</span><span class="mh">0x00007f89cdef7000</span><span class="p">)</span>
+<span class="o">&gt;</span>       <span class="n">libdl</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libdl</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span> <span class="p">(</span><span class="mh">0x00007f89cdcf3000</span><span class="p">)</span>
+<span class="o">&gt;</span>       <span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="mh">0x00007f89cd925000</span><span class="p">)</span>
+<span class="o">&gt;</span>       <span class="n">libncurses</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libncurses</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="mh">0x00007f89cd6cb000</span><span class="p">)</span>
+<span class="o">&gt;</span>       <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span> <span class="p">(</span><span class="mh">0x0000561fca491000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kernel-verify.html" class="btn btn-neutral" title="Linux 内核签名验证" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

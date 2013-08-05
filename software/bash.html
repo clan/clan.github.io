@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Bash &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="Shell 及常用命令" href="shell.html"/>
+        <link rel="next" title="grep" href="grep.html"/>
+        <link rel="prev" title="Shell 及常用命令" href="shell.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="shell.html">Shell 及常用命令</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Bash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">内置命令</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#set">set</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tips-w-examples">tips w/ examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">扩展 bash 内置命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bash-rbash">受限的 BASH (rbash)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">坑</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cd">cd 的前向不兼容行为</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="grep.html">grep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sort.html">sort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="awk_sed.html">awk &amp; sed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vim.html">vim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vimdiff.html">vimdiff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="socat.html">socat 的使用</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="shell.html">Shell 及常用命令</a> &raquo;</li>
+        
+      <li>Bash</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/bash.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bash">
+<h1>Bash<a class="headerlink" href="#bash" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>内置命令<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-20 新版功能: </span>创建，set</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-24 版更改: </span>增加 set -eox</p>
+</div>
+<div class="section" id="set">
+<h3>set<a class="headerlink" href="#set" title="永久链接至标题">¶</a></h3>
+<ul>
+<li><p class="first">-e</p>
+<p>同 <cite>set -o errexit</cite>。一旦命令退出值非 0，则立刻中断脚本执行。
+<strong>对管道无效，参考 **`set -o pipefail`</strong>。**</p>
+</li>
+<li><p class="first">-o</p>
+<ul>
+<li><p class="first">pipefail 如果未设置（缺省情况），则管道组合命令的最后一个命令为返回值。
+如果设置了，则只要管道中的某个子命令失败，则整个组合命令也失败。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bash -c &#39;set -e; foo | echo &quot;a&quot;; echo $?; echo &quot;&gt;&gt; done&quot;&#39;
+a
+bash: foo: 未找到命令
+0
+&gt;&gt; done
+
+$ bash -c &#39;set -e; set -o pipefail; foo | echo &quot;a&quot;; echo $?; echo &quot;&gt;&gt; done&quot;&#39;
+a
+bash: foo: 未找到命令
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">-u</p>
+<p>如果变量未定义，则尝试显示该变量时会报错（非交互式 shell 会退出）。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bash -c &#39;set -u; echo $u; echo &quot;done&quot;&#39;
+bash: u: unbound variable
+</pre></div>
+</div>
+</li>
+<li><p class="first">-x</p>
+<p>同 <cite>set -o xtrace</cite>。先输出 $PS4（+）以及要执行的命令和参数，然后执行命令。
+对调试很有帮助。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="tips-w-examples">
+<h2>tips w/ examples<a class="headerlink" href="#tips-w-examples" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-22 新版功能: </span>创建</p>
+</div>
+<p>cd</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pwd
+/
+$ cd /tmp
+$ cd -
+/
+$ cd -
+/tmp
+</pre></div>
+</div>
+<p>Loop</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ for i in {1..2}; do echo $i; done
+1
+2
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>扩展 bash 内置命令<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-01-01 新版功能: </span>创建</p>
+</div>
+<p>一些常用的操作如 sleep，cat 等一般是通过调用单独的外部命令来执行。
+在对一些 shell 脚本做优化时，或者让系统进程树更清晰，或者尽可能的减少进程 fork
+的次数时总是想尽可能的通过调用 bash 的内置命令来实现类似的功能，在使用内置
+命令实现过于复杂时通过编写扩展编译出动态库来扩展 bash 内置命令也是一个办法。</p>
+<p>对于 sleep，可以通过 bash 内置的 read 命令的超时功能来实现，如下的例子通过创建
+命名管道后读写该管道来实现 sleep 的功能：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">waitfifo</span><span class="o">=</span>/tmp/fifo-demo-only
+<span class="o">[</span> -p <span class="si">${</span><span class="nv">waitfifo</span><span class="si">}</span> <span class="o">]</span> <span class="o">||</span> mkfifo <span class="si">${</span><span class="nv">waitfifo</span><span class="si">}</span>
+<span class="k">while</span> <span class="nb">true</span> <span class="p">;</span> <span class="k">do</span>
+    <span class="nb">read</span> -t <span class="m">1</span> &lt;&gt;<span class="si">${</span><span class="nv">waitfifo</span><span class="si">}</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>其他的功能则需要尽可能的利用 bash 已有的内置命令结合一些技巧来实现。这里我们
+介绍另一种方法，通过 bash 内置的 enable 命令的 “-f” 参数能动态加载代码来实现
+任意内置命令。还是以 sleep 为例，假设其源代码（附在本节最后）为
+sleep.c，参考如下过程演示：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ enable -n sleep # 禁止 sleep 内置命令，如果有
+$ type sleep
+sleep 是 /usr/bin/sleep
+$ gcc -DHAVE_CONFIG_H -fPIC -shared -Wl,-soname,sleep sleep.c -o sleep.so
+$ enable -f ./sleep.so  sleep
+$ type sleep
+sleep 是 shell 内嵌
+$ sleep -h
+sleep: 用法:sleep seconds[.fraction]
+</pre></div>
+</div>
+<p>事实上，对于 Gentoo 系统，只需要对 bash 的 USE flags 加上 plugins 即可拥有
+bash 源代码里已经实现了的动态加载内置命令，查看目录 <em>/usr/lib/bash/</em>。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ equery uses bash
+...
+ * Found these USE flags for app-shells/bash-4.2_p45:
+...
+ + + plugins      : Add support for loading builtins at runtime via &#39;enable&#39;
+...
+</pre></div>
+</div>
+<p>对 Ubuntu 则需要先通过 <cite>apt-get install bash-builtins</cite> 安装相应的头文件后再来
+编译相关的代码。</p>
+<p>sleep.c 的源代码如下：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * @file</span>
+<span class="cm"> * @brief sleep -- sleep for bash builtin</span>
+<span class="cm"> */</span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+
+<span class="c1">// for Gentoo, replace bash-plugins w/ bash if Ubuntu</span>
+<span class="cp">#include</span> <span class="cpf">&lt;bash-plugins/shell.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;bash-plugins/builtins.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">sleep_builtin</span> <span class="p">(</span><span class="n">WORD_LIST</span> <span class="o">*</span><span class="n">list</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">long</span>    <span class="n">sec</span><span class="p">,</span> <span class="n">usec</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">timespec</span> <span class="n">tv</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">list</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">builtin_usage</span><span class="p">();</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">EX_USAGE</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">list</span><span class="o">-&gt;</span><span class="n">word</span><span class="o">-&gt;</span><span class="n">word</span> <span class="o">==</span> <span class="sc">&#39;-&#39;</span> <span class="o">||</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">builtin_usage</span> <span class="p">();</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">EX_USAGE</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">uconvert</span><span class="p">(</span><span class="n">list</span><span class="o">-&gt;</span><span class="n">word</span><span class="o">-&gt;</span><span class="n">word</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sec</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">usec</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">tv</span><span class="p">.</span><span class="n">tv_sec</span> <span class="o">=</span> <span class="n">sec</span><span class="p">;</span>
+        <span class="n">tv</span><span class="p">.</span><span class="n">tv_nsec</span> <span class="o">=</span> <span class="n">usec</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">;</span>
+
+        <span class="n">nanosleep</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tv</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">EXECUTION_SUCCESS</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">builtin_error</span><span class="p">(</span><span class="s">&quot;%s: bad sleep interval&quot;</span><span class="p">,</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">word</span><span class="o">-&gt;</span><span class="n">word</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">EXECUTION_FAILURE</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">sleep_doc</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;Suspend execution for specified period.&quot;</span><span class="p">,</span>
+    <span class="s">&quot;sleep suspends execution for a minimum of SECONDS[.FRACTION] seconds.&quot;</span><span class="p">,</span>
+    <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">builtin</span> <span class="n">sleep_struct</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;sleep&quot;</span><span class="p">,</span>
+    <span class="n">sleep_builtin</span><span class="p">,</span>
+    <span class="n">BUILTIN_ENABLED</span><span class="p">,</span>
+    <span class="n">sleep_doc</span><span class="p">,</span>
+    <span class="s">&quot;sleep seconds[.fraction]&quot;</span><span class="p">,</span>
+    <span class="mi">0</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bash-rbash">
+<h2>受限的 BASH (rbash)<a class="headerlink" href="#bash-rbash" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-09-05 新版功能: </span>创建</p>
+</div>
+<p>如果 bash 以 rbash 为程序名启动或者命令行参数有 -r 选项，则启动的这个 shell
+会在某些功能上受限制．具体表现为如下操作都不能做：</p>
+<ul class="simple">
+<li>通过 cd 来改变工作目录</li>
+<li>设置或取消环境变量： SHELL， PATH， ENV， BASH_ENV</li>
+<li>命令名中不能包含目录分隔符 ‘/’</li>
+<li>包含有 ‘/’ 的文件名作为内置命令 ‘.’ 的参数</li>
+<li>hash 内置命令有 -p 选项时的文件名参数包含 '/'</li>
+<li>在启动时通过 shell 环境导入函数定义</li>
+<li>在启动时通过 shell 环境解析 SHELLOPTS 的值</li>
+<li>使用 &lt;，&lt;|， &lt;&gt;， &gt;&amp;， &amp;&gt;， &gt;&gt;; 等重定向操作符</li>
+<li>使用 exec 内置命令</li>
+<li>通过 enable 内置命令的 -f 和 -d 选项增加或删除内置命令</li>
+<li>使用 enable 内置命令来禁用或启用 shell 内置命令</li>
+<li>执行 command 内置命令时加上 -p 选项</li>
+<li>通过 <cite>set +r</cite> 或 <cite>set +o restricted</cite> 关闭受限模式</li>
+</ul>
+<p>rbash 一般是指向 bash 的符号链接，如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls -l /bin/rbash
+lrwxrwxrwx 1 root root 4 May  3 13:04 /bin/rbash -&gt; bash
+</pre></div>
+</div>
+<p>通过设置 PATH 环境变量为指定的目录，可以控制用户只能执行这些目录下的命令。</p>
+<p>需要注意的是， rbash 提供的受限环境的安全程度取决于用户能执行的命令，很多
+命令都能调用外部命令，从而导致逃逸出受限环境。例如：</p>
+<ul class="simple">
+<li><cite>more -1 /etc/passwd</cite>，然后 <cite>!bash</cite>。 对 less， man 等命令同样有效。</li>
+<li>vi 等编辑器能通过 : 执行外部命令</li>
+<li><cite>awk 'BEGIN {system(&quot;/bin/sh&quot;)}'</cite></li>
+<li><cite>find /etc/ -name passwd -exec /usr/bin/awk 'BEGIN {system(&quot;/bin/sh&quot;)}' ;</cite></li>
+<li><cite>echo &quot;evil script code&quot; | tee script.sh</cite></li>
+</ul>
+<p>如果能执行脚本，如 python， perl 等则有很多种方式启动一个 shell。</p>
+<p>因此，通过 rbash 构建一个安全的受限环境需要花不少功夫，需要严格控制用户能
+使用的命令。更安全的做法还是通过 chroot jail 等方式。</p>
+</div>
+<div class="section" id="id3">
+<h2>坑<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<div class="section" id="cd">
+<h3>cd 的前向不兼容行为<a class="headerlink" href="#cd" title="永久链接至标题">¶</a></h3>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2018-04-18 新版功能: </span>创建</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls -F/
+a/  ab
+$ cd a*
+-bash: cd: too many arguments
+</pre></div>
+</div>
+<p>然而在之前的版本这个 cd 操作是可以正常切换到 <cite>a/</cite> 目录的。原因在<a class="reference external" href="http://git.savannah.gnu.org/cgit/bash.git/commit/config-top.h?id=a0c0a00fc419b7bc08202a79134fcd5bc0427071">这</a>：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>+/* Define CD_COMPLAINS if you want the non-standard, but sometimes-desired
++   error messages about multiple directory arguments to `cd&#39;. */
++#define CD_COMPLAINS
++
+</pre></div>
+</div>
+<p>新增的宏 <cite>CD_COMPLAINS</cite> 如果定义了，那么在 cd 后接多个参数时就会直接报错。</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="grep.html" class="btn btn-neutral float-right" title="grep" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="shell.html" class="btn btn-neutral" title="Shell 及常用命令" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+Python 装饰器和 functools 模块
+==============================
+
+.. versionadded:: @2016-04-20
+   创建
+
+Python装饰器（decorator, :pep:`318`\）
+是很有用的一个语法特性。但在具体使用时，需要注意一些细节。例如，
+被装饰后的函数其实已经是另外一个函数了（函数名等函数属性会发生改变）。
+因此，Python 的 functools 包中提供了一个叫
+`wraps <https://docs.python.org/2.7/library/functools.html?highlight=wraps#functools.wraps>`_
+的装饰器来消除这样的副作用。
+
+.. code-block:: python
+
+   #!/usr/bin/python
+   # -*- coding=utf-8 -*- 
+
+   from functools import wraps
+
+   def my_decorator(func):
+       @wraps(func)
+       def wrapper(*args, **kwargs):
+           print('Calling decorated function...')
+           return func(*args, **kwargs)
+       return wrapper
+
+   @my_decorator
+   def example():
+       """Docstring of example"""
+       print('Called example function')
+
+   example()
+   print("example", example.__name__, example.__doc__)
+
+运行结果： ::
+
+  Calling decorated function...
+  Called example function
+  ('example', 'example', 'Docstring of example')
+
+如果去掉 @wraps，则结果如下： ::
+
+  Calling decorated function...
+  Called example function
+  ('example', 'wrapper', None)
+
+其直接后果是导致所有被装饰的函数都具有相同的名字。在某些应用中函数名字是有
+实际意义的。例如 Flask 应用里的路由规则。
+
+functools 里还有更多的函数。例如 partial()： ::
+
+  >>> from functools import partial
+  >>> int2 = partial(int, base=2)
+  >>> int2('11')
+  3
+
+wraps 其实等价于 functools 里的
+`partial(update_wrapper, wrapped=wrapped, assigned=assigned, updated=updated)`\。
+
+update_wrappers() 则相当于把被封装函数的 module，name，doc 和 dict
+复制到封装的函数中去。

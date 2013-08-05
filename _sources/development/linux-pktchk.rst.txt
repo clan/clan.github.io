@@ -1,0 +1,38 @@
+用于网络包检查的简单内核模块
+============================
+
+.. versionadded:: @2012-03-13
+   创建
+
+非常简单的网络包检查的内核模块，基于此可以做更多有意义的事情。基于内核 3.2
+测试通过。
+
+最新代码请参考 `这里 <https://github.com/clan/kernel/tree/master/net>`_\ 。
+
+.. literalinclude:: pkt_chk.c
+   :caption: pkt_chk.c
+   :language: c
+   :linenos:
+
+.. code-block:: make
+   :caption: makefile
+
+   ifeq ($(KERNELRELEASE),)
+       KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+       PWD := $(shell pwd)
+
+   .PHONY: modules clean
+
+   modules:
+   	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
+
+   modules_install:
+   	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
+
+   clean:
+   	@rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions
+   	@rm -rf modules.order  Module.symvers
+
+   else
+       obj-m := pkt_chk.o
+   endif

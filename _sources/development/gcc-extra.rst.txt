@@ -1,0 +1,38 @@
+gcc 编译选项 -Wextra
+====================
+
+.. versionadded:: @2010-07-28
+   创建
+
+.. index:: gcc
+
+看下面这个程序会有什么问题？
+
+.. code-block:: c
+    :linenos:
+
+    #include <stdio.h>
+    #include <sys/types.h>
+
+    ssize_t test(void)
+    {
+        return -1;
+    }
+
+    int main()
+    {
+        size_t ret;
+
+        if ((ret = test()) < 0) printf("impossible\n");
+
+        return 0;
+    }
+
+`gcc -Wall test.c` 没有任何警告信息输出，但如果加上 -Wextra
+选项就知道会有什么问题了。 ::
+
+    $ gcc -Wall -Wextra test.c
+    test.c: In function 'main':
+    test.c:13: warning: comparison of unsigned expression < 0 is always false
+
+-Wextra 还有更多的检查，上面只是其中一个 -Wall 没包含但很有用的一个检查。

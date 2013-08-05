@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>时序数据库/RRDTOOL &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="数据库" href="db.html"/>
+        <link rel="next" title="WEB 服务" href="web.html"/>
+        <link rel="prev" title="MongoDB" href="mongodb.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="db.html">数据库</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="oracle.html">Oracle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodb.html">MongoDB</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">时序数据库/RRDTOOL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">演示代码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xff">xff 的意义</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rrdcached-io">使用 rrdcached 降低 IO 压力</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="db.html">数据库</a> &raquo;</li>
+        
+      <li>时序数据库/RRDTOOL</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/rrdtool.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rrdtool">
+<h1>时序数据库/RRDTOOL<a class="headerlink" href="#rrdtool" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2010-07-16 新版功能: </span>创建，xff 解释</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2012-11-17 版更改: </span>增加演示 shell 代码</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2013-08-18 版更改: </span>增加 rrdcached 解释</p>
+</div>
+<div class="section" id="id1">
+<h2>演示代码<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+
+rm -fr count.rrd gauge.rrd
+
+rrdtool create rrdtool.rrd --step <span class="m">60</span> DS:gauge:GAUGE:120:0:U DS:count:COUNTER:120:0:U RRA:AVERAGE:0.5:1:60
+
+<span class="nv">start</span><span class="o">=</span><span class="k">$(</span>date --date<span class="o">=</span><span class="s1">&#39;20121204&#39;</span> +%s<span class="k">)</span>
+
+<span class="k">for</span> i in <span class="sb">`</span>seq <span class="m">1</span> <span class="m">60</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nv">t</span><span class="o">=</span><span class="k">$((</span>start <span class="o">+</span> i <span class="o">*</span> <span class="m">60</span><span class="k">))</span>
+    rrdtool update rrdtool.rrd --template gauge:count <span class="si">${</span><span class="nv">t</span><span class="si">}</span>:<span class="si">${</span><span class="nv">i</span><span class="si">}</span>:<span class="k">$((</span>i <span class="o">*</span> i <span class="o">*</span> <span class="m">2</span><span class="k">))</span>
+<span class="k">done</span>
+
+<span class="nv">WIDTH</span><span class="o">=</span><span class="m">504</span>
+<span class="nv">HEIGHT</span><span class="o">=</span><span class="m">128</span>
+<span class="nv">DATETIME</span><span class="o">=</span><span class="k">$(</span>date<span class="k">)</span>
+<span class="nv">INTERVAL</span><span class="o">=</span><span class="k">$((</span><span class="m">24</span> <span class="o">*</span> <span class="m">3600</span><span class="k">))</span>
+
+rrdtool graph rrdtool.png -i -M -s <span class="si">${</span><span class="nv">start</span><span class="si">}</span> -e <span class="k">$((</span>start <span class="o">+</span> <span class="m">3600</span><span class="k">))</span> <span class="se">\</span>
+    -w <span class="si">${</span><span class="nv">WIDTH</span><span class="si">}</span> -h <span class="si">${</span><span class="nv">HEIGHT</span><span class="si">}</span> <span class="se">\</span>
+    -l <span class="m">0</span> <span class="se">\</span>
+    DEF:rcount<span class="o">=</span>rrdtool.rrd:count:AVERAGE <span class="se">\</span>
+    DEF:rgauge<span class="o">=</span>rrdtool.rrd:gauge:AVERAGE <span class="se">\</span>
+    CDEF:count<span class="o">=</span>rcount,1,* <span class="se">\</span>
+    CDEF:gauge<span class="o">=</span>rgauge,10,/ <span class="se">\</span>
+    LINE1:count#00ff00:<span class="s2">&quot;count&quot;</span> <span class="se">\</span>
+    LINE1:gauge#0000ff:<span class="s2">&quot;gauge&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="xff">
+<h2>xff 的意义<a class="headerlink" href="#xff" title="永久链接至标题">¶</a></h2>
+<p>一直对 rrdtool 在 create 时 RRA 中的 xff 参数的意义不是很清楚，今天
+仔细研究了一下，做个总结。下面是 man rrdcreate 里的说明：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span><span class="n">RRA</span><span class="p">:</span><span class="n">_AVERAGE_</span> <span class="o">|</span> <span class="n">MIN</span> <span class="o">|</span> <span class="n">MAX</span> <span class="o">|</span> <span class="n">LAST</span><span class="p">:</span><span class="n">xff</span><span class="p">:</span><span class="n">steps</span><span class="p">:</span><span class="n">rows</span><span class="o">*</span>
+
+<span class="o">*</span><span class="n">xff</span> <span class="n">The</span> <span class="n">xfiles</span> <span class="n">factor</span> <span class="n">defines</span> <span class="n">what</span> <span class="n">part</span> <span class="n">of</span> <span class="n">a</span> <span class="n">consolidation</span> <span class="n">interval</span> <span class="n">may</span>
+<span class="n">be</span> <span class="n">made</span> <span class="n">up</span> <span class="kn">from</span> <span class="o">*</span><span class="n">UNKNOWN</span><span class="o">*</span> <span class="n">data</span> <span class="k">while</span> <span class="n">the</span> <span class="n">consolidated</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">still</span>
+<span class="n">regarded</span> <span class="k">as</span> <span class="n">known</span><span class="o">.</span> <span class="n">It</span> <span class="ow">is</span> <span class="n">given</span> <span class="k">as</span> <span class="n">the</span> <span class="n">ratio</span> <span class="n">of</span> <span class="n">allowed</span> <span class="o">*</span><span class="n">UNKNOWN</span><span class="o">*</span> <span class="n">PDPs</span>
+<span class="n">to</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">PDPs</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">interval</span><span class="o">.</span> <span class="n">Thus</span><span class="p">,</span> <span class="n">it</span> <span class="n">ranges</span> <span class="kn">from</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">1</span>
+<span class="p">(</span><span class="n">exclusive</span><span class="p">)</span><span class="o">.*</span>
+</pre></div>
+</div>
+<p>xff 决定在给定间隔中可以有多大比例的未知 PDP，超过这个比例则该间隔内的值
+为 <em>UNKNOWN</em> ，其取值范围为前闭后开区间，即： [0, 1) 。举两个极端的例子：</p>
+<p>xff = 0 表示不能有未知 PDP</p>
+<p>xff = 0.9 表示可以有 90% 的 PDP</p>
+<p>下面是测试的程序（备忘）。</p>
+<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+
+<span class="nv">LANG</span><span class="o">=</span>C
+
+<span class="nv">xff</span><span class="o">=</span><span class="m">0</span>.5
+
+<span class="c1">#t=$(date +%s)</span>
+<span class="nv">t</span><span class="o">=</span><span class="m">1480272727</span>
+
+<span class="nb">echo</span> <span class="k">$(</span>date<span class="k">)</span>, <span class="nv">$t</span>
+
+rrdtool create test.rrd -b <span class="k">$(</span>date +%s<span class="k">)</span> --step <span class="m">1</span> DS:temp:GAUGE:1:0:100 RRA:AVERAGE:<span class="si">${</span><span class="nv">xff</span><span class="si">}</span>:5:10
+<span class="k">for</span> i in <span class="sb">`</span>seq <span class="m">1</span> <span class="m">20</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+    rrdtool update test.rrd <span class="si">${</span><span class="nv">t</span><span class="si">}</span>:<span class="si">${</span><span class="nv">i</span><span class="si">}</span>
+    <span class="nv">t</span><span class="o">=</span><span class="k">$((</span>t <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
+<span class="k">done</span>
+
+rrdtool dump test.rrd
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="rrdcached-io">
+<h2>使用 rrdcached 降低 IO 压力<a class="headerlink" href="#rrdcached-io" title="永久链接至标题">¶</a></h2>
+<p>在 RRDtool 的数据文件较多时，磁盘 IO 会给系统带来一定的压力。rrdcached
+即是解决该问题的一个方法。相应的代码修改也非常简单，只需要设置
+RRDCACHED_ADDRESS 环境变量或者修改相应的更新方法增加一个参数
+&quot;-l daemon_address&quot; 即可。不过需要注意的是，如果在每次数据更新（update 方法）
+后接着有其他的操作（如graph等）则 rrdcached 起不到应有的作用。原因是
+rrdcached 仅对 update 方法才会有 cache，其他方法在执行之前都会先发送
+FLUSH 命令，导致数据直接更新到文件，即清空 cache。因此，rrdcache 不适用
+于在数据更新（update）之后马上执行 graph 等操作的场景。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="web.html" class="btn btn-neutral float-right" title="WEB 服务" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mongodb.html" class="btn btn-neutral" title="MongoDB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

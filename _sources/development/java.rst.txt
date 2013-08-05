@@ -1,0 +1,23 @@
+Java
+====
+
+.. versionadded:: @2019-01-26
+   创建
+
+jmx
+---
+
+* Monitoring and Management Using JMX Technology
+
+    * http://java.sun.com/javase/6/docs/technotes/guides/management/agent.html
+    * http://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html
+
+* 配置
+
+    * -Dcom.sun.management.jmxremote
+    * -Dcom.sun.management.jmxremote.port=9010
+    * -Dcom.sun.management.jmxremote.rmi.port=9998
+    * -Dcom.sun.management.jmxremote.local.only=false
+    * -Dcom.sun.management.jmxremote.authenticate=false
+    * -Dcom.sun.management.jmxremote.ssl=false
+    * -XX:+DisableAttachMechanism

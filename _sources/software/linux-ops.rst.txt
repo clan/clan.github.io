@@ -1,0 +1,154 @@
+Linux 系统日常维护命令
+======================
+
+.. versionadded:: @2013-08-22
+   创建
+.. versionchanged:: @2019-01-25
+   增加进程管理
+
+软件包维护
+----------
+
+常见发行版（Gentoo，Debian/Ubuntu，RHEL/CentOS）的软件包维护命令。
+
+.. list-table:: 日常维护命令列表
+    :header-rows: 1
+
+    * - 功能
+      - Gentoo
+      - Debian/Ubuntu
+      - RHEL/CentOS
+    * - 软件包同步
+      - * `emerge --sync`
+        * `eix-sync`
+      - `apt-get update`
+      -
+    * - 更新所有安装的软件
+      - `emerge -auvDN world`
+      - * `apt-get upgrade`
+        * `apt-get --just-print upgrade` 不实际更新
+      - `yum update`
+    * - 搜索软件
+      - `emerge -s busybox`
+      - `apt-cache search busybox`
+      - `yum search busybox`
+    * - 安装/更新软件
+      - `emerge -av busybox`
+      - `apt-get install busybox`
+      - * `rpm -[i|U]vh \*.rpm`
+        * `yum [install|update] busybox`
+    * - 删除软件
+      - `emerge -C busybox`
+      - * `apt-get remove busybox`
+        * `apt-get purge busybox`
+      - * `rpm -e busybox`
+        * `yum remove busybox`
+    * - 自动清除不需要的软件
+      - `emerge --depclean`
+      - `apt-get autoremove`
+      - `package-cleanup --leaves`
+    * - 查看软件包安装的文件列表
+      - * `qlist busybox`
+        * `equery files busybox`
+      - `dpkg -L busybox`
+      - `rpm -ql bash`
+    * - 查找文件所属的软件包
+      - * qfile /etc/sysctl.conf`
+        * `equery belongs /etc/sysctl.conf`
+      - `dpkg -S /etc/sysctl.conf`
+      - `rpm -qf /etc/sysctl.conf`
+    * - 列出所有安装的软件包
+      - * `equery list \*`
+        * `equery list -i` (gentoolkit <0.3)
+      - * `dpkg -l` / `dpkg-query -l`
+        * `apt list --installed`
+      - `yum list installed`
+    * - 校验软件包
+      - `equery check busybox`
+      - `cd / && md5sum -c /var/lib/dpkg/info/busybox.md5sums`
+      - `rpm -V busybox`
+    * - 查看安装包版本
+      - `equery uses bash`
+      - `dpkg-query -W -f='${Version}' bash`
+      - `rpm -qi bash`
+    * - 查看二进制包内容
+      -
+      - `dpkg -c \*.deb`
+      - `rpm -qpl \*.rpm`
+    * - 包证书管理
+      -
+      - * `apt-key update`
+        * `apt-key adv --keyserver keyserver.ubuntu.com --recv {KEYID}`
+        * `apt-key add -`
+      -
+    * - 更新历史日志
+      - `/var/log/emerge.log`
+      - `/var/log/apt/history.log`
+      -
+
+Gentoo 更新步骤
+---------------
+
+.. versionadded:: @2018-12-20
+   创建
+
+* `eix-sync`
+* `emerge -auvDNgk world`
+* `eselect news read`
+* `perl-cleaner --all -- -gk`
+* `python-updater`
+* `revdep-rebuild`
+* `cd /etc/ssl && rm ...`
+* `emerge --depclean -p`
+
+Portage 配置
+^^^^^^^^^^^^
+
+* FEATURES
+
+  * collision-protect
+
+    If you are using FEATURES=collision-protect, Portage will reject
+    the upgrade. If this is the case, please temporarily switch to
+    FEATURES=protect-owned for the upgrade.
+
+  * preserve-libs
+
+    Preserve libraries when the sonames change during upgrade or downgrade.
+    Libraries are preserved only if consumers of those libraries are detected.
+    Preserved libraries are automatically removed when there are no remaining
+    consumers. Run `emerge @preserved-rebuild` in order to rebuild all
+    consumers of preserved libraries.
+
+
+进程管理
+--------
+
+.. versionadded:: @2019-02-14
+   创建
+
+* 找出仍在使用被删除文件或动态库的进程
+
+  ``lsof | grep -v -E "\\s(/dev/(zero|shm/.*)|/\\[aio\\]|/tmp/\\S* \\(deleted\\))$" | grep -E "( \\(deleted\\)$|\\s+DEL\\s+)\\s?"``
+
+
+用户/组管理
+-----------
+
+.. versionadded:: @2013-08-07
+   创建
+
+* 由标准输入修改密码：`echo "root:password" | chpasswd`
+* 验证密码是否正确：
+
+  .. code-block:: shell
+
+    SHADOW0=$(awk -v user=root -F: '{if ($1 == user) {print $2;}}' /etc/shadow)
+    SALT=$(echo $SHADOW0 | awk -F\$ '{print $3;}')
+    SHADOW1=$(echo password | mkpasswd -S "${SALT}" -s -m SHA-512)
+    [ ${SHADOW0} = ${SHADOW1} ] && echo "password correct"
+
+* 基于 uid/gid 排序 /etc/passwd， /etc/group 文件：
+
+    * `sort -n -t ':' -k3 /etc/passwd`
+    * `pwck -s` / `grpck -s`

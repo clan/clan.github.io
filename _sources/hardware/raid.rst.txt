@@ -1,0 +1,467 @@
+RAID 维护备忘
+=============
+
+.. versionadded:: @2014-12-22
+   创建
+.. versionchanged:: @2019-01-29
+   增加启动盘查看命令
+.. versionchanged:: @2019-02-14
+   增加更多命令及解释
+.. versionchanged:: @2019-03-11
+   增加软 RAID 维护示例
+
+**RAID/独立（廉价）硬盘冗余阵列/Redundant Array of Independent/Inexpensive Disks**
+
+技术简介
+--------
+
+.. index:: RAID
+
+====== ======== ======== ======== ======== ======== ====== ====================
+ 级别  最少硬盘 最大容错 可用容量 读取性能 写入性能 安全性 特性
+JBOD     1          0       n        1        1       无
+  0      2          0       n        1        1       无   追求容量，但无可靠性
+  1      2         n-1      1        n        n       高   最求安全性，
+                                                           一个硬盘正常即可
+  5      3          1      n-1      n-1      n-1      高   一块校验盘
+  6      4          2      n-2      n-2      n-2      >5   两块校验盘
+====== ======== ======== ======== ======== ======== ====== ====================
+
+RAID 卡维护备忘
+---------------
+
+并非所有命令都有过实际测试，因此不排除个别操作选项有错误。实际操作时请自行确认
+并谨慎操作（有条件的都在测试环境下测试或确保数据有备份）。
+
+RAID 控制器的类型可以由命令 `lspci` 查看 PCI 设备的信息来获得。
+
+* 刷新磁盘信息
+
+    * `echo "- - -" > /sys/class/scsi_host/host0/scan`
+    * `echo "1" > /sys/bus/scsi/devices/0\:0\:0\:0/rescan`
+    * `echo "1" > /sys/class/scsi_disk/0\:0\:0\:0/device/rescan`
+
+* 缓存策略解释
+
+    * WT    （Write through）
+    * WB    （Write back）
+    * NORA  （No read ahead）
+    * RA    （Read ahead）
+    * ADRA  （Adaptive read ahead）
+    * Cached
+    * Direct
+
+LSI 系列
+^^^^^^^^
+
+0. 通用信息
+
+    * 查看帮助 `megacli -h -NoLog`
+
+#. 查看 RAID 卡全部信息
+
+    * 显示适配器个数
+
+      `megacli -adpCount -NoLog`
+    * 显示 RAID 卡信息。
+
+      `megacli -AdpAllInfo -aALL -NoLog`
+    * 显示 RAID 卡型号，RAID 设置及物理磁盘的相关信息。
+
+      `megacli -CfgDsply -aALL -NoLog`
+    * 查看 RAID 卡日志。
+
+      * `megacli -AdpAlILog -aALL -NoLog`
+      * `megacli -FwTermLog -Dsply -aALL -NoLog`
+
+    * 查看电池信息
+
+      `megacli -AdpBbuCmd -aAll -NoLog`
+    * 显示适配器时间
+
+      `megacli -AdpGetTime –aALL -NoLog`
+    * 查看启动盘设置
+
+      `megacli -AdpBootDrive -Get -aALL -NoLog`
+
+#. 物理硬盘
+
+    * 查看所有物理硬盘信息
+      如果 "Firmware state" 显示为非 Online，则表示该磁盘有问题。
+
+      `megacli -PDList -aALL -NoLog`
+
+      .. code-block:: none
+          :emphasize-lines: 17,27,36
+
+          # megacli -cfgdsply -aALL -NoLog
+
+          ==============================================================================
+          Adapter: 0
+          Product Name: PERC H710 Mini
+          ...
+          ==============================================================================
+          Number of DISK GROUPS: 1
+
+          SPANNED DISK GROUP: 0
+          ...
+          Virtual Drive Information:
+          Virtual Drive: 0 (Target Id: 0)
+          Name                :Virtual Disk 0
+          RAID Level          : Primary-1, Secondary-0, RAID Level Qualifier-0
+          ...
+          State               : Degraded
+          Strip Size          : 64 KB
+          ...
+          Physical Disk Information:
+          Physical Disk: 0
+          ...
+          PD Type: SAS
+
+          Raw Size: 279.396 GB [0x22ecb25c Sectors]
+          ...
+          Firmware state: Failed
+          ...
+
+          Physical Disk: 1
+          Enclosure Device ID: 32
+          ...
+
+          Raw Size: 279.396 GB [0x22ecb25c Sectors]
+          ...
+          Firmware state: Online, Spun Up
+          ...
+
+          Exit Code: 0x00
+
+    * 查看指定硬盘的信息（32 和 0 分别对应上一条命令输出的
+      Enclosure Device ID 和 Slot Number）：
+
+      `megacli -pdInfo -PhysDrv[32:0] -aALL -NoLog`
+    * `megacli -PdList -a0 -NoLog | grep -E "^(Enclosure|Device|Firmware|Inquirt|Non Coerced|Coerced|Foreign|Media Type)"`
+    * 表示磁盘状态 `megacli -PDMakeGood -PhysDrv[252:4] -a0`
+
+#. 逻辑（虚拟）盘
+
+    * 查看信息 `megacli -LDInfo -LAll -aAll -NoLog`
+
+      显示所有逻辑磁盘组信息。搜索 State，
+      正常情况为：\ *State : Optimal*\ ，否则为异常，例如 *State : Degraded*\ 。
+
+
+      .. code-block:: none
+           :emphasize-lines: 10
+
+           # megacli -LDInfo -Lall -aALL -NoLog
+
+           Adapter 0 -- Virtual Drive Information:
+           Virtual Drive: 0 (Target Id: 0)
+           Name                :Virtual Disk 0
+           RAID Level          : Primary-1, Secondary-0, RAID Level Qualifier-0
+           Size                : 836.625 GB
+           Sector Size         : 512
+           Mirror Data         : 836.625 GB
+           State               : Degraded
+           ...
+
+           Exit Code: 0x00
+
+    * `megacli -LdPdInfo -aALL -NoLog`
+    * 删除第一个控制器上的第一个VD
+
+      `megacli -CfgLdDel -L0 -a0 -NoLog`
+    * 增加 RAID0 逻辑盘
+
+      `megacli -CfgLdAdd -r0 [E0:S0,E1:S1] -a0 -NoLog`
+    * 初始化逻辑盘（默认创建后会自动执行快速初始化操作）
+
+      `megacli -LDInit -Start -L2 -a0 -NoLog`
+    * 查看阵列初始化状态
+
+      `megacli -LDInit ShowProg -Lall -a0 -NoLog`
+    * 查看阵列初始进度动态显示
+
+      `megacli -LDInit -ProgDsply -LALL -aALL -NoLog`
+    * 配置策略
+
+      `megacli -LDSetProp ... -L0 -a0 -NoLog`
+    * 设定 RAID 阵列名字
+
+      `megacli -LDSetProp Name Raid6_1h -L0 -a0 -NoLog`
+    * 查询 RAID 阵列名字
+
+      `megacli -LDGetProp Name -LAll -a0 -NoLog`
+    * 查看算法
+
+      `megacli -LDGetProp -Cache -L0 -a0 -NoLog`
+    * 设定算法
+
+      `megacli -LDSetProp ADRA -LAll -aAll -NoLog`
+    * 创建 RAID6 阵列
+
+      `megacli -CfgLdAdd r6[16:1,16:2,16:3,16:4,16:5] WT Direct -HSP[16:6] -a0 -NoLog`
+    * 创建 RAID50 阵列
+
+      `megacli -CfgSpanAdd r50 Array0[16:1,16:2,16:3] Array1[16:4,16:5,16:6] -a0 -NoLog`
+    * 给 RAID50 添加 Hot Spare
+
+      `megacli -PDHSP Set PhysDrv[16:7] -a0 -NoLog`
+    * 删除 Hot Spare
+
+      `megacli -PDHSP rmv PhysDrv[16:7] -a0 -NoLog`
+    * 给 Array1 添加私有的 Hot Spare
+
+      `megacli -PDHSP Set Dedicated Array1 PhysDrv[16:7] -a0 -NoLog`
+    * 设定 RAID 阵列重建速度
+
+      `megacli -AdpSetProp RebuildRate 70 -A0 -NoLog`
+    * 设定 RAID 阵列后台初始化速度
+
+      `megacli -AdpSetProp BgiRate 90 -a0 -NoLog`
+    * 增加 1 块磁盘转换 RAID0 到 RAID6
+
+      `megacli -LDRecon Start r6[Add PhysDrv[16:9,16:10]] L0 -a0 -NoLog`
+
+#. JBOD 模式
+
+    * `megacli -AdpSetProp -EnableJBOD -1 -aALL -NoLog`
+    * `megacli -PDMakeJBOD -PhysDrv[252:5] -a0 -NoLog`
+
+#. 定位（点亮）指定硬盘
+
+    * `megacli -PdLocate -start -physdrv[32:0] -a0 -NoLog`
+
+#. BBU 状态信息
+
+    * `megacli -AdpBbuCmd -aALL -NoLog`
+    * 电池容量信息
+
+      `megacli -AdpBbuCmd GetBbuCapacityInfo -aAll -NoLog`
+
+#. 日志
+
+    * 显示最近 4 次日志报告
+
+      `megacli -AdpEventLog -GetLatest 4 -f EventLog -a0 -NoLog`
+    * 清除所有日志
+
+      `megacli -AdpEventLog -Clear -aALL -NoLog`
+
+#. 初始化
+
+    * 恢复出厂设置
+
+      `megacli -AdpFacDefSet -aALL -NoLog`
+    * 清除 RAID 全部信息
+
+      `megacli -CfgClr -aALL -NoLog`
+
+HP SmartArray
+^^^^^^^^^^^^^
+
+HPACUCLI stands for HP Array Configuration Utility CLI。 软件下载地址在
+`这里 <http://downloads.linux.hp.com/SDR/downloads/ManagementComponentPack/>`_ 。
+
+在使用该命令之前需要确认加载了 sg 内核模块。 ::
+
+    # modprobe sg
+    # hpacucli
+    HP Array Configuration Utility CLI 9.40.12.0
+    Detecting Controllers...Done.
+    Type "help" for a list of supported commands.
+    Type "exit" to close the console.
+
+    => rescan
+    => ctrl all show config # Display Controller and Disk Status
+
+    Smart Array P420i in Slot 0 (Embedded)    (sn: 001438028159200)
+
+       array A (SAS, Unused Space: 0  MB)
+
+
+          logicaldrive 1 (838.1 GB, RAID 1+0, OK)
+
+          physicaldrive 1I:1:1 (port 1I:box 1:bay 1, SAS, 300 GB, OK)
+          physicaldrive 1I:1:2 (port 1I:box 1:bay 2, SAS, 300 GB, OK)
+          physicaldrive 1I:1:3 (port 1I:box 1:bay 3, SAS, 300 GB, OK)
+          physicaldrive 1I:1:4 (port 1I:box 1:bay 4, SAS, 300 GB, OK)
+          physicaldrive 2I:1:5 (port 2I:box 1:bay 5, SAS, 300 GB, OK)
+          physicaldrive 2I:1:6 (port 2I:box 1:bay 6, SAS, 300 GB, OK)
+
+       SEP (Vendor ID PMCSIERA, Model SRCv8x6G) 380 (WWID: 500143802815920F)
+
+    => ctrl all show status # View Controller Status
+
+    Smart Array P420i in Slot 0 (Embedded)
+       Controller Status: OK
+       Cache Status: OK
+       Battery/Capacitor Status: OK
+
+
+    => ctrl slot=0 pd all show status # View Drive Status
+
+       physicaldrive 1I:1:1 (port 1I:box 1:bay 1, 300 GB): OK
+       physicaldrive 1I:1:2 (port 1I:box 1:bay 2, 300 GB): OK
+       physicaldrive 1I:1:3 (port 1I:box 1:bay 3, 300 GB): OK
+       physicaldrive 1I:1:4 (port 1I:box 1:bay 4, 300 GB): OK
+       physicaldrive 2I:1:5 (port 2I:box 1:bay 5, 300 GB): OK
+       physicaldrive 2I:1:6 (port 2I:box 1:bay 6, 300 GB): OK
+
+    => ctrl slot=0 pd 1I:1:1 show detail # View Individual Drive Status
+
+    Smart Array P420i in Slot 0 (Embedded)
+
+       array A
+
+          physicaldrive 1I:1:1
+             Port: 1I
+             Box: 1
+             Bay: 1
+             Status: OK
+             Drive Type: Data Drive
+             Interface Type: SAS
+             Size: 300 GB
+             Rotational Speed: 10500
+             Firmware Revision: HPD3
+             Serial Number: S0K12Z250000B411CB2H
+             Model: HP      EG0300FCVBF
+             Current Temperature (C): 30
+             Maximum Temperature (C): 37
+             PHY Count: 2
+             PHY Transfer Rate: 6.0Gbps, Unknown
+             Drive Authentication Status: OK
+             Carrier Application Version: 11
+             Carrier Bootloader Version: 6
+
+
+    => ctrl slot=0 ld all show # View All Logical Drives
+
+    Smart Array P420i in Slot 0 (Embedded)
+
+       array A
+
+          logicaldrive 1 (838.1 GB, RAID 1+0, OK)
+
+    => ctrl slot=0 ld 1 show # View Detailed Logical Drive Status
+
+    Smart Array P420i in Slot 0 (Embedded)
+
+       array A
+
+          Logical Drive: 1
+             Size: 838.1 GB
+             Fault Tolerance: 1+0
+             Heads: 255
+             Sectors Per Track: 32
+             Cylinders: 65535
+             Strip Size: 256 KB
+             Full Stripe Size: 768 KB
+             Status: OK
+             Caching:  Enabled
+             Unique Identifier: 600508B1001C77F824A96079D74D01AD
+             Disk Name: /dev/sda
+             Mount Points: / 16.0 GB
+             OS Status: LOCKED
+             Logical Drive Label: A3251B080014380281592008F9E
+             Mirror Group 0:
+                physicaldrive 1I:1:1 (port 1I:box 1:bay 1, SAS, 300 GB, OK)
+                physicaldrive 1I:1:2 (port 1I:box 1:bay 2, SAS, 300 GB, OK)
+                physicaldrive 1I:1:3 (port 1I:box 1:bay 3, SAS, 300 GB, OK)
+             Mirror Group 1:
+                physicaldrive 1I:1:4 (port 1I:box 1:bay 4, SAS, 300 GB, OK)
+                physicaldrive 2I:1:5 (port 2I:box 1:bay 5, SAS, 300 GB, OK)
+                physicaldrive 2I:1:6 (port 2I:box 1:bay 6, SAS, 300 GB, OK)
+             Drive Type: Data
+
+
+    => ctrl slot=0 modify dwc=enable # Enable or Disable Cache
+
+    Warning: Without the proper safety precautions, use of write cache on physical
+             drives could cause data loss in the event of power failure.  To ensure
+             data is properly protected, use redundant power supplies and
+             Uninterruptible Power Supplies. Also, if you have multiple storage
+             enclosures, all data should be mirrored across them. Use of this
+             feature is not recommended unless these precautions are followed.
+             Continue? (y/n) n
+
+    => ctrl slot=0 ld 1 modify led=on # Blink Physical Disk LED
+
+    => quit
+
+软 RAID 配置
+------------
+
+mdadm
+^^^^^
+
+查看 RAID 状态（该 RAID 处于降级模式）： ::
+
+  # mdadm -D /dev/md0
+  /dev/md0:
+             Version : 1.2
+       Creation Time : Tue Feb 14 10:25:30 2017
+          Raid Level : raid1
+          Array Size : 5829140480 (5559.10 GiB 5969.04 GB)
+       Used Dev Size : 5829140480 (5559.10 GiB 5969.04 GB)
+        Raid Devices : 2
+       Total Devices : 1
+         Persistence : Superblock is persistent
+
+       Intent Bitmap : Internal
+
+         Update Time : Tue Mar  5 09:29:50 2019
+               State : clean, degraded
+      Active Devices : 1
+     Working Devices : 1
+      Failed Devices : 0
+       Spare Devices : 0
+
+  Consistency Policy : bitmap
+
+                Name : localhost:0  (local to host localhost)
+                UUID : 0e82f8b2:b626a667:09e9d9bc:e609bf90
+              Events : 13187
+
+      Number   Major   Minor   RaidDevice State
+         -       0        0        0      removed
+         1       8       19        1      active sync   /dev/sdb3
+
+重新恢复 RAID ::
+
+  # mdadm --manage /dev/md0 -a /dev/sda3
+  mdadm: re-added /dev/sda3
+
+再次查看 RAID 状态： ::
+
+  # mdadm -D /dev/md0
+  /dev/md0:
+       ...
+
+               State : clean, degraded, recovering
+      Active Devices : 1
+     Working Devices : 2
+      Failed Devices : 0
+       Spare Devices : 1
+
+       ...
+
+      Rebuild Status : 24% complete
+
+      ...
+
+      Number   Major   Minor   RaidDevice State
+         0       8        3        0      spare rebuilding   /dev/sda3
+         1       8       19        1      active sync   /dev/sdb3
+
+其他方式
+^^^^^^^^
+
+/proc/mdstat 显示软 RAID 状态： ::
+
+  # cat /proc/mdstat
+  Personalities : [raid1] [raid6] [raid5] [raid4]
+  md0 : active raid1 sda3[0] sdb3[1]
+        5829140480 blocks super 1.2 [2/2] [UU]
+        bitmap: 2/44 pages [8KB], 65536KB chunk
+
+  unused devices: <none>

@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Oracle &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="数据库" href="db.html"/>
+        <link rel="next" title="MySQL" href="mysql.html"/>
+        <link rel="prev" title="数据库" href="db.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="db.html">数据库</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Oracle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#index-0">连接数据库</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">关闭数据库</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">全量导出与导入命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">其他常用语句</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodb.html">MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rrdtool.html">时序数据库/RRDTOOL</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="db.html">数据库</a> &raquo;</li>
+        
+      <li>Oracle</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/oracle.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="oracle">
+<h1>Oracle<a class="headerlink" href="#oracle" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-13 新版功能: </span>创建</p>
+</div>
+<div class="section" id="index-0">
+<span id="id1"></span><h2>连接数据库<a class="headerlink" href="#index-0" title="永久链接至标题">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ su - oracle
+$ rlwrap sqlplus / as sysdba  # rlwrap 启用 readline 支持
+SQL&gt; connect dbname
+输入密码：xxxxxxxx
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>关闭数据库<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ su - oracle
+$ lsnrctl stop   # 关闭服务器端监听。
+$ sqlplus / as sysdba
+SQL&gt; shutdown immediate;  #立即强制关闭
+SQL&gt; quit
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>全量导出与导入命令<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expdp</span> \<span class="s1">&#39; / as sysdba</span><span class="se">\&#39;</span><span class="s1"> dumpfile=full.dmp full=y directory=BACKUP # 导出</span>
+<span class="n">impdp</span> \<span class="s1">&#39; / as sysdba</span><span class="se">\&#39;</span><span class="s1"> dumpfile=full.dmp full=y directory=BACKUP # 导入</span>
+</pre></div>
+</div>
+<p>导入命令参数：</p>
+<blockquote>
+<div><p>TABLE_EXISTS_ACTION=[SKIP|APPEND|TRUNCATE|REPLACE]</p>
+<ul class="simple">
+<li>SKIP leaves the table as is and moves on to the next object. This is not a valid option if the CONTENT parameter is set to DATA_ONLY.</li>
+<li>APPEND loads rows from the source and leaves existing rows unchanged.</li>
+<li>TRUNCATE deletes existing rows and then loads rows from the source.</li>
+<li>REPLACE drops the existing table and then creates and loads it from the source. This is not a valid option if the CONTENT parameter is set to DATA_ONLY.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id4">
+<h2>其他常用语句<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<ul>
+<li><p class="first">查看数据库的用户</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select username from dba_users;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">修改用户密码</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>alter user system identified by 123456;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查看数据库名</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select name from v$database;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查看实例名</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select instance_name from v$instance;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查看 Oracle 中创建的目录</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select * from dba_directories;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查询数据库当前进程的连接数</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select count(*) from v$process;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查看数据库当前会话的连接数</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select count(*) from v$session;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查看数据库的并发连接数</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select count(*) from v$session where status='ACTIVE';</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查看当前数据库建立的会话情况</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select sid,serial#,username,program,machine,status from v$session;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查询数据库允许的最大连接数</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>select value from v$parameter where name = 'processes';</cite></li>
+<li><cite>show parameter processes;</cite></li>
+<li><cite>show parameter sessions;</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">修改数据库允许的最大连接数</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>alter system set processes = 300 scope = spfile;</cite></li>
+<li><cite>create pfile from spfile;</cite>
+# 需要重启数据库才能实现连接数的修改</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">修复 spfile 问题</p>
+<blockquote>
+<div><ul>
+<li><p class="first">参数不匹配时数据库启动会报错，例如：</p>
+<blockquote>
+<div><ul class="simple">
+<li>ORA-00821: Specified value of sga_target 500M is too small, needs to be at least 760M</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">解决办法：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SQL</span><span class="o">&gt;</span> <span class="n">create</span> <span class="n">pfile</span><span class="o">=</span><span class="s1">&#39;/home/oracle/init.ora&#39;</span> <span class="kn">from</span> <span class="nn">spfile</span><span class="p">;</span>
+
+<span class="n">File</span> <span class="n">created</span><span class="o">.</span>
+
+<span class="n">SQL</span><span class="o">&gt;</span> <span class="n">host</span> <span class="n">vi</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">oracle</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">ora</span>
+<span class="c1"># 修正导致问题的参数</span>
+<span class="n">SQL</span><span class="o">&gt;</span> <span class="n">create</span> <span class="n">spfile</span> <span class="kn">from</span> <span class="nn">pfile</span><span class="o">=</span><span class="s1">&#39;/home/oracle/init.ora&#39;</span><span class="p">;</span>
+
+<span class="n">File</span> <span class="n">created</span><span class="o">.</span>
+
+<span class="n">SQL</span><span class="o">&gt;</span> <span class="n">startup</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>其他参考：
+<a class="reference external" href="https://docs.oracle.com/cd/B28359_01/server.111/b28320/initparams004.htm#i1124571">Oracle init params 说明</a></p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mysql.html" class="btn btn-neutral float-right" title="MySQL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="db.html" class="btn btn-neutral" title="数据库" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+内存
+====
+
+.. versionadded:: @2016-07-02
+   创建
+.. versionchanged:: @2019-02-13
+   添加内存分类
+
+参考 :wiki:`Computer memory<Computer_memory>`
+
+分类
+----
+
+* 非易失性内存
+
+  * ROM：PROM/EPROM/EEPROM/...
+  * NVRAM
+  * Tape/Hard Disk/CD/...
+
+* 易失性内存
+
+   * RAM
+
+     * SRAM
+     * :wiki:`DRAM<Dynamic_random-access_memory>`
+
+        * :wiki:`ECC<ECC_memory>`
+          ECC memory is higher cost, as each bank is 9 memory chips
+          compared to 8 for non-ECC memory.
+
+封装
+----
+
+DIMM：
+
+* UDIMM: Unbuffered DIMM. Unbuffered, low density, low-latency DIMM that
+  doesn't include a register or buffer chip. Generally used in applications
+  requiring the lowest possible latency.
+* RDIMM: Registered DIMM. Registered DIMM that provides high signal integrity
+  (performing parity checking to detect improper addresses or commands) and
+  increased performance for heavy workloads. RDIMMs experience slightly
+  increased latency and power consumption over UDIMMs due to the onboard
+  register.
+* LRDIMM: Uses a buffer to reduce memory loading to a single load on all
+  DDR signals, allowing for greater density.
+
+电压：
+
+* Standard Voltage (SV) DDR3 operates at 1.5 volts which is currently
+  required for 1600 million transfers per second (MT/s)
+* Low Voltage (LV) DDR3 operates at 1.35 volts or 1.5 volts. At 1.35 volts
+  the memory can consume less power and reduce heat, but can still be boosted
+  to 1.5V when the memory channel requires additional voltage to help maintain
+  maximum speed.
+
+工作模式：
+
+* Advanced ECC mode (otherwise known as lockstep mode) uses two memory
+  channels and "ties" them together to emulate a 128-bit data bus DIMM.
+  This is primarily used to achieve Single Device Data Correction (SDDC)
+  for DIMMs based on x8 DRAM technology. SDDC is supported with x4 based
+  DIMMs in every memory mode.
+* Memory Optimized mode (or Independent Channel mode) allows memory channels
+  to run independently of each other; for example, one can be idle, one can be
+  performing a write operation, and the other can be preparing for a read
+  operation. Memory may be installed in one, two, three, or four channels.
+  To fully realize the performance benefit of the memory optimized mode,
+  all four channels per physical processor should be populated.
+* Memory Mirroring mode allows memory to be "mirrored" from one channel into
+  a paired channel. This provides 100% memory redundancy, but cuts the
+  available memory to the operating system in half in addition to halving the
+  available memory controllers and channels. This will have a direct impact on
+  memory bandwidth, which should see less than half the memory bandwidth as
+  compared to memory Optimized mode. This will have seriously negative
+  performance implications, and should only be considered for applications
+  that require mission critical levels of memory :term:`RAS`.
+* Memory Rank Sparing mode reserves a memory rank as a spare as long as there
+  are at least 2 DIMMs or 4 ranks available in a memory channel. If a memory
+  rank experiences a high number of correctable errors above a certain
+  threshold, the memory controller will swap the failing rank with the
+  spare rank. The spare rank is invisible to the operating system, thus
+  overall memory available to the operating system is decreased.
+
+对 Dell 服务器，详细信息参考
+`Dell PowerEdge: Server Memory Configuration
+<https://www.dell.com/support/article/us/en/19/sln292309/dell-poweredge-server-memory-configuration?lang=en>`_ 。

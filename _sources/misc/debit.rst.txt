@@ -1,0 +1,10 @@
+房贷还款计算的 python 程序
+==========================
+
+.. versionadded:: @2010-08-25
+   创建
+
+贴一个几年前用python写的房贷还款计算程序，:)
+
+.. literalinclude:: debit.py
+   :language: python

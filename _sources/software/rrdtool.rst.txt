@@ -1,0 +1,100 @@
+时序数据库/RRDTOOL
+==================
+
+.. versionadded:: @2010-07-16
+   创建，xff 解释
+.. versionchanged:: @2012-11-17
+   增加演示 shell 代码
+.. versionchanged:: @2013-08-18
+   增加 rrdcached 解释
+
+演示代码
+--------
+
+.. code-block:: shell
+    :linenos:
+
+    #!/bin/sh
+
+    rm -fr count.rrd gauge.rrd
+
+    rrdtool create rrdtool.rrd --step 60 DS:gauge:GAUGE:120:0:U DS:count:COUNTER:120:0:U RRA:AVERAGE:0.5:1:60
+
+    start=$(date --date='20121204' +%s)
+
+    for i in `seq 1 60`; do
+        t=$((start + i * 60))
+        rrdtool update rrdtool.rrd --template gauge:count ${t}:${i}:$((i * i * 2))
+    done
+
+    WIDTH=504
+    HEIGHT=128
+    DATETIME=$(date)
+    INTERVAL=$((24 * 3600))
+
+    rrdtool graph rrdtool.png -i -M -s ${start} -e $((start + 3600)) \
+        -w ${WIDTH} -h ${HEIGHT} \
+        -l 0 \
+        DEF:rcount=rrdtool.rrd:count:AVERAGE \
+        DEF:rgauge=rrdtool.rrd:gauge:AVERAGE \
+        CDEF:count=rcount,1,* \
+        CDEF:gauge=rgauge,10,/ \
+        LINE1:count#00ff00:"count" \
+        LINE1:gauge#0000ff:"gauge"
+
+xff 的意义
+----------
+
+一直对 rrdtool 在 create 时 RRA 中的 xff 参数的意义不是很清楚，今天
+仔细研究了一下，做个总结。下面是 man rrdcreate 里的说明： ::
+
+    *RRA:_AVERAGE_ | MIN | MAX | LAST:xff:steps:rows*
+
+    *xff The xfiles factor defines what part of a consolidation interval may
+    be made up from *UNKNOWN* data while the consolidated value is still
+    regarded as known. It is given as the ratio of allowed *UNKNOWN* PDPs
+    to the number of PDPs in the interval. Thus, it ranges from 0 to 1
+    (exclusive).*
+
+xff 决定在给定间隔中可以有多大比例的未知 PDP，超过这个比例则该间隔内的值
+为 *UNKNOWN* ，其取值范围为前闭后开区间，即： [0, 1) 。举两个极端的例子：
+
+xff = 0 表示不能有未知 PDP
+
+xff = 0.9 表示可以有 90% 的 PDP
+
+下面是测试的程序（备忘）。
+
+.. code-block:: shell
+    :linenos:
+
+    #!/bin/sh
+
+    LANG=C
+
+    xff=0.5
+
+    #t=$(date +%s)
+    t=1480272727
+
+    echo $(date), $t
+
+    rrdtool create test.rrd -b $(date +%s) --step 1 DS:temp:GAUGE:1:0:100 RRA:AVERAGE:${xff}:5:10
+    for i in `seq 1 20`; do
+        rrdtool update test.rrd ${t}:${i}
+        t=$((t + 1))
+    done
+
+    rrdtool dump test.rrd
+
+使用 rrdcached 降低 IO 压力
+---------------------------
+
+在 RRDtool 的数据文件较多时，磁盘 IO 会给系统带来一定的压力。rrdcached
+即是解决该问题的一个方法。相应的代码修改也非常简单，只需要设置
+RRDCACHED_ADDRESS 环境变量或者修改相应的更新方法增加一个参数
+"-l daemon_address" 即可。不过需要注意的是，如果在每次数据更新（update 方法）
+后接着有其他的操作（如graph等）则 rrdcached 起不到应有的作用。原因是
+rrdcached 仅对 update 方法才会有 cache，其他方法在执行之前都会先发送
+FLUSH 命令，导致数据直接更新到文件，即清空 cache。因此，rrdcache 不适用
+于在数据更新（update）之后马上执行 graph 等操作的场景。

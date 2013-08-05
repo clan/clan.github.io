@@ -1,0 +1,174 @@
+ARP
+===
+
+.. versionadded:: @2012-08-15
+   创建
+.. versionchanged:: @2013-09-27
+   增加 arp_announce
+.. versionchanged:: @2013-10-30
+   增加 arp_filter
+
+Linux ARP 配置参数
+------------------
+
+============ ========
+arp_announce arp 请求
+arp_filter   arp 响应
+arp_ignore   arp 响应
+arp_accept
+arp_notify
+============ ========
+
+官方参考文档： :kernel:`IP Sysctl<networking/ip-sysctl.txt>`
+
+.. _arp_announce:
+
+arp_announce
+^^^^^^^^^^^^
+
+公司办公网络入口新增一接入带宽，接入网关是一 Linux 服务器，比较奇怪的是在
+新增了相应的 IP 地址后，ping 其对应的网关总是失败。tcpdump 抓 ICMP 包根本
+就看不到 ICMP 包出去。 `arp -an` 也没有看到该网关地址的 MAC 记录。于是，
+只抓 ARP 包，结果如下： ::
+
+    # tcpdump -nn -p -i eno2 arp
+    18:12:33.846927 ARP, Request who-has 124.xxx.xxx.xx tell 106.x.x.xxx, length 28
+
+很快发现问题，ARP 请求的地址和要求回应的地址不在一个局域网内。为什么不用同一
+局域网内的地址作为回应地址呢？应该有个参数控制这种行为才对。于是通过
+`sysctl -a | grep arp` 寻找相关的配置参数，发现 arp_announce 这个参数可能和
+碰到的问题相关。修改值为 2 （`sysctl -w net.ipv4.conf.eno2.arp_announce=2`）
+后问题迅速解决。当然，要重启后配置生效则需要配置 /etc/sysctl.d/local.conf
+文件内容如下： ::
+
+    net.ipv4.conf.all.arp_announce = 2
+    net.ipv4.conf.default.arp_announce = 2
+
+arp_announce 的文档摘录如下： ::
+
+    arp_announce - INTEGER
+         Define different restriction levels for announcing the local
+         source IP address from IP packets in ARP requests sent on
+         interface:
+         0 - (default) Use any local address, configured on any interface
+         1 - Try to avoid local addresses that are not in the target's
+         subnet for this interface. This mode is useful when target
+         hosts reachable via this interface require the source IP
+         address in ARP requests to be part of their logical network
+         configured on the receiving interface. When we generate the
+         request we will check all our subnets that include the
+         target IP and will preserve the source address if it is from
+         such subnet. If there is no such subnet we select source
+         address according to the rules for level 2.
+         2 - Always use the best local address for this target.
+         In this mode we ignore the source address in the IP packet
+         and try to select local address that we prefer for talks with
+         the target host. Such local address is selected by looking
+         for primary IP addresses on all our subnets on the outgoing
+         interface that include the target IP address. If no suitable
+         local address is found we select the first local address
+         we have on the outgoing interface or on all other interfaces,
+         with the hope we will receive reply for our request and
+         even sometimes no matter the source IP address we announce.
+
+         The max value from conf/{all,interface}/arp_announce is used.
+
+         Increasing the restriction level gives more chance for
+         receiving answer from the resolved target while decreasing
+         the level announces more valid sender's information.
+
+P.S. 这个参数在 LVS DR 模式里也会用到。
+
+.. _arp_filter:
+
+arp_filter
+^^^^^^^^^^
+
+在某台 ESXi 部署了一台虚拟机 A。ESXi 宿主机上一个物理网卡和交换机的 trunk
+端口相连，即通过该物理网卡能访问多个网段，假设有两个网段分别为
+192.168.1.0/24 和 192.168.2.0/24。虚拟机 A 上配置了两个网卡，分别和其中
+一个网段通讯，假设其对应地址分别为 192.168.1.1 和 192.168.2.1，
+详细信息如下： ::
+
+    # ip addr
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
+        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+        inet 127.0.0.1/8 scope host lo
+    2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+        link/ether 00:50:56:88:8b:c5 brd ff:ff:ff:ff:ff:ff
+        inet 192.168.1.1/24 brd 192.168.1.255 scope global secondary eth0
+    3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+        link/ether 00:50:56:88:26:77 brd ff:ff:ff:ff:ff:ff
+        inet 192.168.2.1/24 brd 192.168.2.255 scope global eth1
+
+现在有另外一台机器 B （A 和 B 不在同一台 ESXi 上）ip 地址为 192.168.2.2。
+问题表现如下，ping 192.168.2.1 时有时正常有时却收不到任何响应。排除任何物理
+链路以及交换机配置的原因。在跟踪问题一段时间后发现 ping 收不到回应时
+192.168.2.2 上的 arp 表里 192.168.2.1 的 MAC 地址为 192.168.1.1
+对应接口的 MAC 地址，如下： ::
+
+    # arp -an
+    ? (192.168.2.1) at 00:50:56:88:8b:c5 [ether] on eth0
+
+在虚拟机 A 上分别在 eth0 和 eth1 上抓包，能看到如下过程： ::
+
+    # tcpdump -nn -p -i eth1 arp
+    tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+    listening on eth1, link-type EN10MB (Ethernet), capture size 65535 bytes
+    23:29:41.815226 ARP, Request who-has 192.168.2.1 tell 192.168.2.2, length 46
+    23:29:41.815237 ARP, Reply 192.168.2.1 is-at 00:50:56:88:26:77, length 28
+
+    # tcpdump -nn -p -i eth0 arp
+    tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+    listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+    23:29:45.337662 ARP, Request who-has 192.168.2.1 tell 192.168.2.2, length 46
+    23:29:45.337667 ARP, Reply 192.168.2.1 is-at 00:50:56:88:8b:c5, length 28
+
+可以看到在两个接口上都收到了 arp 请求，这是由于部署的环境（trunk链路）和 arp
+的广播特性决定的。但同时两个接口也都以自己的 MAC 地址回应了该请求，正是由于
+这个原因导致主机 B 上 ping 的结果反复。因为在主机 A 上的 MAC 地址表里对应
+192.168.2.1 的 MAC 地址会和这两个回应达到的先后顺序有关，如果设置为错误的
+MAC 地址时就会导致 ping 收不到回应。
+
+利用之前找到 arp_announce 相关设置的方法很快找到 arp_filter 这个参数，在
+设置其值为 1 后再次抓包测试，主机 A 上的 eth0 接口仍能收到 arp 请求，但不再
+有 arp 回应， eth1 接口则有正常的 arp 请求和回应。问题解决。
+
+需要修改的配置为： ::
+
+    net.ipv4.conf.all.arp_filter = 1
+    net.ipv4.conf.default.arp_filter = 1
+
+arp_filter 的文档摘录如下： ::
+
+    arp_filter - BOOLEAN
+        1 - Allows you to have multiple network interfaces on the same
+        subnet, and have the ARPs for each interface be answered
+        based on whether or not the kernel would route a packet from
+        the ARP'd IP out that interface (therefore you must use source
+        based routing for this to work). In other words it allows control
+        of which cards (usually 1) will respond to an arp request.
+
+        0 - (default) The kernel can respond to arp requests with addresses
+        from other interfaces. This may seem wrong but it usually makes
+        sense, because it increases the chance of successful communication.
+        IP addresses are owned by the complete host on Linux, not by
+        particular interfaces. Only for more complex setups like load-
+        balancing, does this behaviour cause problems.
+
+        arp_filter for the interface will be enabled if at least one of
+        conf/{all,interface}/arp_filter is set to TRUE,
+        it will be disabled otherwise
+
+P.S. 控制 ARP回应包的还有另外一个参数 arp_ignore，在本文的例子中调整该参数
+值为 1 也能解决问题。该参数在 LVS 的 DR 模式配置里会用到。
+
+howto remove incomplete arp entry
+---------------------------------
+
+arp -d 无法删除 incomplete 的 表项，只能通过如下的命令
+（假设删除设备 eth1 上的表项）：
+
+``ip link set dev eth1 arp off && ip link set dev eth1 arp on``
+
+其副作用是会删除该接口上的所有 ARP 表项。

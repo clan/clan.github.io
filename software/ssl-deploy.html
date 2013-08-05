@@ -1,0 +1,503 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>部署最佳实践 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="SSL" href="ssl.html"/>
+        <link rel="next" title="从 JKS keystore 中迁移证书到 Nginx/Apache" href="ssl-keystore-export.html"/>
+        <link rel="prev" title="SSL/TLS 证书" href="ssl-ca.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ssl.html">SSL</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ssl-ca.html">SSL/TLS 证书</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">部署最佳实践</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">证书</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">性能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#http">HTTP 以及应用安全</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">高级配置</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ssl-keystore-export.html">从 JKS keystore 中迁移证书到 Nginx/Apache</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="ssl.html">SSL</a> &raquo;</li>
+        
+      <li>部署最佳实践</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/ssl-deploy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>部署最佳实践<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-01 新版功能: </span>创建</p>
+</div>
+<p>参考 <a class="reference external" href="https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices">SSL and TLS Deployment Best Practices</a> 。</p>
+<div class="section" id="id2">
+<h2>证书<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">私钥</p>
+<p>至少选择 RSA 2048 位私钥（2030 年前），参考
+<a class="reference external" href="https://en.wikipedia.org/wiki/Key_size">密钥长度</a>。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Algorithm</th>
+<th class="head">Key Size</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>RSA 1024</td>
+<td>80bits</td>
+</tr>
+<tr class="row-odd"><td>RSA 2048</td>
+<td>112bits</td>
+</tr>
+<tr class="row-even"><td>RSA 3072</td>
+<td>128bits</td>
+</tr>
+<tr class="row-odd"><td>ECDSA 256</td>
+<td>128bits</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first">保护好私钥</p>
+<p>在拥有足够墒的可信的计算机上生成私钥。保护好私钥，控制扩散范围；
+及时吊销旧的证书和私钥；降低证书更新的周期；如无必要，每次都使
+用新的私钥生成证书。</p>
+</li>
+<li><p class="first">证书覆盖范围</p>
+<p>足够多的主机/域；但尽可能控制证书扩散范围；</p>
+</li>
+<li><p class="first">从可靠的 CA 申请证书</p>
+<p>考察 CA 的安全记录，业务覆盖范围，CRL/OCSP 服务；尽可能提前（一周）
+更新证书。</p>
+</li>
+<li><p class="first">使用强签名算法</p>
+<p>不要再使用 SHA1。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h2>配置<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">使用完整的证书链</p>
+</li>
+<li><p class="first">使用安全的协议</p>
+<p>SSL v2，SSL v3，TLS v1.0，TLS v1.1，TLS v1.2，TLS v1.3</p>
+<blockquote>
+<div><blockquote>
+<div><div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">待处理</p>
+<p class="last">补全各种攻击细节</p>
+</div>
+</div></blockquote>
+<ol class="arabic">
+<li><p class="first">SSL v2 不要再使用。DROWN 攻击</p>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2010-07-13 新版功能: </span>创建</p>
+</div>
+<p>SSLv2 在协商密钥过程中所带的加密算法列表由于没有签名，因此可以被中间人替换
+为较弱的加密算法，从而很容易被解密出明文。因此对SSL相关的应用最好都禁用 SSLv2。</p>
+<p>Apache 的配置如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SSLProtocol all -SSLv2 # 禁用 SSLv2
+SSLCipherSuite HIGH:MEDIUM:!aNULL:!eNULL:!SSLv2 # 禁用弱密钥算法
+</pre></div>
+</div>
+<p>用如下命令测试是否生效（应该连接失败）：</p>
+<p><cite>openssl s_client -ssl2 -connect host:port</cite></p>
+</li>
+<li><p class="first">SSL v3 不建议使用。HTTP 协议时不安全，POODLE 攻击</p>
+</li>
+<li><p class="first">TLS v1.0 BEAST 攻击</p>
+</li>
+<li><p class="first">TLV v1.1/v1.2 目前无已知漏洞，但 v1.2 才提供现代加密算法。</p>
+</li>
+<li><p class="first">尽可能使用 v1.2/v1.3</p>
+</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">使用安全的密钥算法</p>
+<p>使用 <a class="reference external" href="https://en.wikipedia.org/wiki/Authenticated_encryption#Authenticated_encryption_with_associated_data_(AEAD)">AEAD</a>
+算法。下列算法不应被使用：</p>
+<blockquote>
+<div><ul class="simple">
+<li>ADH（Anonymous Diffie-Hellman） 无认证</li>
+<li>NULL 无加密</li>
+<li>Export 算法族 （FREAK 攻击）</li>
+<li>弱算法（密钥长度为 40 或 56 位）</li>
+<li>RC4 不安全</li>
+<li>3DES 慢和弱</li>
+</ul>
+</div></blockquote>
+<p>如下是可用的一个算法配置：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssl_ciphers</span> <span class="s1">&#39;HIGH:-AECDH:-CAMELLIA:-DHE:!kECDHr:!kECDHe:!kPSK:!kRSA:!kSRP:!ADH:!kDH:!IDEA:!KRB5:!RC4:!SEED:!SSLv2&#39;</span>
+</pre></div>
+</div>
+<p>其包含的算法列表如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># openssl ciphers -v -V &#39;HIGH:-AECDH:-CAMELLIA:-DHE:!kECDHr:!kECDHe:!kPSK:!kRSA:!kSRP:!ADH:!kDH:!IDEA:!KRB5:!RC4:!SEED:!SSLv2&#39;</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x30</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">RSA</span><span class="o">-</span><span class="n">AES256</span><span class="o">-</span><span class="n">GCM</span><span class="o">-</span><span class="n">SHA384</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">RSA</span>  <span class="n">Enc</span><span class="o">=</span><span class="n">AESGCM</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span> <span class="n">Mac</span><span class="o">=</span><span class="n">AEAD</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x2C</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">ECDSA</span><span class="o">-</span><span class="n">AES256</span><span class="o">-</span><span class="n">GCM</span><span class="o">-</span><span class="n">SHA384</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">ECDSA</span> <span class="n">Enc</span><span class="o">=</span><span class="n">AESGCM</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span> <span class="n">Mac</span><span class="o">=</span><span class="n">AEAD</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x28</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">RSA</span><span class="o">-</span><span class="n">AES256</span><span class="o">-</span><span class="n">SHA384</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">RSA</span>  <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA384</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x24</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">ECDSA</span><span class="o">-</span><span class="n">AES256</span><span class="o">-</span><span class="n">SHA384</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">ECDSA</span> <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA384</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x14</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">RSA</span><span class="o">-</span><span class="n">AES256</span><span class="o">-</span><span class="n">SHA</span>    <span class="n">SSLv3</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">RSA</span>  <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA1</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x0A</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">ECDSA</span><span class="o">-</span><span class="n">AES256</span><span class="o">-</span><span class="n">SHA</span>  <span class="n">SSLv3</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">ECDSA</span> <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA1</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x2F</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">RSA</span><span class="o">-</span><span class="n">AES128</span><span class="o">-</span><span class="n">GCM</span><span class="o">-</span><span class="n">SHA256</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">RSA</span>  <span class="n">Enc</span><span class="o">=</span><span class="n">AESGCM</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span> <span class="n">Mac</span><span class="o">=</span><span class="n">AEAD</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x2B</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">ECDSA</span><span class="o">-</span><span class="n">AES128</span><span class="o">-</span><span class="n">GCM</span><span class="o">-</span><span class="n">SHA256</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">ECDSA</span> <span class="n">Enc</span><span class="o">=</span><span class="n">AESGCM</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span> <span class="n">Mac</span><span class="o">=</span><span class="n">AEAD</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x27</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">RSA</span><span class="o">-</span><span class="n">AES128</span><span class="o">-</span><span class="n">SHA256</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">RSA</span>  <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA256</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x23</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">ECDSA</span><span class="o">-</span><span class="n">AES128</span><span class="o">-</span><span class="n">SHA256</span> <span class="n">TLSv1</span><span class="o">.</span><span class="mi">2</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">ECDSA</span> <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA256</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x13</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">RSA</span><span class="o">-</span><span class="n">AES128</span><span class="o">-</span><span class="n">SHA</span>    <span class="n">SSLv3</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">RSA</span>  <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA1</span>
+<span class="mh">0xC0</span><span class="p">,</span><span class="mh">0x09</span> <span class="o">-</span> <span class="n">ECDHE</span><span class="o">-</span><span class="n">ECDSA</span><span class="o">-</span><span class="n">AES128</span><span class="o">-</span><span class="n">SHA</span>  <span class="n">SSLv3</span> <span class="n">Kx</span><span class="o">=</span><span class="n">ECDH</span>     <span class="n">Au</span><span class="o">=</span><span class="n">ECDSA</span> <span class="n">Enc</span><span class="o">=</span><span class="n">AES</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>  <span class="n">Mac</span><span class="o">=</span><span class="n">SHA1</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">选择最好的算法族：SSL 协议中，算法是客户端和服务端协商的，最好配置
+由服务端来选择最好的算法。</p>
+</li>
+<li><p class="first">使用前向保密（Perfect Forward Secrecy），保证会话不依赖服务的私钥。</p>
+</li>
+<li><p class="first">使用更强的密钥交换方法，尽可能使用 ECDHE/DHE，
+不要使用 RSA 作为密钥交换算法。 Logjam attack</p>
+</li>
+<li><p class="first">缓解已知问题，跟踪安全披露信息，更新软件。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id4">
+<h2>性能<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<ol class="arabic simple">
+<li>避免过度的安全，大部分情况下密钥长度 128 位足够安全。</li>
+<li>会话重用（Session Resumption）</li>
+<li>使用 WAN 优化（CDN等），HTTP/2 。</li>
+<li>缓存公开内容，避免无谓的加密。</li>
+<li>使用 OCSP 装订（Stapling）。</li>
+<li>使用快速加密方法，例如硬件加速。</li>
+</ol>
+</div>
+<div class="section" id="http">
+<h2>HTTP 以及应用安全<a class="headerlink" href="#http" title="永久链接至标题">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">加密所有</p>
+</li>
+<li><p class="first">避免混合加密/非加密内容，防范中间人攻击（MITM）</p>
+</li>
+<li><p class="first">理解并确认第三方信任（例如 Google Analytics）</p>
+</li>
+<li><p class="first">使用安全 Cookie</p>
+</li>
+<li><p class="first">安全的 HTTP 压缩（CRIME/TIME/BREACH 攻击）</p>
+</li>
+<li><p class="first">部署 HSTS（HTTP Strict Transport Security）</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Strict</span><span class="o">-</span><span class="n">Transport</span><span class="o">-</span><span class="n">Security</span><span class="p">:</span> <span class="nb">max</span><span class="o">-</span><span class="n">age</span><span class="o">=</span><span class="mi">31536000</span><span class="p">;</span> <span class="n">includeSubDomains</span><span class="p">;</span> <span class="n">preload</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">部署 Content Security Policy（CSP）</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Content</span><span class="o">-</span><span class="n">Security</span><span class="o">-</span><span class="n">Policy</span><span class="p">:</span> <span class="n">default</span><span class="o">-</span><span class="n">src</span> <span class="n">https</span><span class="p">:</span> <span class="s1">&#39;unsafe-inline&#39;</span> <span class="s1">&#39;unsafe-eval&#39;</span><span class="p">;</span>
+                         <span class="n">connect</span><span class="o">-</span><span class="n">src</span> <span class="n">https</span><span class="p">:</span> <span class="n">wss</span><span class="p">:</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">不要缓存敏感内容</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id5">
+<h2>高级配置<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<ol class="arabic simple">
+<li>公钥固定，参考 <span class="target" id="index-1"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc7649.html"><strong>RFC 7649</strong></a> ，DNS CAA</li>
+<li>DNSSEC，DNAME</li>
+<li>HSTS</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ssl-keystore-export.html" class="btn btn-neutral float-right" title="从 JKS keystore 中迁移证书到 Nginx/Apache" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ssl-ca.html" class="btn btn-neutral" title="SSL/TLS 证书" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

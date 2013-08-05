@@ -1,0 +1,122 @@
+WEB 网站
+========
+
+.. contents:: Table of Contents
+   :depth: 3
+
+技术
+----
+
+* `The Architecture of Open Source Applications
+  <https://aosabook.org/en/index.html>`_
+
+  * 500 Lines or Less
+  * The Performance of Open Source Applications
+  * The Architecture of Open Source Application
+  * The Architecture of Open Source Application Volume II
+
+* `高端调试 <http://advdbg.org/>`_
+
+\*nix
+^^^^^
+
+* `LWN <https://lwn.net>`_
+
+  * LWN, initially, was "Linux Weekly News."
+
+* https://www.usenix.org/
+
+  * Since 1975, USENIX, Advanced Computing Systems Association
+
+* `The UNIX School <http://www.theunixschool.com/>`_
+
+学术
+----
+
+* `预印本/康奈尔大学Arxiv <https://arxiv.org/>`_
+* `英文论文免费下载网站 <http://sci-hub.tw/>`_
+* `费曼物理学讲义/The Feynman Lectures Notes on Physics
+  <http://www.feynmanlectures.caltech.edu/>`_
+* `中国哲学电子书计划 <https://ctext.org/zhs>`_
+* `AntWeb <https://www.antweb.org/>`_
+
+  收录超过49万张昆虫图片样本及具体信息的网站，适合昆虫爱好者。
+
+* `美国国会图书馆 <https://www.loc.gov/>`_
+
+图像/艺术
+---------
+
+* `免费图片，CC0 下发布 <https://pixabay.com/>`_
+* `芝加哥美术馆 <https://www.artic.edu/collection>`_
+
+Blog
+----
+
+* `Brendan D. Gregg <http://www.brendangregg.com/>`_
+* `酷壳 <https://coolshell.cn>`_
+
+* `Linux Performance <http://linuxperf.com/>`_
+* `Technical Journal <http://davidad.github.io/>`_
+
+语言
+----
+
+* `中国语言资源联盟 <http://www.chineseldc.org/>`_
+* `Using English for Academic Purposes For Students in Higher Education
+  <http://www.uefap.com/index.htm>`_
+* `英语字典网站 <https://www.thesaurus.com/>`_
+
+  * 输入一个单词，它会自动生成蜘蛛网，列出每个单词的同义词
+
+免费/在线书籍
+-------------
+
+* `The Online Books Page <http://onlinebooks.library.upenn.edu/>`_
+* `Part of Z-Library project. <https://booksc.org/>`_
+
+  * The world's largest scientific articles store.
+    70,000,000+ articles for free.
+
+* `FreeTechBooks <http://www.freetechbooks.com/>`_
+* `Programming Notes for Professionals books <https://goalkicker.com/>`_
+* `Forgotten Old Books <https://www.forgottenbooks.com/>`_
+* `Project Gutenberg <http://www.gutenberg.org/>`_
+* `Wikibooks <https://en.wikibooks.org/wiki/Main_Page>`_
+* `臺大圖書館公開取用電子書 <http://ebooks.lib.ntu.edu.tw/Home/ListBooks>`_
+* `书格：有品格的数字古籍图书馆 <https://shuge.org/>`_
+* `Syncfusion ebooks <https://www.syncfusion.com/ebooks>`_
+* `Planet eBook <https://www.planetebook.com/>`_
+* `恩京の书房 <http://www.enjing.com/>`_
+
+搜索站点
+^^^^^^^^
+
+* `鸠摩捜书 <https://www.jiumodiary.com/>`_
+* `Library Genesis <http://gen.lib.rus.ec/>`_
+
+各出版商的免费电子书集合
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+* `美国国家学术出版社 <https://www.nap.edu/>`_
+* `O'Reilly <https://www.oreilly.com/>`_
+
+  * `O'Reilly 免费电子书频道 <http://www.oreilly.com/programming/free/>`_
+
+* `Packt <https://www.packtpub.com/>`_
+
+  * `Packt 免费电子书频道
+    <https://www.packtpub.com/packt/offers/free-learning?from=block>`_
+
+* `Manning <http://www.manning.com/>`_
+
+  * `Manning 免费电子书频道 <http://freecontent.manning.com/free-ebooks/>`_
+
+* `Apress <https://www.apress.com/>`_
+
+  * `Apress 免费电子书频道
+    <https://www.apress.com/cn/apress-open/apressopen-titles>`_
+
+* `Microsoft Press <https://www.microsoftpressstore.com/>`_
+
+  * `Microsoft Press 免费电子书频道 <https://mva.microsoft.com/ebooks>`_

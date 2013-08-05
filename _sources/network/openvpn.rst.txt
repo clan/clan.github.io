@@ -1,0 +1,193 @@
+使用 openvpn 实现 SSL VPN
+=========================
+
+.. versionadded:: @2013-10-31
+   创建
+
+本文介绍使用 openvpn 实现 SSL VPN 接入的操作过程。
+
+服务端的配置
+------------
+
+生成 Diffie Hellman 参数文件 dh2048.pem。
+
+`openssl dhparam -out dh2048.pem 2048`
+
+生成共享密钥 hmac.key，在 SSL 验证之前验证 HMAC 签名以及防止 DoS 和重放攻击。
+
+`openvpn --genkey --secret hmac.key`
+
+准备 CA 证书（ca.crt）以及服务端密钥（vpn.key），该 CA 签发的对应证书
+（vpn.crt），以及 CRL 证书吊销文件（crl.pem）。相关
+文件的制作请参考\ :doc:`/software/ssl-ca`\ 。注意签发证书时的
+一些属性设置。也可以直接使用 openvpn 提供的 easyrsa 来制作。
+
+编辑 vpn 服务端配置文件如下： ::
+
+  dev tun0                               # vpn 接口名
+  tun-ipv6                               # IPv6 支持
+  tls-server                             # TLS 角色为服务端
+  dh dh2048.pem                          # Diffie Hellman 参数文件
+  tls-auth hmac.key                      # HMAC 认证密钥
+  ca ca.crt                              # CA 证书
+  cert vpn.crt                           # vpn 证书
+  key vpn.key                            # vpn 私钥
+  crl-verify crl.pem                     # CA 提供的 CRL
+  ns-cert-type client                    # 要求客户端证书 nsCertType 为 client
+  remote-cert-tls client                 # 检查客户端证书 key usage 和 extended key usage
+  mode server                            # 工作模式：多客户模式，相对于 p2p
+  topology subnet                        # 网络拓扑模式
+  port 1194                              # 监听端口
+  proto udp                              # VPN 通讯协议
+  float                                  # 允许对端地址变化
+  client-to-client                       # 允许客户端之前通讯
+  client-config-dir example/config/      # 客户端配置目录
+  keepalive 10 30                        # 心跳及超时设置
+  comp-lzo                               # LZO 压缩
+  persist-key                            #
+  persist-tun                            #
+  management 127.0.0.1 59                # 配置管理服务
+  verb 2                                 # 输出信息冗余级别
+  daemon vpn.server                      # syslog 程序名
+  server 10.255.250.0 255.255.254.0      # VPN 地址及网段
+  server-ipv6 fd6d:523c:4aff:ffff::/64   # IPv6 VPN 地址及网段
+  script-security 2                      # 脚本安全级别
+  up "vpn-server-up.sh"                  # 设备打开后执行的脚本
+  up-delay                               # 延迟 up 脚本至连接真正建立
+  up-restart                             #
+
+假设该文件路径为 /etc/openvpn/server.conf，该文件中提到的 CA 及 SSL 证书密钥等
+都在相同目录下，执行如下命令启动服务进程（发行版本一般已经封装了相应的启动
+脚本，请参考相应的文档）：
+
+`openvpn --cd /etc/openvpn --config /etc/openvpn/server.conf`
+
+由于上面的配置文件中有 "--daemon" 选项，因此 openvpn 会已守护进程的方式在后台
+运行，相关的日志会输出到 syslog。如果希望更方便的调试，可以先临时注释 daemon
+相关的配置。
+
+客户端的配置
+------------
+
+拷贝VPN 服务端的文件 hmac.key 和 ca.crt 到客户端。利用服务端同样的 CA 签发客
+户端证书，相应的文件分别为 user.key，user.crt。注意对客户端证书的相关属性设置。
+
+编辑 vpn 客户端配置文件如下： ::
+
+  dev tun0                               # vpn 接口名
+  tls-client                             # TLS 角色为客户端
+  tls-auth hmac.key                      # HMAC 认证密钥
+  ca ca.pem                              # CA 证书
+  cert user.crt                          # vpn 客户证书
+  key user.key                           # vpn 客户私钥
+  topology subnet                        # 网络拓扑模式
+  remote vpn.remote                      # VPN 服务端地址
+  port 57                                # VPN 服务端口
+  proto udp                              # VPN 通讯协议
+  float                                  # 允许对端地址变化
+  ns-cert-type server                    # 要求客户端证书 nsCertType 为 server
+  remote-cert-tls server                 # 检查客户端证书 key usage 和 extended key usage
+  comp-lzo                               # LZO 压缩
+  nobind                                 # Do not bind
+  pull                                   # 接受服务端 push 路由等
+
+假设该文件路径为 /etc/openvpn/client.conf，该文件中提到的 CA 及 SSL 证书密钥等
+都在相同目录下，执行如下命令启动服务进程（发行版本一般已经封装了相应的启动
+脚本，请参考相应的文档）：
+
+`openvpn --cd /etc/openvpn --config /etc/openvpn/client.conf`
+
+如果一切配置正常，则 vpn 客户端能和服务端建立连接，客户端对应的 tun 接口能看到
+属于服务端配置 VPN 网段内的地址。 ::
+
+  # openvpn --cd /etc/openvpn --config /etc/openvpn/client.conf
+  Thu Oct 31 20:30:13 2013 OpenVPN 2.3.2 x86_64-pc-linux-gnu [SSL (OpenSSL)] [LZO] [EPOLL] [eurephia] [MH] [IPv6] built on Sep 14 2013
+  Thu Oct 31 20:30:13 2013 Control Channel Authentication: using 'hmac.key' as a OpenVPN static key file
+  Thu Oct 31 20:30:13 2013 UDPv4 link local: [undef]
+  Thu Oct 31 20:30:13 2013 UDPv4 link remote: [AF_INET]111.222.111.222:57
+  Thu Oct 31 20:30:14 2013 [vpn.jiasule.com] Peer Connection Initiated with [AF_INET]111.222.111.222:57
+  Thu Oct 31 20:30:16 2013 TUN/TAP device tun0 opened
+  Thu Oct 31 20:30:16 2013 do_ifconfig, tt->ipv6=0, tt->did_ifconfig_ipv6_setup=0
+  Thu Oct 31 20:30:16 2013 /bin/ip link set dev tun0 up mtu 1500
+  Thu Oct 31 20:30:16 2013 /bin/ip addr add dev tun0 10.255.250.2/23 broadcast 10.255.251.255
+  Thu Oct 31 20:30:16 2013 Initialization Sequence Completed
+
+::
+
+  # ip addr
+  ...
+  9: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN qlen 100
+      link/none
+      inet 10.255.250.2/23 brd 10.255.251.255 scope global tun0
+         valid_lft forever preferred_lft forever
+
+此时在客户端 ping 10.255.250.1 能收到回应，在相应的接口上抓包也能确认。
+
+进一步的配置
+------------
+
+在上述的配置之后 VPN 链路能建立成功，但还有下面这些需求需要需要进一步的配置。
+
+对于个人用户，如果需要客户端能访问服务端所在的网段，则需要在客户端添加相应的
+路由规则。一种方式是在客户端手动执行相关的命令，或者在配置文件中配置 “up ...”
+指令指定在客户端和服务端成功建立连接后执行的脚本，该方法在测试的时候可以选用。
+更方便的办法是在服务端主动 push 相关的路由指令到客户端，相关的 push 选项可以
+直接写在服务段配置文件中。更具弹性的做法是在 client-config-dir 指令对应的目录
+中编辑相应的配置文件，其中 DEFAULT 对应在没有对应该客户端的配置文件时的缺省
+配置。示例文件内容如下： ::
+
+  push "route 10.0.0.0 255.0.0.0"
+  #push "route-ipv6 fd6d:523c:4aff::/48"
+  push "dhcp-option DNS 10.255.250.1"
+  #push "redirect-gateway def1 bypass-dhcp"
+
+更多的 push 选项请参考 openvpn 的文档。
+
+对于采用 openvpn 作为两个办公地点之间的内网互联时，相应的客户端配置文件如下： ::
+
+  ifconfig-push 10.255.250.254 255.255.254.0
+  iroute 10.1.1.0 255.255.255.0
+  #ifconfig-ipv6-push fd6d:523c:4aff:ffff::fe/64
+  #iroute-ipv6 fd6d:523c:4aff:1::/64
+
+其中 iroute 对应客户端所在的内网网段。注意这里没有配置路由。这是因为一般来说对
+于站点之间互联时路由需要做特别的处理，直接接受服务端 push 的路由并不是最好的办
+法。即使服务端 push 了相关的路由，客户端也可以通过“route-nopull”来忽略。具体的
+路由配置方法可以通过配置 up 和 down 指令来指定连接建立成功和断开时分别要执行的
+动作。
+
+P.S. 本文仅描述了使用 openvpn 的 subnet 模式进行配置的相关步骤。需要注意的是，
+在该模式下服务端和客户端的角色是不对等的。在多个站点的内网互联并且需要采用
+OSPF 或 BGP 进行路由配置时该模式就不合适了，此时应该采用 p2p 模式，即 vpn 连接
+的两端是对等的。
+
+DNS issue of OpenVPN client on Windows
+--------------------------------------
+
+.. versionadded:: @2016-10-17
+   创建
+
+OpenVPN client on Windows 10 can connect the server w/ corrrect IP address
+and route, but the DNS resolution is not properly working, i.e, it failed to
+resolve the domain serviced by the resolver on VPN server side. This issue
+is reproducible on some Windows 7, Window 8 too.
+
+After some analysis, the root cause is found finally. At first, we can see
+that the server do push correct DNS to client from the client's log. ::
+
+  PUSH: Received control message: 'PUSH_REPLY,...,dhcp-option DNS a.b.c.d,...'
+
+One can confirm this by running `netsh interface ip show config` on command
+prompt. You can find the DNS server configuration on the OpenVPN's TAP
+interface. If you see the output of the command carefully, you can find
+there is an *InterfaceMetric* config for each interface. After compare the
+metric number between different interface, you'll see the number of TAP is
+equal to or larger than the primary interface (ethernet or wifi), this is
+the root cause.
+
+Here comes the solution, change the metric number lower than primary
+interface (replace TAP by the real name).
+
+`netsh interface ipv4 set interface "TAP" metric=0`
+
+then restart vpn client.

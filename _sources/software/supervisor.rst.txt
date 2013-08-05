@@ -1,0 +1,137 @@
+supervisor
+==========
+
+.. versionadded:: @2015-06-12
+   创建
+
+`supervisor <http://supervisord.org/>`_ 是一个 Python 开发的进程管理工具。
+
+程序介绍
+--------
+
+程序安装后有如下命令:
+
+::
+
+    $ equery files supervisor | grep 'bin\/'
+    /usr/bin/echo_supervisord_conf
+    /usr/bin/pidproxy
+    /usr/bin/supervisorctl
+    /usr/bin/supervisord
+
+* ``echo_supervisord_conf`` 自动生成默认配置到标准输出，无任何参数选项。
+* ``supervisord`` 守护进程，用于控制服务的启动。
+
+  supervisord -- run a set of applications as daemons。
+* ``supervisorctl`` 控制由 supervisord 运行的程序。
+
+  ::
+
+      # 进入交互式模式，会提示当前管理的服务状态
+      $ supervisorctl
+      demo2                      RUNNING   pid 18356, uptime 17:24:16
+      demo3                      RUNNING   pid 13961, uptime 0:17:40
+
+      # 查看可用的命令
+      supervisor> help
+
+      default commands (type help <topic>):
+      =====================================
+      add    clear  fg        open  quit    remove  restart   start   stop  update
+      avail  exit   maintail  pid   reload  reread  shutdown  status  tail  version
+
+      # help <cmd> 查看相关命令的用法
+      supervisor> help status
+      status <name>           Get status for a single process
+      status <gname>:*        Get status for all processes in a group
+      status <name> <name>    Get status for multiple named processes
+      status                  Get all process status info
+
+      # status 命令查看当前管理的服务状态，确认服务是正常的 RUNNING 状态
+      supervisor> status
+      demo2                      RUNNING   pid 18356, uptime 17:24:20
+      demo3                      RUNNING   pid 13961, uptime 0:17:44
+
+      # 修改配置后，执行 update 命令更新
+      supervisor> update
+      demo3: stopped
+      demo3: updated process group
+
+      # update 后再次确认服务状态
+      supervisor> status
+      demo2                      RUNNING   pid 18356, uptime 17:25:03
+      demo3                      RUNNING   pid 16872, uptime 0:00:03
+
+  也可以直接在 SHELL 下执行命令:
+
+  ::
+
+      $ supervisorctl help
+
+      default commands (type help <topic>):
+      =====================================
+      add    clear  fg        open  quit    remove  restart   start   stop  update
+      avail  exit   maintail  pid   reload  reread  shutdown  status  tail  version
+
+      $ supervisorctl status
+      demo2                      RUNNING   pid 18356, uptime 17:32:56
+      demo3                      RUNNING   pid 16872, uptime 0:07:56
+
+      $ supervisorctl update
+      demo3: stopped
+      demo3: updated process group
+
+配置文件
+--------
+
+参考：\ `Configuration File <http://supervisord.org/configuration.html>`_ 。
+
+配置格式为 Windows ini 格式（Python ConfigParser）。
+初始情况下可以先用 ``echo_supervisord_conf`` 生成后再根据需求编辑。
+
+注释使用分号 `;` ，如果注释是和配置项在同一行，则分号前面必须有一个前置空格。
+
+不支持 SHELL 的环境变量，如 `~` 和 `$HOME`，可以用 `%(ENV_HOME)s` 替代。
+
+配置按节（section）如下：
+
+* `unix_http_server` 和 `inet_http_server` 是配置
+  supervisor 的 http server，至少需要其一，supervisorctl 管理时用到。
+
+* `supervisord` 用于对守护进程的全局性配置，
+  有些配置可以在 `program` 块覆盖。
+
+* `supervisorctl` 用于 supervisorctl 管理 supervisor 服务的配置，
+  如serverurl 等，这些也可以直接命令行指定参数，比如如果在上面配置的是
+  `inet_http_server` ，则这里配置 `serverurl` 为相应路径后，
+  直接使用 `supervisorctl` 命令即可，否则要指定命令行参数。
+
+* `program` 是主要的配置部分。状态详细可参考
+  `supervisor - Process States <http://supervisord.org/subprocess.html#process-states>`_
+
+  .. image:: http://supervisord.org/_images/subprocess-transitions.png
+
+  `BACKOFF` 状态是启动时退出太快，根据 `startretries`
+  达到重试次数后，会进入到 `FATAL` 状态。
+
+  如果状态在 `EXITED`，且配置了 `autorestart=false`，
+  则服务会停留在此状态不再重启；如果 `autorestart=true`，则会一直重启;
+  如果 `autorestart=unexpected`，则当 exitcode 在 `exitcodes`
+  配置的列表里时不再重启，否则重启。
+
+  如果状态在 `FATAL` ，则永远不会再自动重启。
+
+  如果执行了 `supervisorctl stop` 命令，则会进入 `STOP` 状态。
+  在 `stopwaitsecs` 秒后服务还未停止则会发送 `SIGKILL` 信号。
+
+  另外，在 `startretries` 重试次数达到之前，如果频繁在 `BACKOFF` 和
+  `STARTING` 或 `RUNNING` 状态之间切换，则重启等待时间会逐步增大。
+
+* `include` 块用于加载一些自定义配置，一般 `/etc/supervisord.conf`
+  可以用于一些全局配置，然后每个服务一个单独的 `program` 配置，
+  用 include 导入，类似于nginx等配置。
+
+* `group` 块用于把一些 `program` 分为一个组，然后做一些基本配置。
+
+* `rpcinterface` 用于自定义一些接口，这个一般保持默认就行，但是不能删除，
+  必须保留在配置文件中。

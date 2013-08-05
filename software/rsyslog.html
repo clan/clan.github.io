@@ -1,0 +1,908 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rsyslog 配置简介 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="服务维护/管理" href="svc.html"/>
+        <link rel="next" title="rsyslog 队列配置" href="rsyslog-queue.html"/>
+        <link rel="prev" title="supervisor" href="supervisor.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="svc.html">服务维护/管理</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="svc_list.html">服务控制软件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daemontools.html">daemontools 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supervisor.html">supervisor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rsyslog 配置简介</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#etc-rsyslog-conf">配置文件 /etc/rsyslog.conf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">模块</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#im">输入模块（im 前缀）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#om">输出模块（om 前缀）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">其他模块</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">规则</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id8">过滤器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">动作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">日志输出模板</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">深入理解</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog-queue.html">rsyslog 队列配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glusterfs.html">Gluster FS 部署备忘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvs.html">LVS 的三种部署模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cronie.html">cronie 和 pam_loginuuid 的问题解决</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html">通过 snmp 获取数据的几个方式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="svc.html">服务维护/管理</a> &raquo;</li>
+        
+      <li>rsyslog 配置简介</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/rsyslog.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rsyslog">
+<h1>rsyslog 配置简介<a class="headerlink" href="#rsyslog" title="永久链接至标题">¶</a></h1>
+<p><a class="reference external" href="http://www.rsyslog.com/">rsyslog</a> 是负责收集 syslog 的程序，可以用来取代
+syslogd 或 <a class="reference external" href="http://www.balabit.com/network-security/syslog-ng/">syslog-ng</a> 。
+在这些 syslog 处理程序中，个人认为 rsyslog 是功能最为强大的。其特性包括：
+支持输出日志到各种数据库，如 MySQL，PostgreSQL，MongoDB，ElasticSearch，等等；
+通过 RELP + TCP 实现数据的可靠传输（基于此结合丰富的过滤条件可以建立一种
+可靠的数据传输通道供其他应用来使用）；精细的输出格式控制以及对消息的强大
+过滤能力；高精度时间戳；队列操作（内存，磁盘以及混合模式等）；
+支持数据的加密和压缩传输等。</p>
+<p>syslog 的相关 RFC 参考
+<span class="target" id="index-0"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc3164.html"><strong>RFC 3164</strong></a>（The BSD syslog Protocol），
+<span class="target" id="index-1"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc5424.html"><strong>RFC 5424</strong></a>（The Syslog Protocol），，
+<span class="target" id="index-2"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc5425.html"><strong>RFC 5425</strong></a>（Transport Layer Security Mapping for Syslog），
+<span class="target" id="index-3"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc5426.html"><strong>RFC 5426</strong></a>（Transmission of Syslog Messages over UDP）。</p>
+<p>本文仅覆盖 rsyslog 的相关配置，其中配置指令的正确性以
+<a class="reference external" href="http://www.rsyslog.com/doc/manual.html">官方文档</a>为准，
+<a class="reference external" href="http://wiki.rsyslog.com/">Wiki</a>作为参考。</p>
+<div class="section" id="etc-rsyslog-conf">
+<h2>配置文件 /etc/rsyslog.conf<a class="headerlink" href="#etc-rsyslog-conf" title="永久链接至标题">¶</a></h2>
+<p>配置文档官方文档请参考
+<a class="reference external" href="http://www.rsyslog.com/doc/rsyslog_conf.html">Configuration</a>。</p>
+<p>rsyslog 的配置文件一般为 /etc/rsyslog.conf。模块相关的配置指定指定和功能仅在
+相应的模块被加载（$ModLoad）后才可用。配置行如果太长，可以在行尾使用
+“\” 分割成多行。注释支持两种语法，一种以 # 开始到行尾，另一种为 C 语言格式。</p>
+<p>指令的处理顺序为文件内容从始到末。</p>
+<p>使用命令 <cite>rsyslogd -f /etc/rsyslog.conf -N1</cite> 测试配置文件检查。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># rsyslogd -f /etc/rsyslog.conf -N1</span>
+<span class="n">rsyslogd</span><span class="p">:</span> <span class="n">version</span> <span class="mf">7.4</span><span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="n">config</span> <span class="n">validation</span> <span class="n">run</span> <span class="p">(</span><span class="n">level</span> <span class="mi">1</span><span class="p">),</span> <span class="n">master</span> <span class="n">config</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">rsyslog</span><span class="o">.</span><span class="n">conf</span>
+<span class="n">rsyslogd</span><span class="p">:</span> <span class="n">warning</span><span class="p">:</span> <span class="o">~</span> <span class="n">action</span> <span class="ow">is</span> <span class="n">deprecated</span><span class="p">,</span> <span class="n">consider</span> <span class="n">using</span> <span class="n">the</span> <span class="s1">&#39;stop&#39;</span> <span class="n">statement</span> <span class="n">instead</span> <span class="p">[</span><span class="k">try</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">rsyslog</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">e</span><span class="o">/</span><span class="mi">2307</span> <span class="p">]</span>
+<span class="n">rsyslogd</span><span class="p">:</span> <span class="n">immark</span><span class="p">:</span> <span class="n">mark</span> <span class="n">message</span> <span class="n">period</span> <span class="n">must</span> <span class="ow">not</span> <span class="n">be</span> <span class="mi">0</span><span class="p">,</span> <span class="n">can</span> <span class="ow">not</span> <span class="n">run</span>
+<span class="n">rsyslogd</span><span class="p">:</span> <span class="n">End</span> <span class="n">of</span> <span class="n">config</span> <span class="n">validation</span> <span class="n">run</span><span class="o">.</span> <span class="n">Bye</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>日志的发送测试可以使用 <cite>logger</cite> 命令，该命令支持通过 UNIX Socket，UDP/TCP 等
+发送 syslog。</p>
+<p>下面仅对常用的<a class="reference external" href="http://www.rsyslog.com/doc/rsyslog_conf_global.html">配置指令</a>做一些说明，并主要以 legacy rsyslog 的格式来描述。官方文档目前大部分是以
+<a class="reference external" href="http://www.rsyslog.com/doc/rainerscript.html">RainerScript</a> 的格式描述。
+部分配置指令放在单独的章节里说明。</p>
+<ul>
+<li><p class="first">$ActionFileDefaultTemplate [templateName] # 定义文件动作的日志输出模板</p>
+<blockquote>
+<div><p><em>$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dec</span> <span class="mi">30</span> <span class="mi">17</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">58</span> <span class="n">linux</span><span class="o">-</span><span class="mi">64</span> <span class="n">logger</span><span class="p">[</span><span class="mi">16898</span><span class="p">]:</span> <span class="n">test</span> <span class="n">syslog</span>
+</pre></div>
+</div>
+<p><em>$ActionFileDefaultTemplate RSYSLOG_FileFormat</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2013</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">30</span><span class="n">T17</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mf">50.926770</span><span class="o">+</span><span class="mi">08</span><span class="p">:</span><span class="mi">00</span> <span class="n">linux</span><span class="o">-</span><span class="mi">64</span> <span class="n">logger</span><span class="p">[</span><span class="mi">7757</span><span class="p">]:</span> <span class="n">test</span> <span class="n">syslog</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">$ActionForwardDefaultTemplate [templateName] # 定义缺省转发动作的日志输出模板</p>
+</li>
+<li><p class="first">$ActionExecOnlyWhenPreviousIsSuspended [on/off] # 值为 on 时表示接下来的
+动作仅在之前的动作被挂起（失败）时才执行。</p>
+</li>
+<li><p class="first">文件系统相关配置</p>
+<blockquote>
+<div><p>$DirCreateMode，$DirGroup, $DirOwner # 设置目录创建模式，属主和组</p>
+<p>$FileCreateMode，$FileGroup，$FileOwner # 设置文件创建模式，属主和组</p>
+<p>$Umask 0062 # 设置文件创建掩码，等价于 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/umask(1)">umask(1)</a></em></p>
+</div></blockquote>
+</li>
+<li><p class="first">$DynaFileCacheSize # 控制动态文件保持打开的个数，针对每个动作</p>
+</li>
+<li><p class="first">$IncludeConfig # 导入其他文件到配置，等价于 C 中的 #include</p>
+</li>
+<li><p class="first">$MainMsgQueueSize # 主消息队列大小</p>
+</li>
+<li><p class="first">$MaxMessageSize # 日志最大大小，太大的值需要考虑传输协议，如 UDP</p>
+</li>
+<li><p class="first">$ModLoad xxx # 模块加载</p>
+</li>
+<li><p class="first">重复消息控制</p>
+<blockquote>
+<div><ul class="simple">
+<li>$RepeatedMsgReduction on</li>
+<li>$RepeatedMsgContainsOrigionalMsg on</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">日志接收率控制</p>
+<blockquote>
+<div><p>Interval 设置率计算的时间间隔，0 表示关闭；Burst 设置该间隔内允许的日志数。
+IMUXSock 针对通过 system log socket 接收的日志；SystemLog 针对其他输入源。</p>
+<ul class="simple">
+<li>$SystemLogRateLimitInterval 0</li>
+<li>$SystemLogRateLimitBurst 0</li>
+<li>$IMUXSockRateLimitInterval 0</li>
+<li>$IMUXSockRateLimitBurst 0</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dec</span> <span class="mi">31</span> <span class="mi">22</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">36</span> <span class="n">linux</span><span class="o">-</span><span class="mi">64</span> <span class="n">rsyslogd</span><span class="o">-</span><span class="mi">2039</span><span class="p">:</span> <span class="n">imuxsock</span> <span class="n">begins</span> <span class="n">to</span> <span class="n">drop</span> <span class="n">messages</span> <span class="kn">from</span> <span class="nn">pid</span> <span class="mi">6927</span> <span class="n">due</span> <span class="n">to</span> <span class="n">rate</span><span class="o">-</span><span class="n">limiting</span>
+<span class="n">Dec</span> <span class="mi">31</span> <span class="mi">22</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">39</span> <span class="n">linux</span><span class="o">-</span><span class="mi">64</span> <span class="n">rsyslogd</span><span class="o">-</span><span class="mi">2039</span><span class="p">:</span> <span class="n">imuxsock</span> <span class="n">lost</span> <span class="mi">133250</span> <span class="n">messages</span> <span class="kn">from</span> <span class="nn">pid</span> <span class="mi">6927</span> <span class="n">due</span> <span class="n">to</span> <span class="n">rate</span><span class="o">-</span><span class="n">limiting</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>模块<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>完整的模块列表在<a class="reference external" href="http://www.rsyslog.com/doc/rsyslog_conf_modules.html">这里</a>。
+下面仅对常用的各类别模块做简单的介绍。</p>
+<div class="section" id="im">
+<h3>输入模块（im 前缀）<a class="headerlink" href="#im" title="永久链接至标题">¶</a></h3>
+<ul>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/imfile.html">imfile</a>（Text File Input Module）
+- 转换文本文件为日志</p>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/relp.html">imrelp</a> - 通过
+<a class="reference external" href="http://www.rsyslog.com/doc/relp.html">RELP</a> 可靠的接收日志。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad imrelp         # 加载模块
+$InputRELPServerRun 514 # 在 514 端口监听
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/imudp.html">imudp</a> - 通过 UDP 接收日志</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad imudp
+$UDPServerRun  514
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/imtcp.html">imtcp</a> - 通过 TCP 接收日志</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad imtcp
+$InputTCPMaxSessions 500
+$InputTCPServerRun 514
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/imptcp.html">imptcp</a> - 同 imtcp，
+但针对 Linux 做高性能定制</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad imptcp
+$InputPTCPServerRun 514
+</pre></div>
+</div>
+</li>
+<li><p class="first">immark - 周期性输出标记信息</p>
+<p>设置为60，每分钟产生一个 mark 日志</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$MarkMessagePeriod  60
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/imklog.html">imklog</a> - 获取内核日志
+（通过 dmesg 也能看到相关信息）</p>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/imuxsock.html">imuxsock</a> - UNIX socket</p>
+<p>缺省情况下从 /dev/log 获取日志。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># netstat -nxp|grep /dev/log</span>
+<span class="n">unix</span>  <span class="mi">3</span>      <span class="p">[</span> <span class="p">]</span>         <span class="n">DGRAM</span>     <span class="mi">7439519</span>  <span class="mi">9074</span><span class="o">/</span><span class="n">rsyslogd</span>        <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">log</span>
+</pre></div>
+</div>
+<p>配置参考:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad imuxsock # needs to be done just once
+$SystemLogRateLimitInterval 0 # turn off rate limiting
+$InputUnixListenSocketCreatePath on # turn on for *next* socket
+$InputUnixListenSocket /var/run/sshd/dev/log
+$InputUnixListenSocketHostName jail1.example.net
+$AddUnixListenSocket /jail/1/dev/log
+$InputUnixListenSocketHostName jail2.example.net
+$AddUnixListenSocket /jail/2/dev/log
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/impstats.html">impstats</a> - rsyslog
+内部数据周期统计</p>
+</li>
+</ul>
+</div>
+<div class="section" id="om">
+<h3>输出模块（om 前缀）<a class="headerlink" href="#om" title="永久链接至标题">¶</a></h3>
+<ul>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/omfile.html">omfile</a> - 输出到文件</p>
+<p>支持静态文件；通过模板支持动态文件；</p>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/omfwd.html">omfwd</a> - 内置模块，转发</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*.*</span> <span class="nd">@192</span><span class="o">.</span><span class="mf">168.2</span><span class="o">.</span><span class="mi">11</span><span class="p">:</span><span class="mi">10514</span>
+<span class="o">*.*</span> <span class="o">@</span><span class="nd">@192</span><span class="o">.</span><span class="mf">168.2</span><span class="o">.</span><span class="mi">11</span><span class="p">:</span><span class="mi">10514</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/omsnmp.html">omsnmp</a> - SNMP trap 输出</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad omsnmp
+$actionsnmptransport udp
+$actionsnmptarget localhost
+$actionsnmptargetport 162
+$actionsnmpversion 1
+$actionsnmpcommunity public
+*.* :omsnmp:
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/omrelp.html">omrelp</a> - RELP output module</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad omrelp
+*.* :omrelp:loghost.example.com:20514
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/omusrmsg.html">omusrmsg</a> - 内置模块，
+发送日志到指定用户</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Emergencies are sent to everybody logged in.</span>
+<span class="o">*.</span><span class="n">emerg</span>                         <span class="p">:</span><span class="n">omusrmsg</span><span class="p">:</span><span class="o">*</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/omprog.html">omprog</a> - 发送日志给程序处理</p>
+<p>为方便程序解析，日志的输出最好采用 json 格式输出。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ModLoad omprog
+$ActionOMProgBinary /tmp/save_log_data.py
+:programname,startswith,&quot;log4report&quot; :omprog:;RSYSLOG_TraditionalFileFormat
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://www.rsyslog.com/doc/ommail.html">ommail</a> - 发送邮件</p>
+</li>
+<li><p class="first">输出到数据库等</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.rsyslog.com/doc/ommysql.html">ommysql</a> - MySQL</li>
+<li>ompgsql - PostgreSQL</li>
+<li><a class="reference external" href="http://www.rsyslog.com/doc/ommongodb.html">ommongodb</a> - MongoDB</li>
+<li><a class="reference external" href="http://www.rsyslog.com/doc/omlibdbi.html">omlibdbi</a> - 通用数据库模块</li>
+<li><a class="reference external" href="http://www.rsyslog.com/doc/omhdfs.html">omhdfs</a> - Hadoop's HDFS</li>
+<li><a class="reference external" href="http://www.rsyslog.com/doc/omelasticsearch.html">omelasticsearch</a> - ElasticSearch</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>其他模块<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>消息过滤（fm 前缀），消息解析（pm 前缀），字符串生成（sm 前缀），库模块，等。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>规则<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>规则由过滤器和动作组成。</p>
+<div class="section" id="id8">
+<h3><a class="reference external" href="http://www.rsyslog.com/doc/rsyslog_conf_filter.html">过滤器</a><a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">基于设施/优先级的过滤器</p>
+<p>格式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">FACILITY</span><span class="o">&gt;.&lt;</span><span class="n">PRIORITY</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>其中：</p>
+<p>&lt;FACILITY&gt; 表示生成日志的子系统。取值范围为 auth，authpriv，cron，
+daemon，kern，lpr，mail，news，syslog，user，uucp，local0 到 local7，
+参考 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/syslog(3)">syslog(3)</a></em>。其对应的数值请参考
+<em>/usr/include/sys/syslog.h</em>，注意需要忽略移位操作。</p>
+<p>&lt;PRIORITY&gt; 表示日志的级别，取值范围为（从低到高，数值对应 7-0）
+debug，info，notice，warning，err，crit，alert，emerg。
+参考 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/syslog(3)">syslog(3)</a></em>。</p>
+<p>在级别前可以增加相应的修饰符，例如加 = 表示仅选择该优先级的日志，加 !
+表示选择不等于优先级的所有日志，不加任何符号则表示选择该优先级及之上的日志。
+* 可以用来表示所有的日志子系统和/或消息级别。关键字 none
+表示未指定级别的日志。如果要定义多个设置/优先级，使用 , 分隔即可。
+如果要定义多个过滤条件，则使用 ; 分隔。</p>
+<p>示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>kern.*                 # 选择所有级别的内核日志
+mail.crit              # 选择所有级别为 crit 及之上的邮件系统相关日志
+cron.!info,!debug      # 选择所有 cron 日志信息，排除优先级为 info 和 debug 的日志
+*.=debug               # 选择所有的调试级别日志
+*.*;auth,authpriv.none # 选择所有级别的日志，以及认证相关无级别的日志
+</pre></div>
+</div>
+</li>
+<li><p class="first">基于属性的过滤器</p>
+<p>格式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;PROPERTY&gt;, [!]&lt;COMPARE_OPERATION&gt;, &quot;&lt;STRING&gt;&quot;
+</pre></div>
+</div>
+<p>其中 ! 表示对匹配结果取反。</p>
+<p>该过滤器可以对所有日志的属性进行过滤（相对传统的 syslog 程序而言），例如：
+timegenerated 或者 syslogtag，所有的属性列表如下，完整的列表可以参考
+<a class="reference external" href="http://www.rsyslog.com/doc/property_replacer.html">The Property Replacer</a>
+的<em>Available Properties</em> 节。部分属性如下：</p>
+<table border="1" class="docutils" id="property">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">属性名</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>msg</td>
+<td>日志正文</td>
+</tr>
+<tr class="row-odd"><td>hostname</td>
+<td>日志中的主机名</td>
+</tr>
+<tr class="row-even"><td>fromhost</td>
+<td>从该主机接收到的消息，可能不是最开始的发送主机</td>
+</tr>
+<tr class="row-odd"><td>fromhost-ip</td>
+<td>fromhost 的 IP</td>
+</tr>
+<tr class="row-even"><td>syslogtag</td>
+<td>日志标签，如 named[12345]</td>
+</tr>
+<tr class="row-odd"><td>programname</td>
+<td>日志标签的静态部分，如 named</td>
+</tr>
+<tr class="row-even"><td>pri</td>
+<td>日志的 PRI 部分</td>
+</tr>
+<tr class="row-odd"><td>pri-text</td>
+<td>PRI 的文本表示，如 syslog.info</td>
+</tr>
+<tr class="row-even"><td>syslogfacility</td>
+<td>日志类别</td>
+</tr>
+<tr class="row-odd"><td>syslogfacility-text</td>
+<td>日志类别的文本表示</td>
+</tr>
+<tr class="row-even"><td>syslogseverity</td>
+<td>日志级别</td>
+</tr>
+<tr class="row-odd"><td>syslogseverity-text</td>
+<td>日志级别的文本表示</td>
+</tr>
+<tr class="row-even"><td>timegenerated</td>
+<td>日志接收时间，或理解为 timereceived</td>
+</tr>
+<tr class="row-odd"><td>timereported</td>
+<td>日志内的报告时间，或生成时间</td>
+</tr>
+<tr class="row-even"><td>$now</td>
+<td>当前时间，YYYY-MM-DD</td>
+</tr>
+<tr class="row-odd"><td>$year</td>
+<td>当前年，YYYY</td>
+</tr>
+<tr class="row-even"><td>$month</td>
+<td>当前月，MM</td>
+</tr>
+<tr class="row-odd"><td>$day</td>
+<td>当前日志，DD</td>
+</tr>
+<tr class="row-even"><td>$hour</td>
+<td>当前小时，24 小时格式，HH</td>
+</tr>
+<tr class="row-odd"><td>$hhour</td>
+<td>当前半小时，0-29 对应 0，30-59 对应 1</td>
+</tr>
+<tr class="row-even"><td>$qhour</td>
+<td>当前1/4小时，0-3</td>
+</tr>
+<tr class="row-odd"><td>$minute</td>
+<td>当前分钟，MM</td>
+</tr>
+</tbody>
+</table>
+<p><em>timegenerated</em> 和 <em>timereported</em> 的差别请参考
+<a class="reference external" href="http://www.rsyslog.com/what-is-the-difference-between-timereported-and-timegenerated">What is the difference between timereported and timegenerated?</a>。</p>
+<p>每一个属性可以使用下面的比较操作来和某一个指定的值进行从而定义过滤器。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">操作符</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>contains</td>
+<td>属性包含指定的字符串</td>
+</tr>
+<tr class="row-odd"><td>isequal</td>
+<td>属性等于指定的字符串</td>
+</tr>
+<tr class="row-even"><td>startswith</td>
+<td>属性由指定字符串开始</td>
+</tr>
+<tr class="row-odd"><td>regex</td>
+<td>POSIX BRE 正则表达式</td>
+</tr>
+<tr class="row-even"><td>ereregex</td>
+<td>POSIX ERE 正则表达式</td>
+</tr>
+</tbody>
+</table>
+<p>示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:msg,contains,&quot;error&quot;        # 选择包含 error 的日志
+:hostname,isequal, &quot;host1&quot;   # 选择主机名为 host1 的日志
+:msg,!regex,&quot;fatal .* error&quot; # 选择不匹配指定正则表达式的日志
+</pre></div>
+</div>
+</li>
+<li><p class="first">基于 <a class="reference external" href="http://www.rainerscript.com/">RainerScript</a> 的过滤器</p>
+<p>格式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">&lt;</span><span class="n">EXPRESSION</span><span class="o">&gt;</span> <span class="n">then</span> <span class="o">&lt;</span><span class="n">ACTION</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>其中，&lt;EXPRESSION&gt; 表示表达式，例如：
+&quot;$msg startswith 'DEVNAME' or $syslogfacility-text == 'local0'&quot;。
+如果表达式结果为真，则会执行相应的动作。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id9">
+<h3>动作<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">保存日志到指定文件</p>
+<p>例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cron</span><span class="o">.*</span> <span class="o">-/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">cron</span><span class="o">.</span><span class="n">log</span>
+</pre></div>
+</div>
+<p>如果文件路径前有 “-” 则表示每次输出日志时不同步（fsync）指定日志文件。
+文件路径既可以是静态文件也可以是动态文件。动态文件由模板前加 ? 定义。</p>
+</li>
+<li><p class="first">通过网络发送日志</p>
+<p>格式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">@</span><span class="p">[(</span><span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span><span class="p">)]</span><span class="o">&lt;</span><span class="n">HOST</span><span class="o">&gt;</span><span class="p">:[</span><span class="o">&lt;</span><span class="n">PORT</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>&#64; 表示使用 UDP 协议。&#64;&#64; 表示使用 TCP 协议。&lt;options&gt; 可以为：
+z&lt;NUMBER&gt; 表示使用 zlib 压缩，NUMBER 表示压缩级别。多个选项
+使用 , 分隔。</p>
+<p>例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*.*</span> <span class="nd">@192</span><span class="o">.</span><span class="mf">168.0</span><span class="o">.</span><span class="mi">1</span>     <span class="c1"># 使用 UDP 发送日志到 192.168.0.1</span>
+<span class="o">*.*</span> <span class="o">@</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="mi">18</span> <span class="c1"># 使用 TCP 发送到 &quot;example.com&quot; 的 18 端口</span>
+<span class="o">*.*</span> <span class="o">@</span><span class="p">(</span><span class="n">z9</span><span class="p">)[</span><span class="mi">2001</span><span class="p">::</span><span class="mi">1</span><span class="p">]</span>   <span class="c1"># 使用 UDP 发送消息到 2001::1，启用 zlib 9 级压缩</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">发送消息到特定用户</p>
+<p>例如</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">msg</span><span class="p">,</span><span class="n">contains</span><span class="p">,</span><span class="s2">&quot;error&quot;</span> <span class="n">liuzx</span>
+</pre></div>
+</div>
+<p>发送包含 error 的日志到用户 liuzx。多个用户则用 , 分隔，* 表示所有用户。用户
+的 mesg （参考 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/mesg(1)">mesg(1)</a></em>）权限需要设置为 y。</p>
+<p>上面的写法随 rsyslog 版本不同，可能会有如下警告信息，最好做调整。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">action</span> <span class="s1">&#39;liuzx&#39;</span> <span class="n">treated</span> <span class="k">as</span> <span class="s1">&#39;:omusrmsg:liuzx&#39;</span> <span class="o">-</span> <span class="n">please</span> <span class="n">change</span> <span class="n">syntax</span><span class="p">,</span> <span class="s1">&#39;liuzx&#39;</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">supported</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">future</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">更多动作</p>
+<p>参考输出模块的文档。例如 omprog 输出日志到指定程序的标准输入，ommysql 输出
+到 MySQL 数据库，ompgsql 输出日志到 PostgreSQL， ...</p>
+</li>
+<li><p class="first">丢弃日志</p>
+<p>例如</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cron</span><span class="o">.*</span> <span class="o">~</span>
+</pre></div>
+</div>
+<p>丢弃所有信息，即该配置之后的动作不会看到该日志。</p>
+<p>随 rsyslog 版本不同，如果有如下警告信息，则将 ~ 修改为 stop。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">warning</span><span class="p">:</span> <span class="o">~</span> <span class="n">action</span> <span class="ow">is</span> <span class="n">deprecated</span><span class="p">,</span> <span class="n">consider</span> <span class="n">using</span> <span class="n">the</span> <span class="s1">&#39;stop&#39;</span> <span class="n">statement</span> <span class="n">instead</span> <span class="p">[</span><span class="k">try</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">rsyslog</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">e</span><span class="o">/</span><span class="mi">2307</span> <span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>对每一个过滤条件，可以指定多个动作，每个动作一行即可。这种情况下，也可以通过
+“&amp;” 来表示上一行的过滤体检。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">msg</span><span class="p">,</span><span class="n">contains</span><span class="p">,</span><span class="s2">&quot;error&quot;</span> <span class="n">liuzx</span>
+<span class="o">&amp;</span> <span class="nd">@192</span><span class="o">.</span><span class="mf">168.1</span><span class="o">.</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>包含 “error” 日志被同时发送给用户 liuzx 和通过 UDP 发送到 192.168.1.1。</p>
+</div>
+<div class="section" id="id10">
+<h3>日志输出模板<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h3>
+<p>通过模板可以更具需要来控制日志输出的样式。格式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$template &lt;TEMPLATE_NAME&gt;,&quot;text %&lt;PROPERTY&gt;% more text&quot;, [&lt;options&gt;]
+</pre></div>
+</div>
+<p>$template 为模板指令。&lt;TEMPLATE_NAME&gt; 为模板名。&quot;&quot; 之间的文本为模板格式。
+被 % 包含的文本对应相关的<a class="reference internal" href="#property"><span class="std std-ref">属性</span></a>。&lt;options&gt; 指定修改
+模板功能的一些选项,例如 sql 或者 stdsql 会格式化文本为 SQL 查询。</p>
+<ol class="arabic">
+<li><p class="first">动态文件输出</p>
+<blockquote>
+<div><p>通过日志和/或系统<a class="reference internal" href="#property"><span class="std std-ref">属性</span></a>决定输出文件名。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$template DynamicFile,&quot;/var/log/test_logs/%timegenerated%-test.log&quot;
+*.* ?DynamicFile
+</pre></div>
+</div>
+<p>使用 timegenerated 生成文件名，使用该模板则在前面加上 ?。</p>
+<p>其他例子如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$template DailyPerHostLogs,&quot;/var/log/syslog/%$YEAR%/%$MONTH%/%$DAY%/%HOSTNAME%/messages.log&quot;
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">根据属性控制日志输出格式</p>
+<blockquote>
+<div><p>使用下面的格式可以对模板之中的属性做各种修改操作从而定制日志的格式 ::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&lt;</span><span class="n">propname</span><span class="o">&gt;</span><span class="p">[:</span><span class="o">&lt;</span><span class="n">fromChar</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">toChar</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span><span class="p">]</span><span class="o">%</span>
+</pre></div>
+</div>
+<p>&lt;propname&gt; 属性名，可用的属性名参考<a class="reference internal" href="#property"><span class="std std-ref">上文</span></a>。</p>
+<p>&lt;fromChar&gt; 和 &lt;toChar&gt; 表示对属性值字符串的操作范围。
+设置 &lt;fromChar&gt; 为 R，&lt;toChar&gt; 为正则表达式即可以通过正则
+表达式定义范围。</p>
+<p>&lt;options&gt; 则表示属性选项。完整的列表可以参考
+<a class="reference external" href="http://www.rsyslog.com/doc/property_replacer.html">这里</a>的
+<em>Property Options</em> 节。</p>
+<p>一些示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">msg</span><span class="o">%</span>      <span class="c1"># 日志的完整消息文本</span>
+<span class="o">%</span><span class="n">msg</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="o">%</span>  <span class="c1"># 日志消息文本的最开始两个字符</span>
+<span class="o">%</span><span class="n">msg</span><span class="p">:::</span><span class="n">drop</span><span class="o">-</span><span class="n">last</span><span class="o">-</span><span class="n">lf</span><span class="o">%</span> <span class="c1"># 日志的完整消息文本，移出最后的换行符</span>
+<span class="o">%</span><span class="n">timegenerated</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span><span class="n">date</span><span class="o">-</span><span class="n">rfc3339</span><span class="o">%</span> <span class="c1"># 时间戳的头10个字符并按 RFC3999 标准格式化</span>
+</pre></div>
+</div>
+<p>下面是一些模板例子。</p>
+<p>输出日志的级别，类别，收到日志时的时间错，主机名，消息标签，消息正文，
+加上换行符：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$template verbose,&quot;%syslogseverity%,%syslogfacility%,%timegenerated%,%HOSTNAME%,%syslogtag%,%msg%\n&quot;
+</pre></div>
+</div>
+<p>输出日志来源，时间以及日志标签，正文，同时还有蜂鸣声（7）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$template wallmsg,&quot;\r\n\7Message from syslogd@%HOSTNAME% at %timegenerated% ...\r\n %syslogtag% %msg%\n\r&quot;
+</pre></div>
+</div>
+<p>格式化日志以便于直接进行 SQL 操作：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$template dbFormat,&quot;insert into SystemEvents (Message, Facility,FromHost, Priority, DeviceReportedTime, ReceivedAt, InfoUnitID, SysLogTag) values (&#39;%msg%&#39;, %syslogfacility%, &#39;%HOSTNAME%&#39;,%syslogpriority%, &#39;%timereported:::date-mysql%&#39;, &#39;%timegenerated:::date-mysql%&#39;, %iut%, &#39;%syslogtag%&#39;)&quot;,sql
+</pre></div>
+</div>
+<p>以 json 格式输出，方便程序解析：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$template jsonFormat,&quot;{\&quot;message\&quot;:\&quot;%msg:::json%\&quot;,\&quot;fromhost\&quot;:\&quot;%HOSTNAME:::json%\&quot;,\&quot;facility\&quot;:\&quot;%syslogfacility-text%\&quot;,\&quot;priority\&quot;:\&quot;%syslogpriority-text%\&quot;,\&quot;timereported\&quot;:\&quot;%timereported:::date-rfc3339%\&quot;,\&quot;timegenerated\&quot;:\&quot;%timegenerated:::date-rfc3339%\&quot;}\n&quot;
+</pre></div>
+</div>
+<p>注意，message 的内容会在最前面多一个空格，其解释请参考
+<a class="reference external" href="http://www.rsyslog.com/log-normalization-and-the-leading-space/">这里</a>。</p>
+<p>rsyslog 也提供了一些预定义的模板（以 <a class="reference external" href="http://www.rsyslog.com/">RSYSLOG</a> 为前缀），参考
+<a class="reference external" href="http://www.rsyslog.com/doc/rsyslog_conf_templates.html">这里</a> 的
+<em>Reserved Template Names</em> 节，其定义如下：</p>
+<p>RSYSLOG_FileFormat</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;%TIMESTAMP:::date-rfc3339</span><span class="si">% %</span><span class="s2">HOSTNAME</span><span class="si">% %</span><span class="s2">syslogtag</span><span class="si">%%</span><span class="s2">msg:::sp-if-no-1st-sp</span><span class="si">%%</span><span class="s2">msg:::drop-last-lf%</span><span class="se">\n\&quot;</span>
+</pre></div>
+</div>
+<p>RSYSLOG_TraditionalFileFormat</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;%TIMESTAMP</span><span class="si">% %</span><span class="s2">HOSTNAME</span><span class="si">% %</span><span class="s2">syslogtag</span><span class="si">%%</span><span class="s2">msg:::sp-if-no-1st-sp</span><span class="si">%%</span><span class="s2">msg:::drop-last-lf%</span><span class="se">\n\&quot;</span>
+</pre></div>
+</div>
+<p>RSYSLOG_ForwardFormat</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;&lt;%PRI%&gt;%TIMESTAMP:::date-rfc3339</span><span class="si">% %</span><span class="s2">HOSTNAME</span><span class="si">% %</span><span class="s2">syslogtag:1:32</span><span class="si">%%</span><span class="s2">msg:::sp-if-no-1st-sp</span><span class="si">%%</span><span class="s2">msg%</span><span class="se">\&quot;</span>
+</pre></div>
+</div>
+<p>RSYSLOG_TraditionalForwardFormat</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;&lt;%PRI%&gt;%TIMESTAMP</span><span class="si">% %</span><span class="s2">HOSTNAME</span><span class="si">% %</span><span class="s2">syslogtag:1:32</span><span class="si">%%</span><span class="s2">msg:::sp-if-no-1st-sp</span><span class="si">%%</span><span class="s2">msg%</span><span class="se">\&quot;</span>
+</pre></div>
+</div>
+<p>使用这些模板，则在动作后附加 “;template_name” 即可，例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">programname</span><span class="p">,</span><span class="n">startswith</span><span class="p">,</span><span class="s2">&quot;cron&quot;</span> <span class="o">-/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">cron</span><span class="p">;</span><span class="n">RSYSLOG_TraditionalFileFormat</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id11">
+<h2>深入理解<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<p>队列是理解 rsyslog 内部原理和配置的重要基础，
+参考 <a class="reference external" href="http://www.rsyslog.com/doc/queues.html">Understanding rsyslog Queues</a>
+和 <a class="reference external" href="http://www.rsyslog.com/doc/queues_analogy.html">Turning Lanes and Rsyslog Queues - an Analogy</a>。
+下图概要性的说明了 rsyslog 内的数据流图。</p>
+<div class="figure align-center" id="id12">
+<img alt="rsyslog flow" src="../_images/rsyslog-flow.png" />
+<p class="caption"><span class="caption-text">rsyslog data flow</span></p>
+</div>
+<p>队列相关的配置指令：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$WorkDirectory /rsyslog/work    # 中间文件存放路径
+$ActionQueueType LinkedList     # [FixedArray/LinkedList/Direct/Disk]
+$ActionQueueFileName relpact    # 定义队列文件名
+$ActionResumeRetryCount -1      # 重试次数， -1 表示无限重试
+$ActionQueueSaveOnShutdown on   # rsyslog 关闭时将队列内容存盘，防止数据丢失
+*.* :omrelp:172.19.2.10:2514
+</pre></div>
+</div>
+<p>详细的配置请参考 <a class="reference internal" href="rsyslog-queue.html"><span class="doc">rsyslog 队列配置</span></a>。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rsyslog-queue.html" class="btn btn-neutral float-right" title="rsyslog 队列配置" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="supervisor.html" class="btn btn-neutral" title="supervisor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

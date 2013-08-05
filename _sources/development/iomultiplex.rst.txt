@@ -1,0 +1,21 @@
+异步事件的 IO 复用处理机制
+==========================
+
+.. versionadded:: @2010-07-08
+   创建
+
+.. index:: IO Multiplex
+
+事件驱动模型采用 IO 复用（select, poll, epoll, ...）时往往也需要处理异步事
+件（一般通过信号）；异步 IO 可以采用信号通知机制；有些事件处理模型采用 pipe 来
+实现事件的通知。
+
+Linux 2.6 提供了几个新的系统调用可以让异步事件处理通过 IO 复用机制来处理，
+分别为：
+
+    * :index:`eventfd` (>=2.6.22)
+    * :index:`signalfd` (>=2.6.22)
+    * :index:`timerfd_create` (>=2.6.25)
+
+其中 eventfd 可以取代 pipe ，节约一个 fd ；signalfd 和 timerfd_create
+可以分别让信号和定时器事件通过 IO 复用来处理。

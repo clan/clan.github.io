@@ -1,0 +1,54 @@
+awk & sed
+=========
+
+sed
+---
+
+.. versionadded:: @2019-01-26
+   创建
+
+替换 HEX 表示的字符
+^^^^^^^^^^^^^^^^^^^
+
+    `printf '\xC2\xA0\n' | sed 's/\xc2\xA0/X/g'`
+
+替换整行的例子
+^^^^^^^^^^^^^^
+
+::
+
+    $ printf 'a\nb\n' | sed "s/a.*/aaa/g"
+    aaa
+    b
+    $ printf 'a\nb\n' | sed "/a.*/c\aaa"
+    aaa
+    b
+    $ printf 'a\nb\n' | sed 's/\(a\).*/\1"xxx"/g'
+    a"xxx"
+    b
+
+替换换行符
+^^^^^^^^^^
+
+::
+
+  $ printf 'a\nb\n' | sed ':a;N;$!ba;s/\n/ /g' | hexdump -C
+  00000000  61 20 62 0a                                       |a b.|
+  00000004
+
+解释：
+
+#. Create a label via :a.
+#. Append the current and next line to the pattern space via N.
+#. If we are before the last line, branch to the created label
+   $!ba ($! means not to do it on the last line as there should
+   be one final newline).
+#. Finally the substitution replaces every newline with a space
+   on the pattern space (which is the whole file).
+
+awk
+---
+
+* 删除重复的行 (不需要排序
+
+  `awk '!x[$0]++' <file>`

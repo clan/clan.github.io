@@ -1,0 +1,520 @@
+rsyslog 配置简介
+================
+
+.. versionadded: @2013-12-31
+   创建
+
+`rsyslog <http://www.rsyslog.com/>`_ 是负责收集 syslog 的程序，可以用来取代
+syslogd 或 `syslog-ng <http://www.balabit.com/network-security/syslog-ng/>`_ 。
+在这些 syslog 处理程序中，个人认为 rsyslog 是功能最为强大的。其特性包括：
+支持输出日志到各种数据库，如 MySQL，PostgreSQL，MongoDB，ElasticSearch，等等；
+通过 RELP + TCP 实现数据的可靠传输（基于此结合丰富的过滤条件可以建立一种
+可靠的数据传输通道供其他应用来使用）；精细的输出格式控制以及对消息的强大
+过滤能力；高精度时间戳；队列操作（内存，磁盘以及混合模式等）；
+支持数据的加密和压缩传输等。
+
+syslog 的相关 RFC 参考
+:rfc:`3164`\ （The BSD syslog Protocol），
+:rfc:`5424`\ （The Syslog Protocol），，
+:rfc:`5425`\ （Transport Layer Security Mapping for Syslog），
+:rfc:`5426`\ （Transmission of Syslog Messages over UDP）。
+
+本文仅覆盖 rsyslog 的相关配置，其中配置指令的正确性以
+`官方文档 <http://www.rsyslog.com/doc/manual.html>`_\ 为准，
+`Wiki <http://wiki.rsyslog.com/>`_\ 作为参考。
+
+配置文件 /etc/rsyslog.conf
+--------------------------
+
+配置文档官方文档请参考
+`Configuration <http://www.rsyslog.com/doc/rsyslog_conf.html>`_\。
+
+rsyslog 的配置文件一般为 /etc/rsyslog.conf。模块相关的配置指定指定和功能仅在
+相应的模块被加载（$ModLoad）后才可用。配置行如果太长，可以在行尾使用
+“\\” 分割成多行。注释支持两种语法，一种以 # 开始到行尾，另一种为 C 语言格式。
+
+指令的处理顺序为文件内容从始到末。
+
+使用命令 `rsyslogd -f /etc/rsyslog.conf -N1` 测试配置文件检查。 ::
+
+  # rsyslogd -f /etc/rsyslog.conf -N1
+  rsyslogd: version 7.4.4, config validation run (level 1), master config /etc/rsyslog.conf
+  rsyslogd: warning: ~ action is deprecated, consider using the 'stop' statement instead [try http://www.rsyslog.com/e/2307 ]
+  rsyslogd: immark: mark message period must not be 0, can not run
+  rsyslogd: End of config validation run. Bye.
+
+日志的发送测试可以使用 `logger` 命令，该命令支持通过 UNIX Socket，UDP/TCP 等
+发送 syslog。
+
+下面仅对常用的\ `配置指令 <http://www.rsyslog.com/doc/rsyslog_conf_global.html>`_\
+做一些说明，并主要以 legacy rsyslog 的格式来描述。官方文档目前大部分是以
+`RainerScript <http://www.rsyslog.com/doc/rainerscript.html>`__ 的格式描述。
+部分配置指令放在单独的章节里说明。
+
+* $ActionFileDefaultTemplate [templateName] # 定义文件动作的日志输出模板
+
+    *$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat* ::
+
+      Dec 30 17:16:58 linux-64 logger[16898]: test syslog
+
+    *$ActionFileDefaultTemplate RSYSLOG_FileFormat* ::
+
+      2013-12-30T17:19:50.926770+08:00 linux-64 logger[7757]: test syslog
+
+* $ActionForwardDefaultTemplate [templateName] # 定义缺省转发动作的日志输出模板
+
+* $ActionExecOnlyWhenPreviousIsSuspended [on/off] # 值为 on 时表示接下来的
+  动作仅在之前的动作被挂起（失败）时才执行。
+
+* 文件系统相关配置
+
+    $DirCreateMode，$DirGroup, $DirOwner # 设置目录创建模式，属主和组
+
+    $FileCreateMode，$FileGroup，$FileOwner # 设置文件创建模式，属主和组
+
+    $Umask 0062 # 设置文件创建掩码，等价于 :manpage:`umask(1)`
+
+* $DynaFileCacheSize # 控制动态文件保持打开的个数，针对每个动作
+* $IncludeConfig # 导入其他文件到配置，等价于 C 中的 #include
+* $MainMsgQueueSize # 主消息队列大小
+* $MaxMessageSize # 日志最大大小，太大的值需要考虑传输协议，如 UDP
+* $ModLoad xxx # 模块加载
+* 重复消息控制
+
+    * $RepeatedMsgReduction on
+    * $RepeatedMsgContainsOrigionalMsg on
+
+* 日志接收率控制
+
+    Interval 设置率计算的时间间隔，0 表示关闭；Burst 设置该间隔内允许的日志数。
+    IMUXSock 针对通过 system log socket 接收的日志；SystemLog 针对其他输入源。
+
+    * $SystemLogRateLimitInterval 0
+    * $SystemLogRateLimitBurst 0
+    * $IMUXSockRateLimitInterval 0
+    * $IMUXSockRateLimitBurst 0
+
+    ::
+
+      Dec 31 22:02:36 linux-64 rsyslogd-2039: imuxsock begins to drop messages from pid 6927 due to rate-limiting
+      Dec 31 22:02:39 linux-64 rsyslogd-2039: imuxsock lost 133250 messages from pid 6927 due to rate-limiting
+
+模块
+----
+
+完整的模块列表在\ `这里 <http://www.rsyslog.com/doc/rsyslog_conf_modules.html>`__\。
+下面仅对常用的各类别模块做简单的介绍。
+
+输入模块（im 前缀）
+^^^^^^^^^^^^^^^^^^^
+
+* `imfile <http://www.rsyslog.com/doc/imfile.html>`_\（Text File Input Module）
+  - 转换文本文件为日志
+
+* `imrelp <http://www.rsyslog.com/doc/relp.html>`_ - 通过
+  `RELP <http://www.rsyslog.com/doc/relp.html>`_ 可靠的接收日志。 ::
+
+    $ModLoad imrelp         # 加载模块
+    $InputRELPServerRun 514 # 在 514 端口监听
+
+* `imudp <http://www.rsyslog.com/doc/imudp.html>`_ - 通过 UDP 接收日志 ::
+
+    $ModLoad imudp
+    $UDPServerRun  514
+
+* `imtcp <http://www.rsyslog.com/doc/imtcp.html>`_ - 通过 TCP 接收日志 ::
+
+    $ModLoad imtcp
+    $InputTCPMaxSessions 500
+    $InputTCPServerRun 514
+
+* `imptcp <http://www.rsyslog.com/doc/imptcp.html>`_ - 同 imtcp，
+  但针对 Linux 做高性能定制 ::
+
+    $ModLoad imptcp
+    $InputPTCPServerRun 514
+
+* immark - 周期性输出标记信息
+
+  设置为60，每分钟产生一个 mark 日志 ::
+
+    $MarkMessagePeriod  60
+
+* `imklog <http://www.rsyslog.com/doc/imklog.html>`_ - 获取内核日志
+  （通过 dmesg 也能看到相关信息）
+
+* `imuxsock <http://www.rsyslog.com/doc/imuxsock.html>`_ - UNIX socket
+
+  缺省情况下从 /dev/log 获取日志。 ::
+
+    # netstat -nxp|grep /dev/log
+    unix  3      [ ]         DGRAM     7439519  9074/rsyslogd        /dev/log
+
+  配置参考::
+
+    $ModLoad imuxsock # needs to be done just once
+    $SystemLogRateLimitInterval 0 # turn off rate limiting
+    $InputUnixListenSocketCreatePath on # turn on for *next* socket
+    $InputUnixListenSocket /var/run/sshd/dev/log
+    $InputUnixListenSocketHostName jail1.example.net
+    $AddUnixListenSocket /jail/1/dev/log
+    $InputUnixListenSocketHostName jail2.example.net
+    $AddUnixListenSocket /jail/2/dev/log
+
+* `impstats <http://www.rsyslog.com/doc/impstats.html>`_ - rsyslog
+  内部数据周期统计
+
+输出模块（om 前缀）
+^^^^^^^^^^^^^^^^^^^
+
+* `omfile <http://www.rsyslog.com/doc/omfile.html>`_ - 输出到文件
+
+  支持静态文件；通过模板支持动态文件；
+
+* `omfwd <http://www.rsyslog.com/doc/omfwd.html>`_ - 内置模块，转发 ::
+
+    *.* @192.168.2.11:10514
+    *.* @@192.168.2.11:10514
+
+* `omsnmp <http://www.rsyslog.com/doc/omsnmp.html>`_ - SNMP trap 输出 ::
+
+    $ModLoad omsnmp
+    $actionsnmptransport udp
+    $actionsnmptarget localhost
+    $actionsnmptargetport 162
+    $actionsnmpversion 1
+    $actionsnmpcommunity public
+    *.* :omsnmp:
+
+* `omrelp <http://www.rsyslog.com/doc/omrelp.html>`_ - RELP output module ::
+
+    $ModLoad omrelp
+    *.* :omrelp:loghost.example.com:20514
+
+* `omusrmsg <http://www.rsyslog.com/doc/omusrmsg.html>`_ - 内置模块，
+  发送日志到指定用户 ::
+
+    # Emergencies are sent to everybody logged in.
+    *.emerg                         :omusrmsg:*
+
+* `omprog <http://www.rsyslog.com/doc/omprog.html>`_ - 发送日志给程序处理
+
+  为方便程序解析，日志的输出最好采用 json 格式输出。 ::
+
+    $ModLoad omprog
+    $ActionOMProgBinary /tmp/save_log_data.py
+    :programname,startswith,"log4report" :omprog:;RSYSLOG_TraditionalFileFormat
+
+* `ommail <http://www.rsyslog.com/doc/ommail.html>`_ - 发送邮件
+
+* 输出到数据库等
+
+  * `ommysql <http://www.rsyslog.com/doc/ommysql.html>`_ - MySQL
+  * ompgsql - PostgreSQL
+  * `ommongodb <http://www.rsyslog.com/doc/ommongodb.html>`_ - MongoDB
+  * `omlibdbi <http://www.rsyslog.com/doc/omlibdbi.html>`_ - 通用数据库模块
+  * `omhdfs <http://www.rsyslog.com/doc/omhdfs.html>`_ - Hadoop's HDFS
+  * `omelasticsearch <http://www.rsyslog.com/doc/omelasticsearch.html>`_ - ElasticSearch
+
+其他模块
+^^^^^^^^
+
+消息过滤（fm 前缀），消息解析（pm 前缀），字符串生成（sm 前缀），库模块，等。
+
+规则
+----
+
+规则由过滤器和动作组成。
+
+`过滤器 <http://www.rsyslog.com/doc/rsyslog_conf_filter.html>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. 基于设施/优先级的过滤器
+
+   格式如下： ::
+
+    <FACILITY>.<PRIORITY>
+
+   其中：
+
+   <FACILITY> 表示生成日志的子系统。取值范围为 auth，authpriv，cron，
+   daemon，kern，lpr，mail，news，syslog，user，uucp，local0 到 local7，
+   参考 :manpage:`syslog(3)`\。其对应的数值请参考
+   */usr/include/sys/syslog.h*\，注意需要忽略移位操作。
+
+   <PRIORITY> 表示日志的级别，取值范围为（从低到高，数值对应 7-0）
+   debug，info，notice，warning，err，crit，alert，emerg。
+   参考 :manpage:`syslog(3)`\。
+
+   在级别前可以增加相应的修饰符，例如加 = 表示仅选择该优先级的日志，加 !
+   表示选择不等于优先级的所有日志，不加任何符号则表示选择该优先级及之上的日志。
+   \* 可以用来表示所有的日志子系统和/或消息级别。关键字 none
+   表示未指定级别的日志。如果要定义多个设置/优先级，使用 , 分隔即可。
+   如果要定义多个过滤条件，则使用 ; 分隔。
+
+   示例如下： ::
+
+     kern.*                 # 选择所有级别的内核日志
+     mail.crit              # 选择所有级别为 crit 及之上的邮件系统相关日志
+     cron.!info,!debug      # 选择所有 cron 日志信息，排除优先级为 info 和 debug 的日志
+     *.=debug               # 选择所有的调试级别日志
+     *.*;auth,authpriv.none # 选择所有级别的日志，以及认证相关无级别的日志
+
+#. 基于属性的过滤器
+
+   格式如下： ::
+
+     <PROPERTY>, [!]<COMPARE_OPERATION>, "<STRING>"
+
+   其中 ! 表示对匹配结果取反。
+
+   该过滤器可以对所有日志的属性进行过滤（相对传统的 syslog 程序而言），例如：
+   timegenerated 或者 syslogtag，所有的属性列表如下，完整的列表可以参考
+   `The Property Replacer <http://www.rsyslog.com/doc/property_replacer.html>`_
+   的\ *Available Properties* 节。部分属性如下：
+
+   .. _property:
+
+   =================== ==============================================
+   属性名              说明
+   =================== ==============================================
+   msg                 日志正文
+   hostname            日志中的主机名
+   fromhost            从该主机接收到的消息，可能不是最开始的发送主机
+   fromhost-ip         fromhost 的 IP
+   syslogtag           日志标签，如 named[12345]
+   programname         日志标签的静态部分，如 named
+   pri                 日志的 PRI 部分
+   pri-text            PRI 的文本表示，如 syslog.info
+   syslogfacility      日志类别
+   syslogfacility-text 日志类别的文本表示
+   syslogseverity      日志级别
+   syslogseverity-text 日志级别的文本表示
+   timegenerated       日志接收时间，或理解为 timereceived
+   timereported        日志内的报告时间，或生成时间
+   $now                当前时间，YYYY-MM-DD
+   $year               当前年，YYYY
+   $month              当前月，MM
+   $day                当前日志，DD
+   $hour               当前小时，24 小时格式，HH
+   $hhour              当前半小时，0-29 对应 0，30-59 对应 1
+   $qhour              当前1/4小时，0-3
+   $minute             当前分钟，MM
+   =================== ==============================================
+
+   *timegenerated* 和 *timereported* 的差别请参考
+   `What is the difference between timereported and timegenerated?
+   <http://www.rsyslog.com/what-is-the-difference-between-timereported-and-timegenerated>`_\。
+
+   每一个属性可以使用下面的比较操作来和某一个指定的值进行从而定义过滤器。
+
+   ========== ====================
+   操作符     说明
+   ========== ====================
+   contains   属性包含指定的字符串
+   isequal    属性等于指定的字符串
+   startswith 属性由指定字符串开始
+   regex      POSIX BRE 正则表达式
+   ereregex   POSIX ERE 正则表达式
+   ========== ====================
+
+   示例如下： ::
+
+     :msg,contains,"error"        # 选择包含 error 的日志
+     :hostname,isequal, "host1"   # 选择主机名为 host1 的日志
+     :msg,!regex,"fatal .* error" # 选择不匹配指定正则表达式的日志
+
+#. 基于 `RainerScript <http://www.rainerscript.com/>`_ 的过滤器
+
+   格式如下： ::
+
+     if <EXPRESSION> then <ACTION>
+
+   其中，<EXPRESSION> 表示表达式，例如：
+   "$msg startswith 'DEVNAME' or $syslogfacility-text == 'local0'"。
+   如果表达式结果为真，则会执行相应的动作。
+
+动作
+^^^^
+
+#. 保存日志到指定文件
+
+   例如： ::
+
+     cron.* -/var/log/cron.log
+
+   如果文件路径前有 “-” 则表示每次输出日志时不同步（fsync）指定日志文件。
+   文件路径既可以是静态文件也可以是动态文件。动态文件由模板前加 ? 定义。
+
+#. 通过网络发送日志
+
+   格式如下： ::
+
+     @[(<options>)]<HOST>:[<PORT>]
+
+   @ 表示使用 UDP 协议。@@ 表示使用 TCP 协议。<options> 可以为：
+   z<NUMBER> 表示使用 zlib 压缩，NUMBER 表示压缩级别。多个选项
+   使用 , 分隔。
+
+   例如： ::
+
+     *.* @192.168.0.1     # 使用 UDP 发送日志到 192.168.0.1
+     *.* @@example.com:18 # 使用 TCP 发送到 "example.com" 的 18 端口
+     *.* @(z9)[2001::1]   # 使用 UDP 发送消息到 2001::1，启用 zlib 9 级压缩
+
+#. 发送消息到特定用户
+
+   例如 ::
+
+     :msg,contains,"error" liuzx
+
+   发送包含 error 的日志到用户 liuzx。多个用户则用 , 分隔，\* 表示所有用户。用户
+   的 mesg （参考 :manpage:`mesg(1)`\）权限需要设置为 y。
+
+   上面的写法随 rsyslog 版本不同，可能会有如下警告信息，最好做调整。 ::
+
+     action 'liuzx' treated as ':omusrmsg:liuzx' - please change syntax, 'liuzx' will not be supported in the future
+
+#. 更多动作
+
+   参考输出模块的文档。例如 omprog 输出日志到指定程序的标准输入，ommysql 输出
+   到 MySQL 数据库，ompgsql 输出日志到 PostgreSQL， ...
+
+#. 丢弃日志
+
+   例如 ::
+
+     cron.* ~
+
+   丢弃所有信息，即该配置之后的动作不会看到该日志。
+
+   随 rsyslog 版本不同，如果有如下警告信息，则将 ~ 修改为 stop。 ::
+
+     warning: ~ action is deprecated, consider using the 'stop' statement instead [try http://www.rsyslog.com/e/2307 ]
+
+对每一个过滤条件，可以指定多个动作，每个动作一行即可。这种情况下，也可以通过
+“&” 来表示上一行的过滤体检。例如： ::
+
+  :msg,contains,"error" liuzx
+  & @192.168.1.1
+
+包含 “error” 日志被同时发送给用户 liuzx 和通过 UDP 发送到 192.168.1.1。
+
+日志输出模板
+^^^^^^^^^^^^
+
+通过模板可以更具需要来控制日志输出的样式。格式如下： ::
+
+  $template <TEMPLATE_NAME>,"text %<PROPERTY>% more text", [<options>]
+
+$template 为模板指令。<TEMPLATE_NAME> 为模板名。"" 之间的文本为模板格式。
+被 % 包含的文本对应相关的\ :ref:`属性 <property>`\。<options> 指定修改
+模板功能的一些选项,例如 sql 或者 stdsql 会格式化文本为 SQL 查询。
+
+#. 动态文件输出
+
+    通过日志和/或系统\ :ref:`属性 <property>`\决定输出文件名。 ::
+
+      $template DynamicFile,"/var/log/test_logs/%timegenerated%-test.log"
+      *.* ?DynamicFile
+
+    使用 timegenerated 生成文件名，使用该模板则在前面加上 ?。
+
+    其他例子如下： ::
+
+      $template DailyPerHostLogs,"/var/log/syslog/%$YEAR%/%$MONTH%/%$DAY%/%HOSTNAME%/messages.log"
+
+#. 根据属性控制日志输出格式
+
+    使用下面的格式可以对模板之中的属性做各种修改操作从而定制日志的格式 :::
+
+      %<propname>[:<fromChar>:<toChar>:<options>]%
+
+    <propname> 属性名，可用的属性名参考\ :ref:`上文 <property>`\。
+
+    <fromChar> 和 <toChar> 表示对属性值字符串的操作范围。
+    设置 <fromChar> 为 R，<toChar> 为正则表达式即可以通过正则
+    表达式定义范围。
+
+    <options> 则表示属性选项。完整的列表可以参考
+    `这里 <http://www.rsyslog.com/doc/property_replacer.html>`__\的
+    *Property Options* 节。
+
+    一些示例如下： ::
+
+      %msg%      # 日志的完整消息文本
+      %msg:1:2%  # 日志消息文本的最开始两个字符
+      %msg:::drop-last-lf% # 日志的完整消息文本，移出最后的换行符
+      %timegenerated:1:10:date-rfc3339% # 时间戳的头10个字符并按 RFC3999 标准格式化
+
+    下面是一些模板例子。
+
+    输出日志的级别，类别，收到日志时的时间错，主机名，消息标签，消息正文，
+    加上换行符： ::
+
+      $template verbose,"%syslogseverity%,%syslogfacility%,%timegenerated%,%HOSTNAME%,%syslogtag%,%msg%\n"
+
+    输出日志来源，时间以及日志标签，正文，同时还有蜂鸣声（\7）： ::
+
+      $template wallmsg,"\r\n\7Message from syslogd@%HOSTNAME% at %timegenerated% ...\r\n %syslogtag% %msg%\n\r"
+
+    格式化日志以便于直接进行 SQL 操作： ::
+
+      $template dbFormat,"insert into SystemEvents (Message, Facility,FromHost, Priority, DeviceReportedTime, ReceivedAt, InfoUnitID, SysLogTag) values ('%msg%', %syslogfacility%, '%HOSTNAME%',%syslogpriority%, '%timereported:::date-mysql%', '%timegenerated:::date-mysql%', %iut%, '%syslogtag%')",sql
+
+    以 json 格式输出，方便程序解析： ::
+
+      $template jsonFormat,"{\"message\":\"%msg:::json%\",\"fromhost\":\"%HOSTNAME:::json%\",\"facility\":\"%syslogfacility-text%\",\"priority\":\"%syslogpriority-text%\",\"timereported\":\"%timereported:::date-rfc3339%\",\"timegenerated\":\"%timegenerated:::date-rfc3339%\"}\n"
+
+    注意，message 的内容会在最前面多一个空格，其解释请参考
+    `这里 <http://www.rsyslog.com/log-normalization-and-the-leading-space/>`__\。
+
+    rsyslog 也提供了一些预定义的模板（以 RSYSLOG_ 为前缀），参考
+    `这里 <http://www.rsyslog.com/doc/rsyslog_conf_templates.html>`__ 的
+    *Reserved Template Names* 节，其定义如下：
+
+    RSYSLOG_FileFormat ::
+
+      "%TIMESTAMP:::date-rfc3339% %HOSTNAME% %syslogtag%%msg:::sp-if-no-1st-sp%%msg:::drop-last-lf%\n\"
+
+    RSYSLOG_TraditionalFileFormat ::
+
+      "%TIMESTAMP% %HOSTNAME% %syslogtag%%msg:::sp-if-no-1st-sp%%msg:::drop-last-lf%\n\"
+
+    RSYSLOG_ForwardFormat ::
+
+      "<%PRI%>%TIMESTAMP:::date-rfc3339% %HOSTNAME% %syslogtag:1:32%%msg:::sp-if-no-1st-sp%%msg%\"
+
+    RSYSLOG_TraditionalForwardFormat ::
+
+      "<%PRI%>%TIMESTAMP% %HOSTNAME% %syslogtag:1:32%%msg:::sp-if-no-1st-sp%%msg%\"
+
+    使用这些模板，则在动作后附加 “;template_name” 即可，例如： ::
+
+      :programname,startswith,"cron" -/var/log/cron;RSYSLOG_TraditionalFileFormat
+
+深入理解
+--------
+
+队列是理解 rsyslog 内部原理和配置的重要基础，
+参考 `Understanding rsyslog Queues <http://www.rsyslog.com/doc/queues.html>`_
+和 `Turning Lanes and Rsyslog Queues - an Analogy
+<http://www.rsyslog.com/doc/queues_analogy.html>`_\。
+下图概要性的说明了 rsyslog 内的数据流图。
+
+.. figure:: rsyslog-flow.png
+   :alt: rsyslog flow
+   :align: center
+
+   rsyslog data flow
+
+队列相关的配置指令： ::
+
+  $WorkDirectory /rsyslog/work    # 中间文件存放路径
+  $ActionQueueType LinkedList     # [FixedArray/LinkedList/Direct/Disk]
+  $ActionQueueFileName relpact    # 定义队列文件名
+  $ActionResumeRetryCount -1      # 重试次数， -1 表示无限重试
+  $ActionQueueSaveOnShutdown on   # rsyslog 关闭时将队列内容存盘，防止数据丢失
+  *.* :omrelp:172.19.2.10:2514
+
+详细的配置请参考 :doc:`rsyslog-queue`\ 。

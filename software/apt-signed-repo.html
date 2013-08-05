@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>建立本地的（可信）APT 源 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="初始化" href="init.html"/>
+        <link rel="next" title="Linux 下的 iSCSI initiator 部署" href="iscsi.html"/>
+        <link rel="prev" title="LVM" href="lvm.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="init.html">初始化</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pxe.html">PXE 安装系统配置 Howto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="partition.html">存储分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvm.html">LVM</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">建立本地的（可信）APT 源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html">Linux 下的 iSCSI initiator 部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offline.html">各种软件的离线版下载地址</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="init.html">初始化</a> &raquo;</li>
+        
+      <li>建立本地的（可信）APT 源</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/apt-signed-repo.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="apt">
+<h1>建立本地的（可信）APT 源<a class="headerlink" href="#apt" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-09-11 新版功能: </span>创建</p>
+</div>
+<p>除非出于测试或开发的目的，在线上系统上安装软件时最好通过发行版自带的包管理
+机制来执行。这里的软件包括自己开发的（尤其是需要编译成可执行文件的），官方源
+里没有提供的第三方软件，以及官方源里有但版本或某些配置不符合实际需要的第三方
+软件。</p>
+<p>本文仅覆盖 debian 系的发行版本。</p>
+<p>假设 deb 包已经存在（自己构建或其他渠道下载），安装该软件时可以直接通过 dpkg
+来安装。但在需要维护的机器数目比较多时这么做就会比较麻烦。因此，维护一个自己
+的源是很自然的想法。</p>
+<p>下面是一个已经构建完成的源的目录结构。（./ 对应 WEB 服务器的根目录）</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># tree ./
+.
+└── local
+    ├── dists
+    │   └── codename
+    │       └── main
+    │           ├── binary-amd64
+    │           │   └── Packages.bz2
+    │           ├── binary-i386
+    │           │   └── Packages.bz2
+    │           └── i18n
+    ├── local-scan.sh
+    └── pool
+        └── main
+            └── elasticsearch-0.90.2.deb
+</pre></div>
+</div>
+<p>所有的 deb 文件都放在 local/pool/main/ 目录下。
+local/dists/codename/main/binary-[amd64|i386]/Packages.bz2 文件由脚本
+local-scan.sh 生成：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nv">PROGPATH</span><span class="o">=</span><span class="k">$(</span>realpath <span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="si">}</span><span class="k">)</span>
+
+<span class="nb">pushd</span> <span class="k">$(</span>dirname <span class="nv">$PROGPATH</span><span class="k">)</span>
+
+dpkg-scanpackages  . <span class="p">|</span> bzip2 &gt; dists/codename/main/binary-i386/Packages.bz2
+dpkg-scanpackages  . <span class="p">|</span> bzip2 &gt; dists/codename/main/binary-amd64/Packages.bz2
+
+<span class="nb">popd</span>
+</pre></div>
+</div>
+<p>在需要通过 apt-get 执行软件安装的机器上修改 <cite>/etc/apt/sources.list</cite> 文件
+增加一行：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">deb</span> <span class="p">[</span><span class="n">arch</span><span class="o">=</span><span class="n">amd64</span><span class="p">]</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">source</span><span class="o">.</span><span class="n">address</span><span class="o">/</span><span class="n">local</span><span class="o">/</span> <span class="n">codename</span> <span class="n">main</span>
+</pre></div>
+</div>
+<p>在运行 <cite>apt-get update</cite> 后即可以直接 <cite>apt-get install xxx</cite> 来安装相应的软件包。</p>
+<p>但是，在通过 apt-get 从自建源（官方源也有可能）里安装软件时会出现下面这个问题：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># apt-get install xxxx
+......
+WARNING: The following packages cannot be authenticated!
+  xxxx
+Install these packages without verification [y/N]?
+</pre></div>
+</div>
+<p>这个问题的原因为：</p>
+<ol class="arabic simple">
+<li>由于缺少相应的公钥，从而无法执行相关包的校验检查。这时需要通过命令
+<cite>apt-key</cite> 添加相应的公钥。</li>
+<li>通过之前描述的方式构建的自建源没有签名配置，接下来就说明如何配置。</li>
+</ol>
+<p>apt 源的签名是通过 gpg 实现的，因此，我们需要先生成公私钥对，执行命令
+<cite>gpg --gen-key</cite>，密钥选择 RSA (sign only) ，密钥大小建议不小于 2048，其他
+内容根据提示输入。在生成公私钥对时 gpg 会通过 /dev/random 获取真实的随机数，
+如果系统的熵不够时，可能会出现如下提示：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Not enough random bytes available.  Please do some other work to give
+the OS a chance to collect more entropy! (Need 196 more bytes)
+</pre></div>
+</div>
+<p>一个技巧是通过 <cite>ping -f ip</cite> 来增加熵，ip 为执行 gpg 时所在机器的 IP 地址。
+gpg 命令成功执行后可以通过 <cite>gpg --list-keys</cite> 来查看生成的密钥对信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># gpg --list-keys</span>
+<span class="o">/</span><span class="n">root</span><span class="o">/.</span><span class="n">gnupg</span><span class="o">/</span><span class="n">pubring</span><span class="o">.</span><span class="n">gpg</span>
+<span class="o">------------------------</span>
+<span class="n">pub</span>   <span class="mi">4096</span><span class="n">R</span><span class="o">/</span><span class="mi">4</span><span class="n">C96262C</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">10</span>
+<span class="n">uid</span>                  <span class="n">Local</span> <span class="n">Package</span> <span class="n">Archive</span> <span class="o">&lt;</span><span class="n">info</span><span class="nd">@test</span><span class="o">.</span><span class="n">only</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>通过 <cite>gpg --armor --export info&#64;example.com</cite> 导出公钥。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">export</span> <span class="n">info</span><span class="nd">@test</span><span class="o">.</span><span class="n">only</span> <span class="o">&gt;</span> <span class="n">info</span><span class="nd">@test</span><span class="o">.</span><span class="n">only</span><span class="o">.</span><span class="n">gpg</span><span class="o">.</span><span class="n">key</span>
+</pre></div>
+</div>
+<p>通过命令 <cite>apt-key add</cite> 将该公钥添加到信任列表之中去。一般把这个文件放到
+自建源所在的 WEB 目录下，然后通过如下命令导入：</p>
+<p><cite>wget -O - http://source.address/info&#64;test.only.gpg.key  | apt-key add -</cite></p>
+<p>接下来需要做的是对自建源里的 deb 包进行签名即发布的操作，执行完成之后的源目录
+结构如下（注意这时的源目录和本文最初提到的方式创建的目录没有任何关系，建议重新
+创建目录）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># tree -F .
+.
+├── info@example.com.gpg.key
+└── local/
+    ├── conf/
+    │   └── distributions
+    ├── db/
+    │   ├── checksums.db
+    │   ├── contents.cache.db
+    │   ├── packages.db
+    │   ├── references.db
+    │   ├── release.caches.db
+    │   └── version
+    ├── dists/
+    │   └── codename/
+    │       ├── InRelease
+    │       ├── main/
+    │       │   ├── binary-amd64/
+    │       │   │   ├── Packages
+    │       │   │   ├── Packages.gz
+    │       │   │   └── Release
+    │       │   └── source/
+    │       │       ├── Release
+    │       │       └── Sources.gz
+    │       ├── Release
+    │       └── Release.gpg
+    ├── local-deb.sh
+    └── pool/
+        └── main/
+            └── e/
+                └── elasticsearch/
+                    └── elasticsearch_0.90.2_all.deb
+</pre></div>
+</div>
+<p>同样的， ./ 对应于 WEB 服务的根目录。在上面的这个目录结构中，只有
+conf/distributions 和 local-deb.sh 这两个文件是手工创建的，其他的目录和文件都
+由相关命令来创建和维护。</p>
+<p>conf/distributions 文件的内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Origin</span><span class="p">:</span> <span class="n">source</span><span class="o">.</span><span class="n">address</span>
+<span class="n">Label</span><span class="p">:</span> <span class="n">apt</span> <span class="n">repository</span>
+<span class="n">Codename</span><span class="p">:</span> <span class="n">codename</span>
+<span class="n">Architectures</span><span class="p">:</span> <span class="n">amd64</span> <span class="n">source</span>
+<span class="n">Components</span><span class="p">:</span> <span class="n">main</span>
+<span class="n">Description</span><span class="p">:</span> <span class="n">local</span> <span class="n">debian</span> <span class="n">package</span> <span class="n">repo</span>
+<span class="n">SignWith</span><span class="p">:</span> <span class="n">yes</span>
+</pre></div>
+</div>
+<p>其中 codename 对应于 dists/ 下的目录名。</p>
+<p>local-deb.sh 文件的内容如下：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nv">PROGPATH</span><span class="o">=</span><span class="k">$(</span>realpath <span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="si">}</span><span class="k">)</span>
+
+<span class="nb">pushd</span> <span class="k">$(</span>dirname <span class="nv">$PROGPATH</span><span class="k">)</span>
+
+<span class="k">while</span> <span class="o">[</span> <span class="nv">$#</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">do</span>
+    <span class="o">[</span> -s <span class="si">${</span><span class="nv">1</span><span class="si">}</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
+        reprepro -Vb . includedeb codename <span class="nv">$1</span>
+    <span class="o">}</span>
+    <span class="nb">shift</span>
+<span class="k">done</span>
+
+<span class="nb">popd</span>
+</pre></div>
+</div>
+<p>以需要添加到自建源里的 deb 文件作为参数执行 local-deb.sh 即可生成上面的目录结构。
+deb 文件不需要预先拷贝到 pool 目录下去。注意，执行 local-deb.sh 的用户最好和
+执行 gpg --gen-key 的用户一致，如果不是，则需要将相应的密钥对导入到该用户的
+环境中。</p>
+<p>在正确完成这些配置和操作后，再次执行 <cite>apt-get install</cite> 时就不会出现之前碰到
+的警告了。</p>
+<p>从源里删除某个包使用如下命令：
+<cite>reprepro -v --keepunreferencedfiles -Vb . remove codename pkgname</cite>。需要注意
+的是，如果同样版本的 deb 包之前已经加入，则在更新后重新加入时会失败（及时删除
+以前的版本）并报如下类似的信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Already</span> <span class="n">existing</span> <span class="n">files</span> <span class="n">can</span> <span class="n">only</span> <span class="n">be</span> <span class="n">included</span> <span class="n">again</span><span class="p">,</span> <span class="k">if</span> <span class="n">they</span> <span class="n">are</span> <span class="n">the</span> <span class="n">same</span><span class="p">,</span> <span class="n">but</span><span class="p">:</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>这种情况下只能更新版本好后再操作。这里隐含的思想是同样版本的包一旦被发布出去，
+就不能再被修改，只能被更新。</p>
+<p>新增源后运行 <cite>apt-get update</cite> 有时会出现如下错误，</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">W</span><span class="p">:</span> <span class="n">GPG</span> <span class="n">error</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//...</span> <span class="n">precise</span> <span class="n">Release</span><span class="p">:</span> <span class="n">The</span> <span class="n">following</span> <span class="n">signatures</span> <span class="n">couldn</span><span class="s1">&#39;t be verified because the public key is not available: NO_PUBKEY FA04D393774BAC4D</span>
+</pre></div>
+</div>
+<p>其原因是相关的 GPG公钥没有导入，执行如下命令即可：</p>
+<p><cite>apt-key adv --recv-keys --keyserver keyserver.ubuntu.com FA04D393774BAC4D</cite></p>
+<p>P.S. 本文仅在 amd64 下进行过测试，如果需要增加 i386 等的支持，请自行修改相关
+配置。</p>
+<p>参考：</p>
+<p><a class="reference external" href="https://wiki.debian.org/SettingUpSignedAptRepositoryWithReprepro">Setting Up Signed Apt Repository With Reprepro</a></p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="iscsi.html" class="btn btn-neutral float-right" title="Linux 下的 iSCSI initiator 部署" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="lvm.html" class="btn btn-neutral" title="LVM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

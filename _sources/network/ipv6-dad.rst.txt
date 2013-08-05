@@ -1,0 +1,63 @@
+Linux IPv6 DAD 相关配置
+=======================
+
+.. versionadded:: @2013-11-16
+   创建
+
+某台 Linux 主机，在网卡链路没有连接的情况下重启系统时发现 nginx 服务报错如下： ::
+
+  nginx: [emerg] bind() to [fdd8:cc63:4041::2]:80 failed (99: Cannot assign requested address)
+
+在系统启动完成后登录进系统执行 `ip addr` 可以看到该地址确实是正确配置了，但
+ping6 该地址无回应，但对应的 ipv4 地址 ping 有回应。按说 ping 本机的地址不应该
+和链路的状态有关系的，那会是什么原因呢？在仔细检查地址配置情况后发现该地址有
+个标记 tentative。 ::
+
+  1: eth0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+      link/ether 00:50:56:b9:e6:51 brd ff:ff:ff:ff:ff:ff
+      inet6 fdd8:cc63:4041::2/64 scope global tentative
+         valid_lft forever preferred_lft forever
+
+:manpage:`ip-address(8)` 查到对该标记的解释如下： ::
+
+   tentative
+      (IPv6 only) only list addresses which have not yet passed duplicate
+      address detection.
+
+显然该地址没有通过地址重复探测（duplicate address detection，简称 dad）。
+此时需要设置该接口的 accept_dad 参数为 0。我的理解是对线上服务器最好关闭该
+参数，保障服务不会因为链路没有连接好而不能正常启动，尤其是服务之间有依赖关
+系时，在链路恢复后不用再去人工操作恢复启动失败的服务。
+
+事实上 accept_dad 参数启用时，如果发现该地址已经被使用，该地址的配置同样不会
+生效，此时 `ip addr` 输出的结果如下： ::
+
+  2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+      link/ether 00:50:56:b9:09:a0 brd ff:ff:ff:ff:ff:ff
+      inet6 fdd8:cc63:4041::2/64 scope global tentative dadfailed
+         valid_lft forever preferred_lft forever
+      inet6 fe80::250:56ff:feb9:9a0/64 scope link
+         valid_lft forever preferred_lft forever
+
+可以看到该地址的标记又多了个 dadfailed。 `dmesg` 也有相应的消息： ::
+
+  [  195.960452] IPv6: eth0: IPv6 duplicate address fdd8:cc63:4041::2 detected!
+
+启用了 VRRP 协议时，在主备设备切换时虚IP (VIP) 会切换到另一台设备，由于执行
+时间的差别有时会导致 VIP 地址切换失败，即 VIP 已经转换到新的设备，但由于
+dadfailed 不生效。在这种情况下也需要关闭 dad 来避免问题。
+
+上面提到的配置可以统一放置在 /etc/sysctl.d/local.conf 文件中。 ::
+
+  net.ipv6.conf.all.accept_dad = 0
+  net.ipv6.conf.default.accept_dad = 0
+  net.ipv6.conf.eth0.accept_dad = 0
+  net.ipv6.conf.eth1.accept_dad = 0
+
+  # IPv6 Privacy Extensions (RFC 4941)
+  net.ipv6.conf.all.use_tempaddr = 0
+  net.ipv6.conf.default.use_tempaddr = 0
+
+DAD 相关的信息可以参考 :rfc:`4862`\。本文的观点是对服务器建议关闭 DAD 探测，
+但由于缺少 IPv6 的线上实践，这个建议是否合理，是否会带来新的问题，
+以及是否有其他更好的解决办法，留待今后的实践检验。

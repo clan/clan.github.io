@@ -1,0 +1,35 @@
+错觉
+====
+
+参考 `Optical illusion <https://en.wikipedia.org/wiki/Optical_illusion>`_
+
+Delboeuf 错觉：中间的圆大小实际上是一样的，它导致了牙医低估了洞的大小，
+因而钻得太大。
+
+.. figure:: delboeuf.jpg
+   :alt: Delboeuf Illusion
+   :align: center
+
+棋盘格亮度错觉：A，B两块区域的颜色是一样的。参考
+`Grey square optical illusion
+<https://commons.wikimedia.org/wiki/File:Grey_square_optical_illusion.svg>`_
+
+.. figure:: grey_square_optical_illusion.jpg
+   :alt: Grey Square Optical Illusion
+   :align: center
+
+水彩错觉：被黄色线条包围的部分的颜色要比周围白纸的颜色更黄一些，
+实际上二者的颜色是相同的。参考 `Watercolor illusion
+<https://en.wikipedia.org/wiki/Watercolor_illusion>`_\。
+
+.. figure:: pinna_scholarpedia_illusion.jpg
+   :alt: Pinna Scholarpedia Illusion
+   :align: center
+
+旋转运动错觉：当人注视图片中心黑点，头部靠近（或远离）屏幕时，
+会很明显地感受到两个圆环在分别以逆时针和顺时针（或顺时针和逆时针）方向旋转，
+但事实上圆环并没有任何物理移动。
+
+.. figure:: spin_illusion.jpg
+   :alt: Spin Illusion
+   :align: center

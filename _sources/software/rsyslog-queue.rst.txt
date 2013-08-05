@@ -1,0 +1,91 @@
+rsyslog 队列配置
+================
+
+.. versionadded:: @2014-04-09
+   创建
+
+rsyslog 的基本配置请参考\ :doc:`rsyslog`\，本文仅覆盖队列相关的配置。
+官方文档在\ `这里 <http://www.rsyslog.com/doc/queues.html>`__\。
+
+下文出现的配置指令中，请将 "<object>" 根据情况替换为 "MainMsg" 或 "Action"。
+前者对应主消息队列，后者对应将要创建的动作对应的队列。
+
+每定义一个动作都会相应的创建一个动作队列，缺省情况下动作队列为 direct
+模式（下详），等价于无队列。在动作队列创建其的配置参数会被恢复为缺省值，
+这样就可以针对不同的动作进行不同的配置。
+
+可用的队列类型为
+`$<object>QueueType [Direct|Disk|FixedArray|LinkedList]`\，分别解释如下：
+
+- Direct：没有队列
+- Disk：仅使用磁盘作为缓冲
+- FixedArray：使用内存作为缓冲，使用固定大小的预分配指针数组来记录队列元素
+- LinkedList：使用内存作为缓冲，但所有数据都是动态分配的
+
+当队列使用到磁盘或磁盘辅助时，会用到下面这些参数：
+
+- $WorkDirectory 磁盘文件所在的目录
+- $<object>QueueFilename 定义磁盘文件前缀
+- $<object>QueueMaxFileSize 每个文件的最大大小，缺省为 10MB
+- $<object>QueueMaxDiskSpace 最大可用的磁盘空间
+- $<object>QueueCheckpointInterval 更新 bookkeeping 信息的间隔，每 n 秒
+- $<object>QueueSyncQueueFiles [on/off] 每次写操作后调用 (f)sync，
+  4.3.2 及之后的版本可用
+
+对 FixedArray 和 LinkedList 两种类型，如果定义了 `$<object>QueueFilename`\，
+则队列变为磁盘辅助内存队列。在有必要时（内存队列满，写数据库太慢，进程关闭等），
+数据会被写入磁盘（将来再读出）作为缓冲。指令 `$<object>QueueHighWatermark`
+和 `$<object>QueueLowWatermark` 控制合适使用磁盘。在队列中的元素超过高水位
+时开始使用磁盘，低于低水位时才停止。
+
+$<object>QueueSize 配置队列大小，即可以存放的日志条数。
+
+每个队列都有一个工作线程池，相关配置如下：
+
+- $<object>QueueWorkerThreadMinimumMessages 新工作线程启动的条件
+- $<object>QueueWorkerThreads 线程个数的上限
+- $<object>QueueWorkerTimeoutThreadShutdown 线程关闭超时值，
+  0 表示立即关闭，-1 表示永不关闭。
+
+如果队列里的元素个数达到丢弃水位，则可以抛弃指定级别的日志信息，
+从而保障重要信息有空间存放。
+
+- $<object>QueueDiscardMark
+- $<object>QueueDiscardSeverity 定义可丢弃日志的优先级（>=） ::
+
+        Numerical         Severity
+          Code
+
+           0       Emergency: system is unusable
+           1       Alert: action must be taken immediately
+           2       Critical: critical conditions
+           3       Error: error conditions
+           4       Warning: warning conditions
+           5       Notice: normal but significant condition
+           6       Informational: informational messages
+           7       Debug: debug-level messages
+
+如果队列满或磁盘空间满或其他情况，rsyslog 会控制输入输出的吞吐。
+
+- $<object>QueueTimeoutEnqueue 单位 ms，如果超过该时间仍然不能出队列，
+  日志会被丢弃。0 表示立即丢弃。缺省为 2s。
+- $<object>QueueDequeueSlowdown 延迟出队列时间，单位 ms
+- $<object>QueueDequeueTimeBegin <hour>
+- $<object>QueueDequeueTimeEnd <hour> 出队列的时间窗口
+- $<object>DequeueBatchSize <number> 批量处理条件
+- $ActionResumeRetryCount 队列被挂起后重试次数
+- `$ActionResumeInterval <http://www.rsyslog.com/doc/rsconf1_actionresumeinterval.html>`_ <number>
+  队列被挂起（例如输出不可达）后再次继续的间隔
+
+队列关闭的相关参数如下：
+
+- $<object>QueueTimeoutShutdown 关闭超时时间
+- $<object>QueueTimeoutActionCompletion 队列完成超时时间
+- $<object>QueueSaveOnShutdown 队列关闭时是否保存数据
+
+在没有配置任何队列相关参数的情况下（即队列类型为 Direct），
+日志输出是按顺序进行，如果其中某个动作阻塞则会导致所有日志输出阻塞。
+队列缺省参数（例如 $<object>QueueTimeoutEnqueue 的缺省 2s）
+的设置也会影响到日志输入端的处理。
+其他应用的日志输出相应的会被延迟，导致应用响应变慢。
+因此在日志输出动作有使用到非本地文件输出时，最好对该动作队列进行合理的配置。

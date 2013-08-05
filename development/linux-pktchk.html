@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>用于网络包检查的简单内核模块 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="内核" href="kernel.html"/>
+        <link rel="next" title="Linux 内核 firmware 加载过程" href="linux-firmware-load.html"/>
+        <link rel="prev" title="clocksource 解释" href="linux-clocksource.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">调试</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="kernel.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kernel-commits.html">有趣的内核 commit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-magic.html">Linux reboot 的魔数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-memory.html">Linux 内核内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-clocksource.html">clocksource 解释</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">用于网络包检查的简单内核模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-firmware-load.html">Linux 内核 firmware 加载过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-verify.html">Linux 内核签名验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aslr.html">ASLR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kernel.html">内核</a> &raquo;</li>
+        
+      <li>用于网络包检查的简单内核模块</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/development/linux-pktchk.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>用于网络包检查的简单内核模块<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2012-03-13 新版功能: </span>创建</p>
+</div>
+<p>非常简单的网络包检查的内核模块，基于此可以做更多有意义的事情。基于内核 3.2
+测试通过。</p>
+<p>最新代码请参考 <a class="reference external" href="https://github.com/clan/kernel/tree/master/net">这里</a>。</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">pkt_chk.c</span><a class="headerlink" href="#id3" title="永久链接至代码">¶</a></div>
+<div class="highlight-c notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * @file</span>
+<span class="cm"> * @author Z. Liu &lt;liuzx@knownsec.com&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @brief kernel module for packet inspection</span>
+<span class="cm"> */</span>
+<span class="cp">#include</span> <span class="cpf">&lt;linux/ip.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;linux/tcp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;linux/udp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;linux/kernel.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;linux/module.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;linux/netfilter_ipv4.h&gt;</span><span class="cp"></span>
+
+<span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">&quot;Dual BSD/GPL&quot;</span><span class="p">);</span>
+<span class="n">MODULE_AUTHOR</span><span class="p">(</span><span class="s">&quot;Z. Liu &lt;liuzx@knownsec.com&gt;&quot;</span><span class="p">);</span>
+<span class="n">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">&quot;demo of packet inspection&quot;</span><span class="p">);</span>
+
+<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">pkt_chk_out</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">hooknum</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sk_buff</span> <span class="o">*</span><span class="n">skb</span><span class="p">,</span>
+		<span class="k">const</span> <span class="k">struct</span> <span class="n">net_device</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span>
+		<span class="k">const</span> <span class="k">struct</span> <span class="n">net_device</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span>
+		<span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">okfn</span><span class="p">)(</span><span class="k">struct</span> <span class="n">sk_buff</span> <span class="o">*</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="k">struct</span> <span class="n">tcphdr</span> <span class="o">*</span><span class="n">th</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">udphdr</span> <span class="o">*</span><span class="n">uh</span><span class="p">;</span>
+	<span class="kt">uint16_t</span> <span class="n">sport</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dport</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">iphdr</span> <span class="o">*</span><span class="n">iph</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">iphdr</span> <span class="o">*</span><span class="p">)</span><span class="n">skb_network_header</span><span class="p">(</span><span class="n">skb</span><span class="p">);</span>
+
+	<span class="k">switch</span> <span class="p">(</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">protocol</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nl">IPPROTO_UDP</span><span class="p">:</span>
+			<span class="n">uh</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">udphdr</span> <span class="o">*</span><span class="p">)</span><span class="n">skb_transport_header</span><span class="p">(</span><span class="n">skb</span><span class="p">);</span>
+			<span class="n">sport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">uh</span><span class="o">-&gt;</span><span class="n">source</span><span class="p">);</span>
+			<span class="n">dport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">uh</span><span class="o">-&gt;</span><span class="n">dest</span><span class="p">);</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="nl">IPPROTO_TCP</span><span class="p">:</span>
+			<span class="n">th</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">tcphdr</span> <span class="o">*</span><span class="p">)</span><span class="n">skb_transport_header</span><span class="p">(</span><span class="n">skb</span><span class="p">);</span>
+			<span class="n">sport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">th</span><span class="o">-&gt;</span><span class="n">source</span><span class="p">);</span>
+			<span class="n">dport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">th</span><span class="o">-&gt;</span><span class="n">dest</span><span class="p">);</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="k">default</span><span class="o">:</span>
+			<span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;OUT: %pI4:%u -&gt; %pI4:%u, proto: %u</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">saddr</span><span class="p">,</span> <span class="n">sport</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">daddr</span><span class="p">,</span> <span class="n">dport</span><span class="p">,</span> <span class="n">iph</span><span class="o">-&gt;</span><span class="n">protocol</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">NF_ACCEPT</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">pkt_chk_in</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">hooknum</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sk_buff</span> <span class="o">*</span><span class="n">skb</span><span class="p">,</span>
+		<span class="k">const</span> <span class="k">struct</span> <span class="n">net_device</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span>
+		<span class="k">const</span> <span class="k">struct</span> <span class="n">net_device</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span>
+		<span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">okfn</span><span class="p">)(</span><span class="k">struct</span> <span class="n">sk_buff</span> <span class="o">*</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">char</span> <span class="n">nulldevname</span><span class="p">[</span><span class="n">IFNAMSIZ</span><span class="p">]</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">aligned</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">long</span><span class="p">))));</span>
+	<span class="k">struct</span> <span class="n">tcphdr</span> <span class="o">*</span><span class="n">th</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">udphdr</span> <span class="o">*</span><span class="n">uh</span><span class="p">;</span>
+	<span class="kt">uint16_t</span> <span class="n">sport</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dport</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">iphdr</span> <span class="o">*</span><span class="n">iph</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">iphdr</span> <span class="o">*</span><span class="p">)</span><span class="n">skb_network_header</span><span class="p">(</span><span class="n">skb</span><span class="p">);</span>
+	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">indev</span><span class="p">;</span>
+
+	<span class="n">indev</span> <span class="o">=</span> <span class="n">in</span> <span class="o">?</span> <span class="n">in</span><span class="o">-&gt;</span><span class="nl">name</span> <span class="p">:</span> <span class="n">nulldevname</span><span class="p">;</span>
+
+	<span class="c1">// @note when a packet goes in from wire, it travels from physical layer,</span>
+	<span class="c1">// data link layer, network layer upwards, therefore it might not go</span>
+	<span class="c1">// through the functions for skb_transport_header to work as expected.</span>
+	<span class="c1">// so we need a hack: skip the ip header.</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">protocol</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nl">IPPROTO_UDP</span><span class="p">:</span>
+			<span class="n">uh</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">udphdr</span> <span class="o">*</span><span class="p">)(</span><span class="n">skb_transport_header</span><span class="p">(</span><span class="n">skb</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">ihl</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">));</span>
+			<span class="n">sport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">uh</span><span class="o">-&gt;</span><span class="n">source</span><span class="p">);</span>
+			<span class="n">dport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">uh</span><span class="o">-&gt;</span><span class="n">dest</span><span class="p">);</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="nl">IPPROTO_TCP</span><span class="p">:</span>
+			<span class="n">th</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">tcphdr</span> <span class="o">*</span><span class="p">)(</span><span class="n">skb_transport_header</span><span class="p">(</span><span class="n">skb</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">ihl</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">));</span>
+			<span class="n">sport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">th</span><span class="o">-&gt;</span><span class="n">source</span><span class="p">);</span>
+			<span class="n">dport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">ntohs</span><span class="p">(</span><span class="n">th</span><span class="o">-&gt;</span><span class="n">dest</span><span class="p">);</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="k">default</span><span class="o">:</span>
+			<span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;IN: %pI4:%u -&gt; %pI4:%u, proto: %u</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">saddr</span><span class="p">,</span> <span class="n">sport</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">iph</span><span class="o">-&gt;</span><span class="n">daddr</span><span class="p">,</span> <span class="n">dport</span><span class="p">,</span> <span class="n">iph</span><span class="o">-&gt;</span><span class="n">protocol</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">NF_ACCEPT</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="k">struct</span> <span class="n">nf_hook_ops</span> <span class="n">packet_ops</span><span class="p">[]</span> <span class="n">__read_mostly</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="p">{</span>
+		<span class="p">.</span><span class="n">hook</span>     <span class="o">=</span> <span class="n">pkt_chk_in</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">owner</span>    <span class="o">=</span> <span class="n">THIS_MODULE</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">pf</span>       <span class="o">=</span> <span class="n">NFPROTO_IPV4</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">hooknum</span>  <span class="o">=</span> <span class="n">NF_INET_PRE_ROUTING</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">NF_IP_PRI_FIRST</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="p">{</span>
+		<span class="p">.</span><span class="n">hook</span>     <span class="o">=</span> <span class="n">pkt_chk_out</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">owner</span>    <span class="o">=</span> <span class="n">THIS_MODULE</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">pf</span>       <span class="o">=</span> <span class="n">NFPROTO_IPV4</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">hooknum</span>  <span class="o">=</span> <span class="n">NF_INET_LOCAL_OUT</span><span class="p">,</span>
+		<span class="p">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">NF_IP_PRI_FIRST</span><span class="p">,</span>
+	<span class="p">},</span>
+<span class="p">};</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="n">__init</span> <span class="nf">pkt_chk_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+
+	<span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;initialize of packet inspection module</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+	<span class="n">ret</span> <span class="o">=</span> <span class="n">nf_register_hooks</span><span class="p">(</span><span class="n">packet_ops</span><span class="p">,</span> <span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">packet_ops</span><span class="p">));</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="n">__exit</span> <span class="nf">pkt_chk_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">nf_unregister_hooks</span><span class="p">(</span><span class="n">packet_ops</span><span class="p">,</span> <span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">packet_ops</span><span class="p">));</span>
+
+	<span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;packet inspection module unloaded.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">module_init</span><span class="p">(</span><span class="n">pkt_chk_init</span><span class="p">);</span>
+<span class="n">module_exit</span><span class="p">(</span><span class="n">pkt_chk_exit</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">makefile</span><a class="headerlink" href="#id4" title="永久链接至代码">¶</a></div>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="cp">ifeq ($(KERNELRELEASE),)</span>
+    KERNELDIR ?<span class="o">=</span> /lib/modules/<span class="k">$(</span>shell uname -r<span class="k">)</span>/build
+    PWD :<span class="o">=</span> <span class="k">$(</span>shell <span class="nb">pwd</span><span class="k">)</span>
+
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">modules</span> <span class="n">clean</span>
+
+<span class="nf">modules</span><span class="o">:</span>
+     <span class="k">$(</span>MAKE<span class="k">)</span> -C <span class="k">$(</span>KERNELDIR<span class="k">)</span> <span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span> modules
+
+<span class="nf">modules_install</span><span class="o">:</span>
+     <span class="k">$(</span>MAKE<span class="k">)</span> -C <span class="k">$(</span>KERNELDIR<span class="k">)</span> <span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span> modules_install
+
+<span class="nf">clean</span><span class="o">:</span>
+     @rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions
+     @rm -rf modules.order  Module.symvers
+
+<span class="cp">else</span>
+    obj-m :<span class="o">=</span> pkt_chk.o
+<span class="cp">endif</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="linux-firmware-load.html" class="btn btn-neutral float-right" title="Linux 内核 firmware 加载过程" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="linux-clocksource.html" class="btn btn-neutral" title="clocksource 解释" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

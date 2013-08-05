@@ -1,0 +1,59 @@
+OSX 上部署 Gentoo Prefix
+========================
+
+.. versionadded:: @2015-01-21
+   创建
+
+.. index:: Gentoo Prefix
+
+`Genttoo Prefix <http://www.gentoo.org/proj/en/gentoo-alt/prefix/>`_
+在非 Linux 系统上提供类似 Gentoo Linux 的体验和软件安装。
+本文简要描述在 OSX 上的部署过程。
+
+参考了
+`Gentoo Prefix Bootstrap Process <http://www.gentoo.org/proj/en/gentoo-alt/prefix/bootstrap.xml>`_
+和
+`Gentoo Prefix Bootstrap Process for UNIX-like systems <http://www.gentoo.org/proj/en/gentoo-alt/prefix/bootstrap-solaris.xml>`_
+这两个文档。
+
+Gentoo 的软件安装需要编译器支持，但在 OSX 缺省安装时是没有提供编译器的： ::
+
+    $ gcc -v
+    xcode-select: note: no developer tools were found at '/Applications/Xcode.app', requesting install. Choose an option in the dialog to download the command line developer tools.
+
+输入 `gcc -v` 后会返回上面的信息以及一个对话框（下图），选择安装后按提示操作即可。
+或 `xcode-select --install` 直接安装。
+该步骤完成后可以再次执行命令确认。
+
+.. image:: xcode-cmdline.png
+    :alt: Xcode command line
+    :align: center
+    :width: 400
+
+接下来依次输入下列命令即可完成 Gentoo Prefix 的安装。 ::
+
+    $ export EPREFIX="$HOME/Gentoo"
+    $ export PATH="$EPREFIX/usr/bin:$EPREFIX/bin:$EPREFIX/tmp/usr/bin:$EPREFIX/tmp/bin:/usr/bin:/bin"
+    $ curl http://rsync.prefix.bitzolder.nl/scripts/bootstrap-prefix.sh
+    $ chmod +x bootstrap-prefix.sh
+    $ ./bootstrap-prefix.sh $EPREFIX stage1
+    $ ./bootstrap-prefix.sh $EPREFIX stage2
+    $ ./bootstrap-prefix.sh $EPREFIX stage3
+    $ ./bootstrap-prefix.sh $EPREFIX startscript
+    $ more $EPREFIX/etc/portage/make.conf
+    USE="cscope nls -perl python unicode xattr"
+    CFLAGS="${CFLAGS} -O2 -pipe"
+    CXXFLAGS="${CFLAGS}"
+    MAKEOPTS="-j4"
+    EMERGE_DEFAULT_OPTS="--quiet-build=y"
+    FEATURES="buildpkg -distcc parallel-fetch splitdebug"
+    PORTAGE_BINHOST="file:///Users/liuzx/Gentoo/usr/portage/packages/"
+    CONFIG_SHELL="/Users/liuzx/Gentoo/bin/bash"
+    # be careful with this one, don't just remove it!
+    PREFIX_DISABLE_GEN_USR_LDSCRIPT=yes
+    $ $EPREFIX/startprefix
+    $ emerge -auvDNgke world
+
+make.conf 文件中的最后一行非常关键，其他的配置可以根据实际情况调整。
+
+正常安装成功后可以通过 `$EPREFIX/startprefix` 启动 Gentoo 类似环境。

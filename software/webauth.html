@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>通过 WEB 实现 kerberos 密码修改 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="名字服务" href="nss.html"/>
+        <link rel="next" title="数据库" href="db.html"/>
+        <link rel="prev" title="使用 LDAP + Kerberos 实现集中用户认证及授权系统" href="ldap-kerberos.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="nss.html">名字服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dns.html">DNS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bind.html">BIND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ldap-kerberos.html">使用 LDAP + Kerberos 实现集中用户认证及授权系统</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">通过 WEB 实现 kerberos 密码修改</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="nss.html">名字服务</a> &raquo;</li>
+        
+      <li>通过 WEB 实现 kerberos 密码修改</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/webauth.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="web-kerberos">
+<h1>通过 WEB 实现 kerberos 密码修改<a class="headerlink" href="#web-kerberos" title="永久链接至标题">¶</a></h1>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">待处理</p>
+<p class="last">增加 Python 实现</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-11-06 新版功能: </span>创建</p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">&#64;2019-02-19 版后已移除: </span>使用 Python 能更方便的实现</p>
+</div>
+<p>在 <a class="reference internal" href="ldap-kerberos.html"><span class="doc">使用 LDAP + Kerberos 实现集中用户认证及授权系统</span></a> 里我们采用 Kerberos
+来实现认证系统。接下来的一个需求是如何让用户方便的进行密码的修改。</p>
+<p>在 Linux 系统上如果配置了 PAM 使用 pam_krb5 来进行认证（示例配置文件如下），
+在用户成功登录到该系统可以通过命令 kpasswd （如果合适的配置了
+/etc/pam.d/passwd 文件，通过命令 passwd 也可以）来进行密码修改。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># more /etc/pam.d/system-auth</span>
+<span class="n">auth</span>            <span class="n">required</span>        <span class="n">pam_env</span><span class="o">.</span><span class="n">so</span>
+<span class="n">auth</span>            <span class="n">sufficient</span>      <span class="n">pam_krb5</span><span class="o">.</span><span class="n">so</span>
+<span class="n">auth</span>            <span class="n">required</span>        <span class="n">pam_unix</span><span class="o">.</span><span class="n">so</span> <span class="n">try_first_pass</span> <span class="n">likeauth</span> <span class="n">nullok</span>
+<span class="n">auth</span>            <span class="n">optional</span>        <span class="n">pam_permit</span><span class="o">.</span><span class="n">so</span>
+
+<span class="n">account</span>         <span class="n">sufficient</span>      <span class="n">pam_krb5</span><span class="o">.</span><span class="n">so</span>
+<span class="n">account</span>         <span class="n">required</span>        <span class="n">pam_unix</span><span class="o">.</span><span class="n">so</span>
+<span class="n">account</span>         <span class="n">optional</span>        <span class="n">pam_permit</span><span class="o">.</span><span class="n">so</span>
+
+<span class="n">password</span>        <span class="n">required</span>        <span class="n">pam_cracklib</span><span class="o">.</span><span class="n">so</span> <span class="n">difok</span><span class="o">=</span><span class="mi">2</span> <span class="n">minlen</span><span class="o">=</span><span class="mi">8</span> <span class="n">dcredit</span><span class="o">=</span><span class="mi">2</span> <span class="n">ocredit</span><span class="o">=</span><span class="mi">2</span> <span class="n">retry</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">password</span>        <span class="n">sufficient</span>      <span class="n">pam_krb5</span><span class="o">.</span><span class="n">so</span>
+<span class="n">password</span>        <span class="n">required</span>        <span class="n">pam_unix</span><span class="o">.</span><span class="n">so</span> <span class="n">try_first_pass</span> <span class="n">use_authtok</span> <span class="n">nullok</span> <span class="n">sha512</span> <span class="n">shadow</span>
+<span class="n">password</span>        <span class="n">optional</span>        <span class="n">pam_permit</span><span class="o">.</span><span class="n">so</span>
+
+<span class="n">session</span>         <span class="n">required</span>        <span class="n">pam_limits</span><span class="o">.</span><span class="n">so</span>
+<span class="n">session</span>         <span class="n">required</span>        <span class="n">pam_env</span><span class="o">.</span><span class="n">so</span>
+<span class="n">session</span>         <span class="n">sufficient</span>      <span class="n">pam_krb5</span><span class="o">.</span><span class="n">so</span>
+<span class="n">session</span>         <span class="n">required</span>        <span class="n">pam_unix</span><span class="o">.</span><span class="n">so</span>
+<span class="n">session</span>         <span class="n">optional</span>        <span class="n">pam_permit</span><span class="o">.</span><span class="n">so</span>
+</pre></div>
+</div>
+<p>但在某些情况下用户可能无法通过 kpasswd 命令行来执行操作。此外，对于非技术人员
+来说，让用户通过命令行来操作也可能会遇到很多支持上的问题，因此能让用户通过 WEB
+界面来修改密码是比较方便的。乍一看，这个问题很简单。但如果在 Kerberos 里配置了
+密码策略，新的密码也可能要满足策略要求，如密码的最小长度，需要包含的字符类别数
+目限制，密码重复的次数等。在密码修改界面里重复实现这一套逻辑会费时费力。更严重
+的是，用户修改密码时其密码可能已经过期从而无法通过认证（kpasswd 命令在密码过期
+时会要求用户重新设置新密码），因此基于 WEB 的密码修改程序也得遵循 Kerberos
+协议。幸运的是，已经有一个软件提供了基于 WEB 的解决方案，即
+<a class="reference external" href="{http://webauth.stanford.edu/">WebAuth</a>。下面描述其安装过程。</p>
+<ol class="arabic">
+<li><p class="first">在 WebAuth 官网下载源代码后编译。<cite>./configure --enable-perl &amp;&amp; make</cite></p>
+</li>
+<li><p class="first">拷贝编译后的目录里的动态库代码到系统目录下。<cite>cp -ar lib/.libs/libwebauth.so* /usr/lib64/ &amp;&amp; ./perl/Build install</cite></p>
+</li>
+<li><p class="first">拷贝 weblogin 目录下的 pwchange.fcgi 和其他模板文件到某个目录，如
+/home/web/pwchange</p>
+</li>
+<li><p class="first">执行 pwchange.fcgi 并根据出错信息安装相应的 perl 扩展库(<cite>cpan -i ...</cite>)，
+确保 pwchange.fcgi 能正常运行，其输出结果为 HTTP 响应数据，
+包含响应头和 HTTP 正文文本。</p>
+</li>
+<li><p class="first">安装 spawnfcgi 和 fcgiwrap 程序 <cite>emerge -avgk fcgiwrap spawnfcgi</cite></p>
+</li>
+<li><p class="first">新增服务 <cite>ln -s /etc/init.d/spawnfcgi /etc/init.d/spawnfcgi.fcgiwrap</cite>，并
+配置 /etc/conf.d/spawn-fcgi.fcgiwrap 如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FCGI_SOCKET</span><span class="o">=/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">fcgiwrap</span><span class="o">.</span><span class="n">sock</span>
+<span class="n">FCGI_PORT</span><span class="o">=</span>
+<span class="n">FCGI_PROGRAM</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">fcgiwrap</span>
+<span class="n">FCGI_CHILDREN</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">FCGI_USER</span><span class="o">=</span><span class="n">nginx</span>
+<span class="n">FCGI_GROUP</span><span class="o">=</span><span class="n">nginx</span>
+<span class="n">ALLOWED_ENV</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">配置 nginx 如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">location</span> <span class="o">~</span> <span class="o">^/</span><span class="n">auth</span><span class="o">/</span><span class="n">pwchange</span><span class="o">*</span> <span class="p">{</span>
+      <span class="n">alias</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="n">pwchange</span><span class="p">;</span>
+      <span class="n">rewrite</span> <span class="o">^/</span><span class="n">auth</span><span class="o">/</span><span class="n">pwchange</span> <span class="o">/</span><span class="n">pwchange</span><span class="o">.</span><span class="n">fcgi</span> <span class="k">break</span><span class="p">;</span>
+      <span class="n">include</span> <span class="n">fastcgi</span><span class="o">.</span><span class="n">conf</span><span class="p">;</span>
+      <span class="n">fastcgi_param</span> <span class="n">DOCUMENT_ROOT</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="n">pwchange</span><span class="p">;</span>
+      <span class="n">fastcgi_param</span> <span class="n">SCRIPT_NAME</span>   <span class="n">pwchange</span><span class="o">.</span><span class="n">fcgi</span><span class="p">;</span>
+      <span class="n">fastcgi_pass</span> <span class="n">unix</span><span class="p">:</span><span class="o">///</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">fcgiwrap</span><span class="o">.</span><span class="n">sock</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">配置文件 /etc/webkdc/webkdc.conf</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$KEYRING_PATH = &quot;/etc/webkdc/webkdc.keyring&quot;;
+</pre></div>
+</div>
+</li>
+<li><p class="first">使用 WebAuth 软件源代码里的 wa_keyring 程序生成 webkdc.conf 里指定的文件。
+<cite>./tools/wa_keyring -f /etc/webkdc/webkdc.keyring add 0d</cite>。调整
+webkdc.keyring 文件权限，让 fcgiwrap 程序执行时有权限访问该文件。</p>
+</li>
+<li><p class="first">启动 spawnfcgi.fcgiwrap 和 nginx 服务。测试 pwchange 服务是否能正常工作。</p>
+</li>
+<li><p class="first">如果有问题则通过 strace 以及其他相关服务的日志文件分析排查。</p>
+</li>
+<li><p class="first">调整相关的 web 表单模板。</p>
+</li>
+</ol>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="db.html" class="btn btn-neutral float-right" title="数据库" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ldap-kerberos.html" class="btn btn-neutral" title="使用 LDAP + Kerberos 实现集中用户认证及授权系统" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

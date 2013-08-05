@@ -1,0 +1,45 @@
+Linux 内核签名验证
+==================
+
+.. versionadded:: @2013-11-21
+   创建
+
+一般校验文件的完整性是通过比较 MD5 或 SHA 系列的值，但这种方式存在 MD5 值也被
+伪造的情况（如网站漏洞等）。因此，对比较重要或敏感的文件，往往需要通过签名来
+验证文件确实没有被伪造。关于签名的原理可以参考密码学相关的书籍或文档。
+
+本文简介如何验证从 `kernel.org <http://kernel.org>`_ 下载的内核的完整性。
+命令如下： ::
+
+  # xz -cd linux-3.10.tar.xz |gpg --verify linux-3.10.tar.sign -
+  gpg: Signature made Mon 01 Jul 2013 06:47:38 AM CST using RSA key ID 00411886
+  gpg: Can't check signature: public key not found
+
+内核的完整性是通过 `gpg <http://www.gnupg.org>`_ 来验证的，上面的例子中验证
+结果是失败，原因是找不到签名私钥对应的公钥，因此需要先导入该公钥： ::
+
+  # gpg --recv-keys 00411886
+  gpg: requesting key 00411886 from hkp server keys.gnupg.net
+  gpg: key 00411886: public key "Linus Torvalds <torvalds@linux-foundation.org>" imported
+  gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
+  gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+  gpg: Total number processed: 1
+  gpg:               imported: 1  (RSA: 1)
+
+从导入过程可以看到该公钥对应的签发人为 Linus。
+
+再次执行验证： ::
+
+  # xz -cd linux-3.10.tar.xz |gpg --verify linux-3.10.tar.sign -
+  gpg: Signature made Mon 01 Jul 2013 06:47:38 AM CST using RSA key ID 00411886
+  gpg: Good signature from "Linus Torvalds <torvalds@linux-foundation.org>"
+  gpg: WARNING: This key is not certified with a trusted signature!
+  gpg:          There is no indication that the signature belongs to the owner.
+  Primary key fingerprint: ABAF 11C6 5A29 70B1 30AB  E3C4 79BE 3E43 0041 1886
+
+只要输出结果没有 "BAD Signature" 就基本上可以确认文件没有被篡改。
+
+上面的警告信息暂时可以忽略，如何消除该警告留在 GPG 的文档里再详细说明。
+更多信息请参考
+`Linux kernel releases PGP signatures
+<https://www.kernel.org/signature.html>`_\。

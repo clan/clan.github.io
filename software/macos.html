@@ -1,0 +1,623 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>macOS / OS X &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="日常维护" href="ops.html"/>
+        <link rel="next" title="OSX 上部署 Gentoo Prefix" href="gentoo-prefix.html"/>
+        <link rel="prev" title="Linux 问题解决汇总" href="linux-faq.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ops.html">日常维护</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="rsync.html">使用 rsync 进行文件备份</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-ops.html">Linux 系统日常维护命令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="driver.html">Linux 设备驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-hotplug.html">Linux 下的 CPU 和 内存热插拔</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-faq.html">Linux 问题解决汇总</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">macOS / OS X</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">版本列表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">文件权限问题</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">快捷键</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gentoo-prefix.html">OSX 上部署 Gentoo Prefix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">SSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdsh.html">PDSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="socks.html">SOCKS 代理配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsmmc.html">Windows 远程桌面连接工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="ops.html">日常维护</a> &raquo;</li>
+        
+      <li>macOS / OS X</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/macos.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="macos-os-x">
+<h1>macOS / OS X<a class="headerlink" href="#macos-os-x" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-11 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-20 版更改: </span>增加命令 sw_vers</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-03-21 版更改: </span>增加快捷键</p>
+</div>
+<div class="section" id="id1">
+<h2>版本列表<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>参考 <a class="reference external" href="https://en.wikipedia.org/wiki/MacOS">MacOS</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="22%" />
+<col width="12%" />
+<col width="26%" />
+<col width="17%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Version</th>
+<th class="head">Codename</th>
+<th class="head">Darwin</th>
+<th class="head">CPU</th>
+<th class="head">Release</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Mac OS X 10.0</td>
+<td>Cheetah</td>
+<td>1.3.1</td>
+<td>PPC/32</td>
+<td>2001/03/24</td>
+</tr>
+<tr class="row-odd"><td>Mac OS X 10.1</td>
+<td>Puma</td>
+<td>1.4.1/5</td>
+<td>PPC/32</td>
+<td>2001/09/25</td>
+</tr>
+<tr class="row-even"><td>Mac OS X 10.2</td>
+<td>Jaguar</td>
+<td>6</td>
+<td>PPC/32/64</td>
+<td>2002/08/24</td>
+</tr>
+<tr class="row-odd"><td>Mac OS X 10.3</td>
+<td>Panther</td>
+<td>7</td>
+<td>PPC/32/64</td>
+<td>2003/10/24</td>
+</tr>
+<tr class="row-even"><td>Mac OS X 10.4</td>
+<td>Tiger</td>
+<td>8</td>
+<td>Intel/PPC/32/64</td>
+<td>2005/04/29</td>
+</tr>
+<tr class="row-odd"><td>Mac OS X 10.5</td>
+<td>Leopard</td>
+<td>9</td>
+<td>Intel/PPC/32/64</td>
+<td>2007/10/26</td>
+</tr>
+<tr class="row-even"><td>Mac OS X 10.6</td>
+<td>Snow Leopard</td>
+<td>10</td>
+<td>Intel/32/64</td>
+<td>2009/08/28</td>
+</tr>
+<tr class="row-odd"><td>Mac OS X 10.7</td>
+<td>Lion</td>
+<td>11</td>
+<td>Intel/64</td>
+<td>2011/07/20</td>
+</tr>
+<tr class="row-even"><td>OS X 10.8</td>
+<td>Mountain Lion</td>
+<td>12</td>
+<td>Intel/64</td>
+<td>2012/07/25</td>
+</tr>
+<tr class="row-odd"><td>OS X 10.9</td>
+<td>Mavericks</td>
+<td>13</td>
+<td>Intel/64</td>
+<td>2013/10/22</td>
+</tr>
+<tr class="row-even"><td>OS X 10.10</td>
+<td>Yosemite</td>
+<td>14</td>
+<td>Intel/64</td>
+<td>2014/10/16</td>
+</tr>
+<tr class="row-odd"><td>OS X 10.11</td>
+<td>EI Capitan</td>
+<td>15</td>
+<td>Intel/64</td>
+<td>2015/09/30</td>
+</tr>
+<tr class="row-even"><td>macOS 10.12</td>
+<td>Sierra</td>
+<td>16</td>
+<td>Intel/64</td>
+<td>2016/09/20</td>
+</tr>
+<tr class="row-odd"><td>macOS 10.13</td>
+<td>High Sierra</td>
+<td>17</td>
+<td>Intel/64</td>
+<td>2017/09/25</td>
+</tr>
+<tr class="row-even"><td>macOS 10.14</td>
+<td>Mojave</td>
+<td>18</td>
+<td>Intel/64</td>
+<td>2018/09/24</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id2">
+<h2>命令<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<ul>
+<li><p class="first">查询系统版本信息</p>
+<ul>
+<li><p class="first">sw_vers: print Mac OS X operating system version information</p>
+<p>sw_vers [-productName|-productVersion|-buildVersion]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sw_vers
+ProductName:    Mac OS X
+ProductVersion: 10.13.6
+BuildVersion:   17G4015
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>文件权限问题<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>10.14 版本在 iTerm2 下查看文件（例如 Time Machine 备份文件夹）时会出现:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ls</span><span class="p">:</span> <span class="p">:</span> <span class="n">Operation</span> <span class="ow">not</span> <span class="n">permitted</span>
+</pre></div>
+</div>
+<p>而 10.14 之前的版本并没有这个问题。原因是 10.14 开始的 macOS 增加了更多的
+隐私安全控制，按如下步骤配置权限即可修复问题：</p>
+<ol class="arabic simple">
+<li><cite>open /System/Library/PreferencePanes/Security.prefPane/</cite></li>
+<li>选择 隐私/Privacy</li>
+<li>左下角解锁获取权限</li>
+<li>选择 <cite>Full Disk Access</cite> ，增加相应的 App</li>
+</ol>
+</div>
+<div class="section" id="id4">
+<h2>快捷键<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>参考 <a class="reference external" href="https://support.apple.com/en-us/HT201236">Mac keyboard shortcuts</a></p>
+<ul>
+<li><p class="first">截图</p>
+<ul class="simple">
+<li>屏幕部分画面 <kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⇧</kbd> + <kbd class="kbd docutils literal notranslate">4</kbd></li>
+<li>截取当前窗口 <kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⇧</kbd> + <kbd class="kbd docutils literal notranslate">4</kbd>，<kbd class="kbd docutils literal notranslate">SPACE</kbd></li>
+<li>全屏截图 <kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⇧</kbd> + <kbd class="kbd docutils literal notranslate">3</kbd></li>
+</ul>
+<p>截图文件保存在桌面，格式为 PNG。</p>
+</li>
+<li><p class="first">浏览器</p>
+<ul class="simple">
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">L</kbd> 光标定位到地址栏，按 <kbd class="kbd docutils literal notranslate">TAB</kbd> 取消。</li>
+</ul>
+</li>
+<li><p class="first">编辑</p>
+<ul class="simple">
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">z</kbd> Undo</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⇧</kbd> + <kbd class="kbd docutils literal notranslate">z</kbd> Redo</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">v</kbd> Paste</li>
+</ul>
+</li>
+<li><p class="first">窗口管理</p>
+<ul class="simple">
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⌥</kbd> + <kbd class="kbd docutils literal notranslate">h</kbd> 将所有已打开的程序窗口
+（除了当前正在运行的应用程序窗口）隐藏到 Dock 栏上。</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⌥</kbd> 并点击桌面上空白区域，将除 Finder
+窗口以外的所有窗口隐藏到 Dock 栏，直接显示桌面。</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">m</kbd> 最小化到右下角</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">w</kbd> 关闭窗口</li>
+<li>文件剪切： 选中目标文件，<kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">c</kbd> 复制，然后
+<kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⌥</kbd> + <kbd class="kbd docutils literal notranslate">w</kbd> 移动到目标目录。</li>
+</ul>
+</li>
+<li><p class="first">Finder</p>
+<ul class="simple">
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">o</kbd> 打开文件</li>
+<li>选择文件后<ul>
+<li>快速预览文件<ul>
+<li><kbd class="kbd docutils literal notranslate">SPACE</kbd></li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">y</kbd></li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⌥</kbd> + <kbd class="kbd docutils literal notranslate">y</kbd> 全屏模式</li>
+</ul>
+</li>
+<li><kbd class="kbd docutils literal notranslate">↩︎</kbd> 重命名（Windows 下是打开文件）</li>
+</ul>
+</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">↑</kbd> 回上一级目录</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⌥</kbd> + <kbd class="kbd docutils literal notranslate">p</kbd> 隐藏或显示路径栏</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">⌥</kbd> + <kbd class="kbd docutils literal notranslate">s</kbd> 隐藏或显示边栏</li>
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">/</kbd> 隐藏或显示状态栏。</li>
+<li><kbd class="kbd docutils literal notranslate">⌥</kbd> + <kbd class="kbd docutils literal notranslate">双击左键</kbd> 在新窗口中打开该文件/文件夹，并关闭当前窗口。</li>
+</ul>
+</li>
+<li><p class="first">多窗口应用</p>
+<ul class="simple">
+<li><kbd class="kbd docutils literal notranslate">⌘</kbd> + <kbd class="kbd docutils literal notranslate">`</kbd> 多窗口之间切换</li>
+<li>按住 <kbd class="kbd docutils literal notranslate">⌘</kbd> 拖动后面窗口，此时焦点任是前窗口</li>
+</ul>
+</li>
+<li><p class="first"><kbd class="kbd docutils literal notranslate">⌃</kbd> + <kbd class="kbd docutils literal notranslate">⇧</kbd> + <kbd class="kbd docutils literal notranslate">电源键</kbd> 关闭屏幕</p>
+</li>
+<li><p class="first">将文件拖到终端，会直接得到其路径</p>
+</li>
+<li><p class="first">触控板</p>
+<ul class="simple">
+<li>双指左右滚动：在页面之间轻扫</li>
+<li>双指从右边缘向左轻扫：显示通知中心</li>
+<li>张开拇指和其他三指：显示桌面</li>
+<li>提拢拇指和其他三指：显示启动台（Launchpad）</li>
+<li>三指左右轻扫：在全屏幕显示的应用之间切换</li>
+<li>三指向上轻扫：调度中心</li>
+<li>辅助功能开启更多功能后<ul>
+<li>在窗口标题栏处三指拖移，移动过程中可以两指</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p class="first">声音/屏幕亮度“小调节”：</p>
+<p>按住 <kbd class="kbd docutils literal notranslate">⇧</kbd> + <kbd class="kbd docutils literal notranslate">⌥</kbd> 后按音量/亮度，以更细微的粒度调节</p>
+</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Symbol</td>
+<td>Key on Keyboard</td>
+</tr>
+<tr class="row-even"><td>⌘</td>
+<td>Command (or Cmd) Like the Control key on Windows/PC. a.k.a Apple key.</td>
+</tr>
+<tr class="row-odd"><td>⌥</td>
+<td>Option (like Alt on Windows/PC)</td>
+</tr>
+<tr class="row-even"><td>⇧</td>
+<td>Shift</td>
+</tr>
+<tr class="row-odd"><td>⌃</td>
+<td>Control (Control-click = Right-click)</td>
+</tr>
+<tr class="row-even"><td>⇥</td>
+<td>Tab</td>
+</tr>
+<tr class="row-odd"><td>↩︎</td>
+<td>Return</td>
+</tr>
+<tr class="row-even"><td>⌅</td>
+<td>Enter (on Number Pad, or fn-Return on compact keyboards)</td>
+</tr>
+<tr class="row-odd"><td>⏏︎</td>
+<td>Eject</td>
+</tr>
+<tr class="row-even"><td>⎋</td>
+<td>Escape</td>
+</tr>
+<tr class="row-odd"><td>⇞</td>
+<td>Page Up (fn-Up Arrow on compact keyboards)</td>
+</tr>
+<tr class="row-even"><td>⇟</td>
+<td>Page Down (fn-Down Arrow on compact keyboards)</td>
+</tr>
+<tr class="row-odd"><td>↖︎</td>
+<td>Home (fn-Left Arrow on compact keyboards)</td>
+</tr>
+<tr class="row-even"><td>↘︎</td>
+<td>End (fn-Right Arrow on compact keyboards)</td>
+</tr>
+<tr class="row-odd"><td>←↑↓→</td>
+<td>Arrow Keys</td>
+</tr>
+<tr class="row-even"><td>⌫</td>
+<td>Delete Left (like Backspace on Windows/PC)</td>
+</tr>
+<tr class="row-odd"><td>⌦</td>
+<td>Delete Right (fn-Delete on compact keyboards. Also called Forward Delete)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gentoo-prefix.html" class="btn btn-neutral float-right" title="OSX 上部署 Gentoo Prefix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="linux-faq.html" class="btn btn-neutral" title="Linux 问题解决汇总" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

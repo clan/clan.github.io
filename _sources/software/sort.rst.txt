@@ -1,0 +1,30 @@
+sort
+====
+
+locale 配置会影响排序结果
+-------------------------
+
+.. versionadded:: @2019-02-18
+   创建
+
+查看如下例子： ::
+
+    # tree
+    .
+    ├── a_b
+    │   └── test
+    └── a-b
+        └── test
+
+    2 directories, 2 files
+
+    # diff -y <(find . -type f | LANG=C sort) <(find . -type f | LANG=zh_CN.UTF-8 sort)
+    ./a-b/test                                                    <
+    ./a_b/test                                                      ./a_b/test
+                                                                  > ./a-b/test
+
+
+可以清楚的看到随 locale 配置影响排序的结果。因此：
+
+.. important::
+   如果希望得到稳定的排序结果，请保持 locale 配置的一致。

@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>通过 SMART 查看和跟踪硬盘健康状态 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="RAID 维护备忘" href="raid.html"/>
+        <link rel="prev" title="内存" href="memory.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="memory.html">内存</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>通过 SMART 查看和跟踪硬盘健康状态</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hardware/smart.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="smart">
+<h1>通过 SMART 查看和跟踪硬盘健康状态<a class="headerlink" href="#smart" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-12-19 新版功能: </span>创建</p>
+</div>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/S.M.A.R.T.">S.M.A.R.T.</a>
+的全称为 Self-Monitoring, Analysis and Reporting Technology，一般简写为 SMART。
+这是硬盘（HDD 或 SSD）内置提供的状态监控系统，通过它可以及时了解硬盘驱动器的
+可用性状态，提前预测可能的失败。不过，需要说明的是， <strong>在 SMART 没有报告任何异常
+时硬盘也可能会失败</strong>。因此，在任何情况下数据备份都是非常重要的，不能省略。</p>
+<p>本文仅对 SMART 数据的查看及监控软件
+<a class="reference external" href="http://www.smartmontools.org/">smartmontools</a> 做简单的介绍，
+关于 SMART 的更多说明请参考维基百科及相关的参考文献。</p>
+<p>SMART 数据是硬盘驱动器内置的，首先通过如下命令获取系统支持的硬盘设备：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># lsblk
+NAME                       MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0 465.8G  0 disk
+├─sda1                       8:1    0    16G  0 part /
+└─sda2                       8:2    0 449.8G  0 part
+  ├─vg_data-lv_home (dm-0) 254:0    0   800G  0 lvm  /home
+  └─vg_data-lv_swap (dm-1) 254:1    0     4G  0 lvm  [SWAP]
+sdb                          8:16   0 465.8G  0 disk
+└─sdb1                       8:17   0 465.8G  0 part
+  └─vg_data-lv_home (dm-0) 254:0    0   800G  0 lvm  /home
+sdc                          8:32   0 465.8G  0 disk
+└─sdc1                       8:33   0 465.8G  0 part
+sdd                          8:48   0 465.8G  0 disk
+└─sdd1                       8:49   0 465.8G  0 part
+</pre></div>
+</div>
+<p><cite>smartctl -a /dev/sda</cite> 可以输出该硬盘的所有 SMART 信息，</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -a /dev/sda</span>
+<span class="n">smartctl</span> <span class="mf">6.3</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">26</span> <span class="n">r3976</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.17</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="n">gentoo</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">Franke</span><span class="p">,</span> <span class="n">www</span><span class="o">.</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">org</span>
+
+<span class="o">===</span> <span class="n">START</span> <span class="n">OF</span> <span class="n">INFORMATION</span> <span class="n">SECTION</span> <span class="o">===</span>
+<span class="o">...</span>
+
+<span class="o">===</span> <span class="n">START</span> <span class="n">OF</span> <span class="n">READ</span> <span class="n">SMART</span> <span class="n">DATA</span> <span class="n">SECTION</span> <span class="o">===</span>
+<span class="n">SMART</span> <span class="n">overall</span><span class="o">-</span><span class="n">health</span> <span class="bp">self</span><span class="o">-</span><span class="n">assessment</span> <span class="n">test</span> <span class="n">result</span><span class="p">:</span> <span class="n">PASSED</span>
+
+<span class="o">...</span>
+
+<span class="n">SMART</span> <span class="n">Attributes</span> <span class="n">Data</span> <span class="n">Structure</span> <span class="n">revision</span> <span class="n">number</span><span class="p">:</span> <span class="mi">10</span>
+
+<span class="o">...</span>
+
+<span class="n">SMART</span> <span class="n">Error</span> <span class="n">Log</span> <span class="n">Version</span><span class="p">:</span> <span class="mi">1</span>
+<span class="o">...</span>
+
+<span class="n">SMART</span> <span class="n">Self</span><span class="o">-</span><span class="n">test</span> <span class="n">log</span> <span class="n">structure</span> <span class="n">revision</span> <span class="n">number</span> <span class="mi">1</span>
+<span class="o">...</span>
+
+<span class="n">SMART</span> <span class="n">Selective</span> <span class="bp">self</span><span class="o">-</span><span class="n">test</span> <span class="n">log</span> <span class="n">data</span> <span class="n">structure</span> <span class="n">revision</span> <span class="n">number</span> <span class="mi">1</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>省略的内容可以分别使用以下命令单独输出，命令和内容分别解释如下。</p>
+<p>查看设备 SMART 信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -i /dev/sda</span>
+
+<span class="n">smartctl</span> <span class="mf">6.3</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">26</span> <span class="n">r3976</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.17</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="n">gentoo</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">Franke</span><span class="p">,</span> <span class="n">www</span><span class="o">.</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">org</span>
+
+<span class="o">===</span> <span class="n">START</span> <span class="n">OF</span> <span class="n">INFORMATION</span> <span class="n">SECTION</span> <span class="o">===</span>
+<span class="n">Model</span> <span class="n">Family</span><span class="p">:</span>     <span class="n">Seagate</span> <span class="n">Barracuda</span> <span class="mf">7200.10</span>
+<span class="n">Device</span> <span class="n">Model</span><span class="p">:</span>     <span class="n">ST3160815AS</span>
+<span class="n">Serial</span> <span class="n">Number</span><span class="p">:</span>    <span class="mi">9</span><span class="n">RX39P8Q</span>
+<span class="n">Firmware</span> <span class="n">Version</span><span class="p">:</span> <span class="mf">3.</span><span class="n">ADA</span>
+<span class="n">User</span> <span class="n">Capacity</span><span class="p">:</span>    <span class="mi">160</span><span class="p">,</span><span class="mi">000</span><span class="p">,</span><span class="mi">000</span><span class="p">,</span><span class="mi">000</span> <span class="nb">bytes</span> <span class="p">[</span><span class="mi">160</span> <span class="n">GB</span><span class="p">]</span>
+<span class="n">Sector</span> <span class="n">Size</span><span class="p">:</span>      <span class="mi">512</span> <span class="nb">bytes</span> <span class="n">logical</span><span class="o">/</span><span class="n">physical</span>
+<span class="n">Device</span> <span class="ow">is</span><span class="p">:</span>        <span class="n">In</span> <span class="n">smartctl</span> <span class="n">database</span> <span class="p">[</span><span class="k">for</span> <span class="n">details</span> <span class="n">use</span><span class="p">:</span> <span class="o">-</span><span class="n">P</span> <span class="n">show</span><span class="p">]</span>
+<span class="n">ATA</span> <span class="n">Version</span> <span class="ow">is</span><span class="p">:</span>   <span class="n">ATA</span><span class="o">/</span><span class="n">ATAPI</span><span class="o">-</span><span class="mi">7</span> <span class="p">(</span><span class="n">minor</span> <span class="n">revision</span> <span class="ow">not</span> <span class="n">indicated</span><span class="p">)</span>
+<span class="n">Local</span> <span class="n">Time</span> <span class="ow">is</span><span class="p">:</span>    <span class="n">Fri</span> <span class="n">Dec</span> <span class="mi">19</span> <span class="mi">14</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="mi">55</span> <span class="mi">2014</span> <span class="n">CST</span>
+<span class="n">SMART</span> <span class="n">support</span> <span class="ow">is</span><span class="p">:</span> <span class="n">Available</span> <span class="o">-</span> <span class="n">device</span> <span class="n">has</span> <span class="n">SMART</span> <span class="n">capability</span><span class="o">.</span>
+<span class="n">SMART</span> <span class="n">support</span> <span class="ow">is</span><span class="p">:</span> <span class="n">Enabled</span>
+</pre></div>
+</div>
+<p>如果出现 “SMART support is: Disabled”，则需要通过
+<cite>smartctl -s on /dev/sda</cite> 打开 SMART 功能。</p>
+<p>查看硬盘健康状态查询结果：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -Hc /dev/sda</span>
+
+<span class="n">smartctl</span> <span class="mf">6.3</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">26</span> <span class="n">r3976</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.17</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="n">gentoo</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">Franke</span><span class="p">,</span> <span class="n">www</span><span class="o">.</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">org</span>
+
+<span class="o">===</span> <span class="n">START</span> <span class="n">OF</span> <span class="n">READ</span> <span class="n">SMART</span> <span class="n">DATA</span> <span class="n">SECTION</span> <span class="o">===</span>
+<span class="n">SMART</span> <span class="n">overall</span><span class="o">-</span><span class="n">health</span> <span class="bp">self</span><span class="o">-</span><span class="n">assessment</span> <span class="n">test</span> <span class="n">result</span><span class="p">:</span> <span class="n">PASSED</span>
+
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>PASSED 表示测试结果。如果该值为 FAILING，则需要立即备份数据。</p>
+<p>查看硬盘的各种属性值：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -A /dev/sda</span>
+<span class="n">smartctl</span> <span class="mf">6.3</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">26</span> <span class="n">r3976</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.17</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="n">gentoo</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">Franke</span><span class="p">,</span> <span class="n">www</span><span class="o">.</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">org</span>
+
+<span class="o">===</span> <span class="n">START</span> <span class="n">OF</span> <span class="n">READ</span> <span class="n">SMART</span> <span class="n">DATA</span> <span class="n">SECTION</span> <span class="o">===</span>
+<span class="n">SMART</span> <span class="n">Attributes</span> <span class="n">Data</span> <span class="n">Structure</span> <span class="n">revision</span> <span class="n">number</span><span class="p">:</span> <span class="mi">10</span>
+<span class="n">Vendor</span> <span class="n">Specific</span> <span class="n">SMART</span> <span class="n">Attributes</span> <span class="k">with</span> <span class="n">Thresholds</span><span class="p">:</span>
+<span class="n">ID</span><span class="c1"># ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>需要说明的是，属性不再是 ATA 标准的一部分。具体属性的解释因厂商而异。每一个
+属性都有 RAW_VALUE 和 VALUE，前者完全由厂商指定，没有任何规范约束。后者是
+标准化之后的值，其范围为 1 到 253。如果该值小于或等于阈值（THRESH），则表示
+失败（即该值越大越好），对应 WHEN_FAILED 列会有显示（例如 FAILING_NOW 或
+In_the_past 或 -）。属性类型分别为 Pre-fail 和 Old_age，前者表示该属性很关键，
+如果其值低于阈值则意味着设备很快会故障，后者表示设备达到或超过设计寿命。
+WORST 栏对应该属性所记录到的最小值。</p>
+<p>查看硬盘错误日志：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -l error /dev/sda</span>
+<span class="n">smartctl</span> <span class="mf">6.3</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">26</span> <span class="n">r3976</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.17</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="n">gentoo</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">Franke</span><span class="p">,</span> <span class="n">www</span><span class="o">.</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">org</span>
+
+<span class="o">===</span> <span class="n">START</span> <span class="n">OF</span> <span class="n">READ</span> <span class="n">SMART</span> <span class="n">DATA</span> <span class="n">SECTION</span> <span class="o">===</span>
+<span class="n">SMART</span> <span class="n">Error</span> <span class="n">Log</span> <span class="n">Version</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">No</span> <span class="n">Errors</span> <span class="n">Logged</span>
+</pre></div>
+</div>
+<p>完全正常的情况下日志为空。如果有大量的错误日志出现，则需要引起关注。</p>
+<p>硬盘自测试日志查看：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -l selftest /dev/sda</span>
+
+<span class="n">smartctl</span> <span class="mf">6.3</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">26</span> <span class="n">r3976</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.17</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="n">gentoo</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">Franke</span><span class="p">,</span> <span class="n">www</span><span class="o">.</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">org</span>
+
+<span class="o">===</span> <span class="n">START</span> <span class="n">OF</span> <span class="n">READ</span> <span class="n">SMART</span> <span class="n">DATA</span> <span class="n">SECTION</span> <span class="o">===</span>
+<span class="n">SMART</span> <span class="n">Self</span><span class="o">-</span><span class="n">test</span> <span class="n">log</span> <span class="n">structure</span> <span class="n">revision</span> <span class="n">number</span> <span class="mi">1</span>
+<span class="n">Num</span>  <span class="n">Test_Description</span>    <span class="n">Status</span>                  <span class="n">Remaining</span>  <span class="n">LifeTime</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span>  <span class="n">LBA_of_first_error</span>
+<span class="c1"># 1  Short offline       Completed without error       00%      4771         -</span>
+</pre></div>
+</div>
+<p>如果没有相关的日志，则可以通过 <cite>smartctl -t [short|long] /dev/sda</cite> 执行。
+该命令不会破坏硬盘上的数据。<cite>smartctl -t offline /dev/sda</cite> 能用来执行离线
+测试，也可以通过 <cite>smartctl -o on /dev/sda</cite> 打开自动离线测试。离线测试的结果
+不会显示在自测试日志中。</p>
+<p>SMART 标准提供了硬盘测试和监控硬盘性能的机制，但在故障发生时并不会主动通知
+操作系统。因此需要通过 smartd 这个守护进程来定期主动查询并反馈。缺省情况下，
+smartd 会每 30 分钟查询硬盘属性，如果有失败的属性或健康状态或错误/自测试日志
+增加，则相应的信息会记录到 SYSLOG，也可以配置为发送邮件到相关的负责人。smartd
+的配置细节请参考手册，本文不再介绍。</p>
+<p>在系统配置了硬件 RAID 卡的情况下，操作系统看到的是 RAID 卡虚拟出来的虚拟硬盘，
+这种情况下需要显示指明物理硬盘的类型，例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -Hc -d cciss,0 /dev/sda</span>
+<span class="n">smartctl</span> <span class="mf">5.41</span> <span class="mi">2011</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">09</span> <span class="n">r3365</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.10</span><span class="o">.</span><span class="mi">20</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">11</span> <span class="n">by</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">sourceforge</span><span class="o">.</span><span class="n">net</span>
+
+<span class="n">SMART</span> <span class="n">Health</span> <span class="n">Status</span><span class="p">:</span> <span class="n">OK</span>
+</pre></div>
+</div>
+<p>或</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># smartctl -Hc -d megaraid,0 /dev/sda</span>
+<span class="n">smartctl</span> <span class="mf">5.41</span> <span class="mi">2011</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">09</span> <span class="n">r3365</span> <span class="p">[</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="mf">3.10</span><span class="o">.</span><span class="mi">20</span><span class="p">]</span> <span class="p">(</span><span class="n">local</span> <span class="n">build</span><span class="p">)</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2002</span><span class="o">-</span><span class="mi">11</span> <span class="n">by</span> <span class="n">Bruce</span> <span class="n">Allen</span><span class="p">,</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">smartmontools</span><span class="o">.</span><span class="n">sourceforge</span><span class="o">.</span><span class="n">net</span>
+
+<span class="n">SMART</span> <span class="n">Health</span> <span class="n">Status</span><span class="p">:</span> <span class="n">OK</span>
+</pre></div>
+</div>
+<p>更多的参数配置请参考<em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/smartctl(8)">smartctl(8)</a></em>。</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="raid.html" class="btn btn-neutral float-right" title="RAID 维护备忘" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="memory.html" class="btn btn-neutral" title="内存" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

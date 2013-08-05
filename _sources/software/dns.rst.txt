@@ -1,0 +1,171 @@
+DNS
+===
+
+.. versionadded:: @2013-09-02
+   创建
+.. versionchanged:: @2019-02-13
+   增加 SRV RR 解释
+.. versionchanged:: @2019-03-22
+   增加公共 DNS 列表
+
+公共 DNS 列表
+-------------
+
+参考 `公共递归 DNS 服务
+<https://en.wikipedia.org/wiki/Public_recursive_name_server>`_
+
+=============== ======================================================
+1.1.1.1         https://1.1.1.1.1, Cloudflare & APNIC, 1.0.0.1
+8.8.8.8         Google 8.8.4.4
+9.9.9.9         https://www.quad9.net/，IBM/..., 9.9.9.10
+114.114.114.114 https://www.114dns.com/，114DNS，114.114.115.115
+119.29.29.29    腾讯公共 DNS
+180.76.76.76    https://dudns.baidu.com/intro/publicdns/，百度公共 DNS
+223.5.5.5.      http://alidns.com/，阿里公共 DNS，223.6.6.6
+=============== ======================================================
+
+记录类型/RR
+-----------
+
+参考 `List of DNS record types <https://en.wikipedia.org/wiki/List_of_DNS_record_types>`_
+
+#. A/AAAA
+
+#. CAA
+
+#. CNAME
+
+#. MX
+
+#. NS
+
+#. PTR
+
+#. SOA
+
+   ::
+
+     @ IN SOA ns1.google.com. dns-admin.google.com. (
+              1999051401  ; Serial
+              3600        ; Refresh
+              300         ; Retry
+              3600000     ; Expire
+              3600        ; Minimum
+              )
+
+   ======= =============================================================
+   Serial  The unsigned 32 bit version number of the original copy
+           of the zone.  Zone transfers preserve this value.  This
+           value wraps and should be compared using
+           :wiki:`Serial number arithmetic<Serial_number_arithmetic>`\.
+   Refresh A 32 bit time interval before the zone should be refreshed
+   Retry   A 32 bit time interval that should elapse before a failed
+           refresh should be retried.
+   Expire  A 32 bit time value that specifies the upper limit on
+           the time interval that can elapse before the zone is no
+           longer authoritative.
+   Minimum The unsigned 32 bit minimum TTL field that should be
+           exported with any RR from this zone.
+   ======= =============================================================
+
+#. SRV
+
+   ``_ldap._tcp.example.com. IN SRV 10 50 389 ds1.example.com.``
+
+    #. name of record
+
+        #. an underscore, name of the network service
+        #. a period
+        #. an underscore, name of the protocol (tcp/udp/...)
+        #. a period
+        #. domain
+
+    #. priority
+
+       An integer value in [0, 65535], with lower values taking precedence
+       over higher values. If there are multiple servers, the priority can help
+       the client decide which one it should try first. Client will fall back
+       to record of higher vlue only if the connection fails.
+
+    #. weight
+
+       An integer value in [0, 65535], with higher weight means larger
+       proportion of the traffic. If there are multiple servers with the
+       same priority, then the weight is used to specify the relative ratio
+       of connections that each of them should receive.
+
+    #. port
+
+       An integer value in [1, 65535].
+
+    #. FQDN of the server
+
+#. TXT
+
+CNAME 和 MX 记录冲突的原因解释
+------------------------------
+
+CNAME 记录是 DNS 里的一种特殊的记录类型，一般理解为“别名”记录。之所以说其
+特殊，请看下面的例子。假设为 DNS 域 demo.only 注册了下面的两条记录： ::
+
+    test    MX       10  www.abc.com.
+    test    CNAME        www.test.com.
+
+下面是在递归服务器（不能使用该域的授权服务器）上 dig 查询的结果（省略了部分
+不重要的信息）： ::
+
+    $ dig test.demo.only cname
+    ...
+    ;; QUESTION SECTION:
+    ;test.demo.only.               IN      CNAME
+
+    ;; ANSWER SECTION:
+    test.demo.only.        600     IN      CNAME   www.test.com.
+    ...
+
+    $ dig test.demo.only mx
+    ...
+    ;; QUESTION SECTION:
+    ;test.demo.only.                IN      MX
+
+    ;; ANSWER SECTION:
+    test.demo.only.         332     IN      CNAME   www.test.com.
+    www.test.com.           958     IN      CNAME   test.blockdos.com.
+    ...
+
+可以看到 MX 记录查询的结果为其 CNAME 记录值所配置的 MX 记录。
+但如果在递归服务器的 CNAME 记录 TTL 过期后再来做查询，只是把查询的顺序颠倒，
+（即先查询 MX 记录，再查询 CNAME 记录）则有可能得到正确的结果。
+
+在上面的测试过程中授权服务器和递归服务器都是有着大量用户的知名 DNS 服务提
+供商，因此，程序出现 bug 的可能性可以忽略。那么，怎么解释这种现象呢？
+
+其实在\ :wiki:`维基百科<CNAME>`\ 里已经有相关的说明。
+权威的说明则请参考相关的 RFC 文档（:rfc:`1034` 以及
+:rfc:`2181#section-10`\ ）。部分原文摘抄如下： ::
+
+    When a DNS resolver encounters a CNAME record while looking for a regular
+    resource record, it will restart the query using the canonical name instead
+    of the original name. (If the resolver is specifically told to look for
+    CNAME records, the canonical name (right-hand side) is returned, rather
+    than restarting the query.)
+
+    An alias defined in a CNAME record must have no other resource records
+    of other types (MX, A, etc.). (RFC 1034 section 3.6.2, RFC 1912 section
+    2.4) The exception is when DNSSEC is being used, in which case there can
+    be DNSSEC related records such as RRSIG, NSEC, etc. (RFC 2181 section 10.1)
+
+中文说明如下：
+
+递归 DNS 服务器在查询某个常规域名记录（非 CNAME 记录）时，如果在本地 cache
+中已有该域名有对应的 CNAME 记录，则会开始用该别名记录来重启查询。
+上文中第一次 dig 查询 MX 记录即对应于这种情况。如果直接在授权服务器上查询，
+则总是能得到预期的结果。或者简单的理解为 CNAME 的优先级更高。
+
+已经注册了 CNAME 类型的域名记录不能再注册除 DNSSEC 相关类型记录
+（RRSIG， NSEC 等）之外的其他类型记录，包括（MX， A， NS 等记录）。
+
+这就是本文最开始 dig 查询 MX 记录拿不到预期结果的原因。从用户的角度来说，
+对任何记录（尤其是 @ 记录，因为该记录用到 MX 的可能性非常大）的配置如果
+用到了 CNAME，则需要知道该域名不可再配置 MX 等其他记录。从 DNS 服务提供
+商的角度来说，需要显示的告知用户这样配置的风险，警示和教育用户。

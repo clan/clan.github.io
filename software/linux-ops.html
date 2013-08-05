@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linux 系统日常维护命令 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="日常维护" href="ops.html"/>
+        <link rel="next" title="Linux 设备驱动" href="driver.html"/>
+        <link rel="prev" title="使用 rsync 进行文件备份" href="rsync.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ops.html">日常维护</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="rsync.html">使用 rsync 进行文件备份</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux 系统日常维护命令</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">软件包维护</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gentoo">Gentoo 更新步骤</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#portage">Portage 配置</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">进程管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">用户/组管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="driver.html">Linux 设备驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-hotplug.html">Linux 下的 CPU 和 内存热插拔</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-faq.html">Linux 问题解决汇总</a></li>
+<li class="toctree-l2"><a class="reference internal" href="macos.html">macOS / OS X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gentoo-prefix.html">OSX 上部署 Gentoo Prefix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">SSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdsh.html">PDSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="socks.html">SOCKS 代理配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsmmc.html">Windows 远程桌面连接工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="ops.html">日常维护</a> &raquo;</li>
+        
+      <li>Linux 系统日常维护命令</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/linux-ops.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux">
+<h1>Linux 系统日常维护命令<a class="headerlink" href="#linux" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-08-22 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-01-25 版更改: </span>增加进程管理</p>
+</div>
+<div class="section" id="id1">
+<h2>软件包维护<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>常见发行版（Gentoo，Debian/Ubuntu，RHEL/CentOS）的软件包维护命令。</p>
+<table border="1" class="docutils" id="id4">
+<caption><span class="caption-text">日常维护命令列表</span><a class="headerlink" href="#id4" title="永久链接至表格">¶</a></caption>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">功能</th>
+<th class="head">Gentoo</th>
+<th class="head">Debian/Ubuntu</th>
+<th class="head">RHEL/CentOS</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>软件包同步</td>
+<td><ul class="first last simple">
+<li><cite>emerge --sync</cite></li>
+<li><cite>eix-sync</cite></li>
+</ul>
+</td>
+<td><cite>apt-get update</cite></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>更新所有安装的软件</td>
+<td><cite>emerge -auvDN world</cite></td>
+<td><ul class="first last simple">
+<li><cite>apt-get upgrade</cite></li>
+<li><cite>apt-get --just-print upgrade</cite> 不实际更新</li>
+</ul>
+</td>
+<td><cite>yum update</cite></td>
+</tr>
+<tr class="row-even"><td>搜索软件</td>
+<td><cite>emerge -s busybox</cite></td>
+<td><cite>apt-cache search busybox</cite></td>
+<td><cite>yum search busybox</cite></td>
+</tr>
+<tr class="row-odd"><td>安装/更新软件</td>
+<td><cite>emerge -av busybox</cite></td>
+<td><cite>apt-get install busybox</cite></td>
+<td><ul class="first last simple">
+<li><cite>rpm -[i|U]vh *.rpm</cite></li>
+<li><cite>yum [install|update] busybox</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>删除软件</td>
+<td><cite>emerge -C busybox</cite></td>
+<td><ul class="first last simple">
+<li><cite>apt-get remove busybox</cite></li>
+<li><cite>apt-get purge busybox</cite></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><cite>rpm -e busybox</cite></li>
+<li><cite>yum remove busybox</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>自动清除不需要的软件</td>
+<td><cite>emerge --depclean</cite></td>
+<td><cite>apt-get autoremove</cite></td>
+<td><cite>package-cleanup --leaves</cite></td>
+</tr>
+<tr class="row-even"><td>查看软件包安装的文件列表</td>
+<td><ul class="first last simple">
+<li><cite>qlist busybox</cite></li>
+<li><cite>equery files busybox</cite></li>
+</ul>
+</td>
+<td><cite>dpkg -L busybox</cite></td>
+<td><cite>rpm -ql bash</cite></td>
+</tr>
+<tr class="row-odd"><td>查找文件所属的软件包</td>
+<td><ul class="first last simple">
+<li>qfile /etc/sysctl.conf`</li>
+<li><cite>equery belongs /etc/sysctl.conf</cite></li>
+</ul>
+</td>
+<td><cite>dpkg -S /etc/sysctl.conf</cite></td>
+<td><cite>rpm -qf /etc/sysctl.conf</cite></td>
+</tr>
+<tr class="row-even"><td>列出所有安装的软件包</td>
+<td><ul class="first last simple">
+<li><cite>equery list *</cite></li>
+<li><cite>equery list -i</cite> (gentoolkit &lt;0.3)</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><cite>dpkg -l</cite> / <cite>dpkg-query -l</cite></li>
+<li><cite>apt list --installed</cite></li>
+</ul>
+</td>
+<td><cite>yum list installed</cite></td>
+</tr>
+<tr class="row-odd"><td>校验软件包</td>
+<td><cite>equery check busybox</cite></td>
+<td><cite>cd / &amp;&amp; md5sum -c /var/lib/dpkg/info/busybox.md5sums</cite></td>
+<td><cite>rpm -V busybox</cite></td>
+</tr>
+<tr class="row-even"><td>查看安装包版本</td>
+<td><cite>equery uses bash</cite></td>
+<td><cite>dpkg-query -W -f='${Version}' bash</cite></td>
+<td><cite>rpm -qi bash</cite></td>
+</tr>
+<tr class="row-odd"><td>查看二进制包内容</td>
+<td>&#160;</td>
+<td><cite>dpkg -c *.deb</cite></td>
+<td><cite>rpm -qpl *.rpm</cite></td>
+</tr>
+<tr class="row-even"><td>包证书管理</td>
+<td>&#160;</td>
+<td><ul class="first last simple">
+<li><cite>apt-key update</cite></li>
+<li><cite>apt-key adv --keyserver keyserver.ubuntu.com --recv {KEYID}</cite></li>
+<li><cite>apt-key add -</cite></li>
+</ul>
+</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>更新历史日志</td>
+<td><cite>/var/log/emerge.log</cite></td>
+<td><cite>/var/log/apt/history.log</cite></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="gentoo">
+<h2>Gentoo 更新步骤<a class="headerlink" href="#gentoo" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2018-12-20 新版功能: </span>创建</p>
+</div>
+<ul class="simple">
+<li><cite>eix-sync</cite></li>
+<li><cite>emerge -auvDNgk world</cite></li>
+<li><cite>eselect news read</cite></li>
+<li><cite>perl-cleaner --all -- -gk</cite></li>
+<li><cite>python-updater</cite></li>
+<li><cite>revdep-rebuild</cite></li>
+<li><cite>cd /etc/ssl &amp;&amp; rm ...</cite></li>
+<li><cite>emerge --depclean -p</cite></li>
+</ul>
+<div class="section" id="portage">
+<h3>Portage 配置<a class="headerlink" href="#portage" title="永久链接至标题">¶</a></h3>
+<ul>
+<li><p class="first">FEATURES</p>
+<ul>
+<li><p class="first">collision-protect</p>
+<p>If you are using FEATURES=collision-protect, Portage will reject
+the upgrade. If this is the case, please temporarily switch to
+FEATURES=protect-owned for the upgrade.</p>
+</li>
+<li><p class="first">preserve-libs</p>
+<p>Preserve libraries when the sonames change during upgrade or downgrade.
+Libraries are preserved only if consumers of those libraries are detected.
+Preserved libraries are automatically removed when there are no remaining
+consumers. Run <cite>emerge &#64;preserved-rebuild</cite> in order to rebuild all
+consumers of preserved libraries.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>进程管理<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-14 新版功能: </span>创建</p>
+</div>
+<ul>
+<li><p class="first">找出仍在使用被删除文件或动态库的进程</p>
+<p><code class="docutils literal notranslate"><span class="pre">lsof</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">-v</span> <span class="pre">-E</span> <span class="pre">&quot;\\s(/dev/(zero|shm/.*)|/\\[aio\\]|/tmp/\\S*</span> <span class="pre">\\(deleted\\))$&quot;</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">-E</span> <span class="pre">&quot;(</span> <span class="pre">\\(deleted\\)$|\\s+DEL\\s+)\\s?&quot;</span></code></p>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>用户/组管理<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-08-07 新版功能: </span>创建</p>
+</div>
+<ul>
+<li><p class="first">由标准输入修改密码：<cite>echo &quot;root:password&quot; | chpasswd</cite></p>
+</li>
+<li><p class="first">验证密码是否正确：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">SHADOW0</span><span class="o">=</span><span class="k">$(</span>awk -v <span class="nv">user</span><span class="o">=</span>root -F: <span class="s1">&#39;{if ($1 == user) {print $2;}}&#39;</span> /etc/shadow<span class="k">)</span>
+<span class="nv">SALT</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$SHADOW0</span> <span class="p">|</span> awk -F<span class="se">\$</span> <span class="s1">&#39;{print $3;}&#39;</span><span class="k">)</span>
+<span class="nv">SHADOW1</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> password <span class="p">|</span> mkpasswd -S <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SALT</span><span class="si">}</span><span class="s2">&quot;</span> -s -m SHA-512<span class="k">)</span>
+<span class="o">[</span> <span class="si">${</span><span class="nv">SHADOW0</span><span class="si">}</span> <span class="o">=</span> <span class="si">${</span><span class="nv">SHADOW1</span><span class="si">}</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">&quot;password correct&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">基于 uid/gid 排序 /etc/passwd， /etc/group 文件：</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>sort -n -t ':' -k3 /etc/passwd</cite></li>
+<li><cite>pwck -s</cite> / <cite>grpck -s</cite></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="driver.html" class="btn btn-neutral float-right" title="Linux 设备驱动" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rsync.html" class="btn btn-neutral" title="使用 rsync 进行文件备份" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

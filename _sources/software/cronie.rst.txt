@@ -1,0 +1,45 @@
+cronie 和 pam_loginuuid 的问题解决
+==================================
+
+.. versionadded:: @2014-01-10
+   创建
+
+前几天将系统 cron 守护进程由 vixie-cron 替换为
+`cronie <https://fedorahosted.org/cronie/>`_\)，然后发现所有的 cron
+任务都不能正常运行，系统日志里有如下信息： ::
+
+  Dec 26 21:07:01 localhost crond[22769]: (root) PAM ERROR (Cannot make/remove an entry for the specified session)
+  Dec 26 21:07:01 localhost crond[22769]: (root) FAILED to open PAM security session (Cannot make/remove an entry for the specified session)
+
+比较两者的 pam 配置文件 /etc/pam.d/crond 发现 cronie 的配置多了一行： ::
+
+  session    required   pam_loginuid.so
+
+strace 有如下信息： ::
+
+  [pid  9949] open("/proc/self/loginuid", O_WRONLY|O_TRUNC|O_NOFOLLOW) = 3
+  [pid  9949] write(3, "0", 1)            = -1 EPERM (Operation not permitted)
+  [pid  9949] close(3)                    = 0
+  [pid  9949] sendto(4, "<83>Jan  7 23:27:01 crond[9949]: pam_loginuid(crond:session): set_loginuid failed\n", 82, MSG_NOSIGNAL, NULL, 0) = 82
+
+但是 crond 是以 root 身份运行的，为什么会被拒绝写呢？系统没有使用 SELinux，
+Apparmor 等安全机制。Google 搜索后有人说需要内核选项 CONFIG_AUDIT 和
+CONFIG_AUDITSYSCALL 需要打开。在上面的测试系统中这两个选项也是开启的。
+不过，注意到我所使用的内核中还有一个选项 CONFIG_AUDIT_LOGINUID_IMMUTABLE
+也是打开的，从字面意思能看出前面的错误和这个有关系。
+关闭该选项并重新编译内核后问题解决。事实上，在最新的内核中该选项已经被废弃。
+如下是相关的 git 日志： ::
+
+  commit 83fa6bbe4c4541ae748b550b4ec391f8a0acfe94
+  Author: Eric Paris <eparis@redhat.com>
+  Date:   Fri May 24 09:39:29 2013 -0400
+
+      audit: remove CONFIG_AUDIT_LOGINUID_IMMUTABLE
+
+      After trying to use this feature in Fedora we found the hard coding
+      policy like this into the kernel was a bad idea.  Surprise surprise.
+      We ran into these problems because it was impossible to launch a
+      container as a logged in user and run a login daemon inside that container.
+      This reverts back to the old behavior before this option was added.  The
+      option will be re-added in a userspace selectable manor such that
+      userspace can choose when it is and when it is not appropriate.

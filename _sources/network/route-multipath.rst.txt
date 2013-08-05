@@ -1,0 +1,64 @@
+多个外网接入时的路由配置
+========================
+
+.. versionadded:: @2013-09-30
+   创建
+
+办公室网络有多个外网接入，拓扑如下： ::
+
+          __                                              _______
+      ___/  \_         +-------------+   +-------+       /
+    _/        \__      |        eth1 +---+ WAN 1 +----- /
+   /             \     |      Linux  |   +-------+     |
+  | Local network -----+ eth0        |                |    Internet
+   \_           __/    |       Box   |   +-------+     |
+     \__     __/       |        eth2 +---+ WAN 2 +----  \
+        \___/          +-------------+   +-------+       \________
+
+eth0 为内网接口，eth1， eth2 为外网接入口（eth1 和 eth2 也可能是同一块网卡，
+通过交换机互联）。
+
+内网地址网段为 172.16.0.0/12。Linux 上配置了 SNAT。
+
+如何充分的利用这两个带宽呢？
+
+首先想到的方案是直接使用 multipath route，前提是内核选项
+"CONFIG_IP_ROUTE_MULTIPATH=y" 已经正确设置。执行命令
+`ip route add default nexthop via x.x.x.x dev eth1 weight 1 nexthop via y.y.y.y dev eth2 weight 1`
+配置缺省路由为 multipath route，内核会在这两个地址之间做负载均衡。但在有 NAT 的
+情况下该方案不一定有效。由内网发出的包在发送到 Internet 时其源地址会被 SNAT
+修改为两个 WAN 接口中的其中一个地址，因此这个包只有在通过这个地址对应的缺省
+网关时才能正常转发。因此，需要配置如下 SNAT 规则： ::
+
+  iptables -t nat -A POSTROUTING -o eth1 -j SNAT –to $eth1_WAN_IP
+  iptables -t nat -A POSTROUTING -o eth2 -j SNAT –to $eth2_WAN_IP
+
+但如果两个接入是通过交换机接入到同一个网卡时，上面的方法则无效。只有在能正确的
+进行 SNAT 操作时数据包才能被转发到互联网，这个问题暂时留存。
+
+另一种思路是通过策略路由。对数据包按一定的规则加上相应的标签并设置 SNAT 规则，
+然后根据这些标签设置路由策略指向正确的路由表。如下： ::
+
+  echo "201 wan-eth1" >> /etc/iproute2/rt_tables
+  echo "202 wan-eth2" >> /etc/iproute2/rt_tables
+  iptables -t mangle -A PREROUTING -i eth0 -s 172.16.1.0/24 \! -d 172.16.0.0/12 -j MARK --set-mark 7
+  iptables -t mangle -A PREROUTING -i eth0 -s 172.16.2.0/24 \! -d 172.16.0.0/12 -j MARK --set-mark 8
+  iptables -t nat -A POSTROUTING -o eth1 -s 172.16.1.0/24 -j SNAT --to-source x.x.x.a
+  iptables -t nat -A POSTROUTING -o eth2 -s 172.16.2.0/24 -j SNAT --to-source y.y.y.a
+  ip route add table wan-eth1 default via x.x.x.x
+  ip route add table wan-eth2 default via y.y.y.y
+  ip rule add from all fwmark 7 lookup wan-eth1
+  ip rule add from all fwmark 8 lookup wan-eth2
+
+在上面的一系列命令中，首先对从内网接口进来的数据包按源 IP 所在的网段打上不同
+的标签和应用不同的 SNAT 规则，然后设置路由策略根据这些标签值指向相应的路由表。
+路由表的选择和 SNAT 规则对应上即可。实际的规则需要结合具体的场景和策略来进行
+相应的调整。
+
+例如，下面的例子 ::
+
+  iptables -t mangle -A PREROUTING -m conntrack --ctstate NEW -j MARK --set-mark 7
+  iptables -t mangle -A PREROUTING -m conntrack --ctstate NEW -m statistic --mode random --probability 0.5 -j MARK –set-mark 8
+
+设置所有的新建连接标签为 7，然后根据一定的几率修改标签为 8。再结合路由策略
+设置正确的 SNAT 规则后可以按一定的几率来分配使用两个接入带宽。

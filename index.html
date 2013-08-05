@@ -1,0 +1,794 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Notes on Nothing and/or Everything &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="genindex.html"/>
+        <link rel="search" title="搜索" href="search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="#"/>
+        <link rel="next" title="综述" href="hardware/intro.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Notes on Nothing and/or Everything</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="notes-on-nothing-and-or-everything">
+<h1>Notes on Nothing and/or Everything<a class="headerlink" href="#notes-on-nothing-and-or-everything" title="永久链接至标题">¶</a></h1>
+<div class="toctree-wrapper compound" id="sec-hardware">
+<p class="caption"><span class="caption-text">硬件猎奇</span><a class="headerlink" href="#sec-hardware" title="永久链接至目录树">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hardware/intro.html">综述</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hardware/intro.html#id2">命令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/intro.html#id3">状态监测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/intro.html#id4">资源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/intro.html#id5">术语</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/ipmi.html">IPMI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hardware/ipmi.html#id1">常用命令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/ipmi.html#id2">功能介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/ipmi.html#kipmi0-100-cpu">kipmi0 占用 100% CPU 的问题</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/memory.html">内存</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hardware/memory.html#id2">分类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/memory.html#id3">封装</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/raid.html">RAID 维护备忘</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hardware/raid.html#id1">技术简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/raid.html#id2">RAID 卡维护备忘</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hardware/raid.html#lsi">LSI 系列</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware/raid.html#hp-smartarray">HP SmartArray</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/raid.html#id4">软 RAID 配置</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hardware/raid.html#mdadm">mdadm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware/raid.html#id5">其他方式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware/interface.html">各种接口简述</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hardware/interface.html#usb">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware/interface.html#id3">常用接口图例/物理接口</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="sec-software">
+<p class="caption"><span class="caption-text">软件探秘</span><a class="headerlink" href="#sec-software" title="永久链接至目录树">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="software/init.html">初始化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/pxe.html">PXE 安装系统配置 Howto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/partition.html">存储分区</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/partition.html#id2">命令</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/partition.html#parted">parted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/partition.html#sfdisk">sfdisk</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/partition.html#id3">通知内核更新分区表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/partition.html#resize">怎样调整文件系统大小</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/lvm.html">LVM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/lvm.html#id1">命令</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/lvm.html#id2">lvm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/lvm.html#lvmetad">lvmetad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/lvm.html#pv">PV</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/lvm.html#vg">VG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/lvm.html#lv">LV</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/lvm.html#id3">示例</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/apt-signed-repo.html">建立本地的（可信）APT 源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/iscsi.html">Linux 下的 iSCSI initiator 部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/offline.html">各种软件的离线版下载地址</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/svc.html">服务维护/管理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/svc_list.html">服务控制软件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/daemontools.html">daemontools 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/supervisor.html">supervisor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/supervisor.html#id2">程序介绍</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/supervisor.html#id3">配置文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/rsyslog.html">rsyslog 配置简介</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/rsyslog.html#etc-rsyslog-conf">配置文件 /etc/rsyslog.conf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/rsyslog.html#id4">模块</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/rsyslog.html#im">输入模块（im 前缀）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/rsyslog.html#om">输出模块（om 前缀）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/rsyslog.html#id5">其他模块</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/rsyslog.html#id6">规则</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/rsyslog.html#id8">过滤器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/rsyslog.html#id9">动作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/rsyslog.html#id10">日志输出模板</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/rsyslog.html#id11">深入理解</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/rsyslog-queue.html">rsyslog 队列配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/glusterfs.html">Gluster FS 部署备忘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/lvs.html">LVS 的三种部署模式</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/lvs.html#nat">NAT 模式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/lvs.html#tun">TUN 模式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/lvs.html#dr">DR 模式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/lvs.html#lvs-director">LVS Director 配置</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/cronie.html">cronie 和 pam_loginuuid 的问题解决</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/snmp.html">通过 snmp 获取数据的几个方式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/ops.html">日常维护</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/rsync.html">使用 rsync 进行文件备份</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/linux-ops.html">Linux 系统日常维护命令</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/linux-ops.html#id1">软件包维护</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/linux-ops.html#gentoo">Gentoo 更新步骤</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/linux-ops.html#portage">Portage 配置</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/linux-ops.html#id2">进程管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/linux-ops.html#id3">用户/组管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/driver.html">Linux 设备驱动</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/driver.html#id1">如何判断设备驱动存在？</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/driver.html#pci">PCI 设备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/driver.html#usb">USB 设备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/driver.html#dmi">DMI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/linux-hotplug.html">Linux 下的 CPU 和 内存热插拔</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/linux-faq.html">Linux 问题解决汇总</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/macos.html">macOS / OS X</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/macos.html#id1">版本列表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/macos.html#id2">命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/macos.html#id3">文件权限问题</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/macos.html#id4">快捷键</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/gentoo-prefix.html">OSX 上部署 Gentoo Prefix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/ssh.html">SSH</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/ssh.html#ssh-pubkey-auth">SSH 公钥认证</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/ssh.html#id2">简介</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/ssh.html#id3">配置</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="software/ssh.html#id4">服务端配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="software/ssh.html#id5">密钥生成</a></li>
+<li class="toctree-l5"><a class="reference internal" href="software/ssh.html#id6">客户端配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="software/ssh.html#id7">关于密钥的更多说明</a></li>
+<li class="toctree-l5"><a class="reference internal" href="software/ssh.html#id8">结语</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssh.html#ssh-otp">SSH OTP 认证</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssh.html#ssh-socks">SSH SOCKS 代理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssh.html#id9">SSH 端口转发/隧道</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/pdsh.html">PDSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/socks.html">SOCKS 代理配置</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/socks.html#chrome">Chrome 配置</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/tsmmc.html">Windows 远程桌面连接工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/virtualization.html">虚拟化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/vmware.html">VMWARE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/vmware.html#vcenter">vCenter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/vmware.html#esxi">ESXi</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/vmware.html#esxcfg"># esxcfg-*</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vmware.html#esxcli"># esxcli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vmware.html#tcpdump-uw"># tcpdump-uw</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vmware.html#vim-cmd"># vim-cmd</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vmware.html#vsish"># vsish</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vmware.html#id2">问题解决汇总</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="software/vmware.html#id3">孤立的虚拟机</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/shell.html">Shell 及常用命令</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/bash.html">Bash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/bash.html#id1">内置命令</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/bash.html#set">set</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/bash.html#tips-w-examples">tips w/ examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/bash.html#id2">扩展 bash 内置命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/bash.html#bash-rbash">受限的 BASH (rbash)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/bash.html#id3">坑</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/bash.html#cd">cd 的前向不兼容行为</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/grep.html">grep</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/grep.html#grep-ps">不让 grep 自身出现在 ps 结果中</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/sort.html">sort</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/sort.html#locale">locale 配置会影响排序结果</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/awk_sed.html">awk &amp; sed</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/awk_sed.html#sed">sed</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/awk_sed.html#hex">替换 HEX 表示的字符</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/awk_sed.html#id1">替换整行的例子</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/awk_sed.html#id2">替换换行符</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/awk_sed.html#awk">awk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/vim.html">vim</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/vim.html#id1">编辑操作</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="software/vim.html#id2">模式</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vim.html#id3">定位</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vim.html#id4">编辑（增删改查）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vim.html#id5">窗口操作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="software/vim.html#id6">文件状态</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software/vim.html#id7">插件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/vimdiff.html">vimdiff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/socat.html">socat 的使用</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/ssl.html">SSL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/ssl-ca.html">SSL/TLS 证书</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/ssl-ca.html#id1">证书信息查看</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssl-ca.html#openssl-ca">使用 OpenSSL 建立 CA 及签发，撤消证书</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/ssl-deploy.html">部署最佳实践</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/ssl-deploy.html#id2">证书</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssl-deploy.html#id3">配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssl-deploy.html#id4">性能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssl-deploy.html#http">HTTP 以及应用安全</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/ssl-deploy.html#id5">高级配置</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/ssl-keystore-export.html">从 JKS keystore 中迁移证书到 Nginx/Apache</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/nss.html">名字服务</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/dns.html">DNS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/dns.html#id1">公共 DNS 列表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/dns.html#rr">记录类型/RR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/dns.html#cname-mx">CNAME 和 MX 记录冲突的原因解释</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/bind.html">BIND</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/bind.html#bind-interface-interval">BIND 监听任意地址的问题解决 (interface-interval)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/ldap-kerberos.html">使用 LDAP + Kerberos 实现集中用户认证及授权系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/webauth.html">通过 WEB 实现 kerberos 密码修改</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/db.html">数据库</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/oracle.html">Oracle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/oracle.html#index-0">连接数据库</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/oracle.html#id2">关闭数据库</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/oracle.html#id3">全量导出与导入命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/oracle.html#id4">其他常用语句</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software/mongodb.html">MongoDB</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/mongodb.html#replset">replset 改名操作</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="software/rrdtool.html">时序数据库/RRDTOOL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/rrdtool.html#id1">演示代码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/rrdtool.html#xff">xff 的意义</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software/rrdtool.html#rrdcached-io">使用 rrdcached 降低 IO 压力</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/web.html">WEB 服务</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/nginx.html">Nginx</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software/nginx.html#location">Location</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software/analysis.html">数据分析</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="software/hbase.html">HBase</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="sec-network">
+<p class="caption"><span class="caption-text">网络漫游</span><a class="headerlink" href="#sec-network" title="永久链接至目录树">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/arp.html">ARP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network/arp.html#linux-arp">Linux ARP 配置参数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="network/arp.html#arp-announce">arp_announce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="network/arp.html#arp-filter">arp_filter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="network/arp.html#howto-remove-incomplete-arp-entry">howto remove incomplete arp entry</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network/address.html">IP 地址</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network/address.html#ipv4">IPv4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network/address.html#ipv6">IPv6</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/route.html">路由</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network/route-multipath.html">多个外网接入时的路由配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network/policy-route.html">策略路由</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network/openvpn.html">使用 openvpn 实现 SSL VPN</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network/openvpn.html#id1">服务端的配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network/openvpn.html#id2">客户端的配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network/openvpn.html#id3">进一步的配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network/openvpn.html#dns-issue-of-openvpn-client-on-windows">DNS issue of OpenVPN client on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="sec-development">
+<p class="caption"><span class="caption-text">开发构建</span><a class="headerlink" href="#sec-development" title="永久链接至目录树">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="development/scms.html">配置管理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development/gitolite.html">gitolite 的安装和配置</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development/gitolite.html#id1">服务端软件安装及配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development/gitolite.html#id2">Gitolite 配置</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development/lang.html">语言</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development/lang.html#id2">开发环境</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development/macos.html">macOS / OS X 环境构建</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="development/macos.html#download-software-for-apple-development">Download Software for Apple Development</a></li>
+<li class="toctree-l4"><a class="reference internal" href="development/macos.html#id1">命令行开发工具</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="development/make.html">make</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="development/make.html#j">-j 的并行任务个数选择</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development/lang.html#c-c">C/C++</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development/gcc-extra.html">gcc 编译选项 -Wextra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development/gcc-attribute.html">gcc 属性 section 在应用层代码的使用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development/legacyfunc.html">怎样让函数在被编译或被链接时警告用户？</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development/clang.html">clang</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development/lang.html#java">Java</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development/java.html">Java</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="development/java.html#jmx">jmx</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development/lang.html#python">Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development/python-functools.html">Python 装饰器和 functools 模块</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development/debug.html">调试</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development/linker.html">LD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development/linker.html#id1">命令行选项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development/linker.html#id2">环境变量</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development/splitdebug.html">实现 ELF 可执行文件和调试符号表分离</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/segfault.html">由段错误信息定位错误代码</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development/kernel.html">内核</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development/kernel-commits.html">有趣的内核 commit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/kernel-magic.html">Linux reboot 的魔数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/linux-memory.html">Linux 内核内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/linux-clocksource.html">clocksource 解释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/linux-pktchk.html">用于网络包检查的简单内核模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/linux-firmware-load.html">Linux 内核 firmware 加载过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/kernel-verify.html">Linux 内核签名验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/aslr.html">ASLR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development/api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development/listen-backlog.html">listen() 的 backlog 及 TCP 相关参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/recvmmsg.html">新的 socket 读函数：recvmmsg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/iomultiplex.html">异步事件的 IO 复用处理机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/linux-capabilities.html">Linux Capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development/nlp.html">自然语言处理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development/nlp-testcase.html">测试用例</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="sec-misc">
+<p class="caption"><span class="caption-text">天南海北</span><a class="headerlink" href="#sec-misc" title="永久链接至目录树">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="misc/cards.html">各种卡片</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc/cards.html#id2">银行/信用卡号码规则及验证算法</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/restructuredtext.html">reStructuredText 备忘</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc/restructuredtext.html#id1">段落</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/restructuredtext.html#id2">文本格式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/restructuredtext.html#id3">列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/restructuredtext.html#roles">Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/restructuredtext.html#directives">Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/restructuredtext.html#id6">数学公式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc/sites.html">WEB 网站</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc/sites.html#id1">技术</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="misc/sites.html#nix">*nix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="misc/sites.html#id3">学术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/sites.html#id7">图像/艺术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/sites.html#blog">Blog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/sites.html#id10">语言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/sites.html#id13">免费/在线书籍</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="misc/sites.html#id17">搜索站点</a></li>
+<li class="toctree-l3"><a class="reference internal" href="misc/sites.html#id19">各出版商的免费电子书集合</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc/illusion.html">错觉</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="sec-books">
+<p class="caption"><span class="caption-text">读书笔记</span><a class="headerlink" href="#sec-books" title="永久链接至目录树">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="sec-index">
+<p class="caption"><span class="caption-text">索引/表</span><a class="headerlink" href="#sec-index" title="永久链接至目录树">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">索引</a></li>
+</ul>
+</div>
+<div class="section" id="todo">
+<h2>TODO<a class="headerlink" href="#todo" title="永久链接至标题">¶</a></h2>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">待处理</p>
+<p class="last">状态图链接失效，整理一个本地版本备查</p>
+</div>
+<p class="todo-source"><a class="reference internal" href="network/netfilter-recent.html#index-0"><em>原始记录</em></a></p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">待处理</p>
+<p class="last">补全更多常见设备的 modalias 细节</p>
+</div>
+<p class="todo-source"><a class="reference internal" href="software/driver.html#index-0"><em>原始记录</em></a></p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">待处理</p>
+<p class="last">SAN 配置</p>
+</div>
+<p class="todo-source"><a class="reference internal" href="software/ssl-ca.html#index-3"><em>原始记录</em></a></p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">待处理</p>
+<p class="last">补全各种攻击细节</p>
+</div>
+<p class="todo-source"><a class="reference internal" href="software/ssl-deploy.html#index-0"><em>原始记录</em></a></p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">待处理</p>
+<p class="last">增加 Python 实现</p>
+</div>
+<p class="todo-source"><a class="reference internal" href="software/webauth.html#index-0"><em>原始记录</em></a></p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hardware/intro.html" class="btn btn-neutral float-right" title="综述" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/js/ga.js"></script>
+      <script type="text/javascript" src="_static/js/baidu.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linux 内核 firmware 加载过程 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="内核" href="kernel.html"/>
+        <link rel="next" title="Linux 内核签名验证" href="kernel-verify.html"/>
+        <link rel="prev" title="用于网络包检查的简单内核模块" href="linux-pktchk.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">调试</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="kernel.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kernel-commits.html">有趣的内核 commit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-magic.html">Linux reboot 的魔数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-memory.html">Linux 内核内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-clocksource.html">clocksource 解释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-pktchk.html">用于网络包检查的简单内核模块</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux 内核 firmware 加载过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel-verify.html">Linux 内核签名验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aslr.html">ASLR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kernel.html">内核</a> &raquo;</li>
+        
+      <li>Linux 内核 firmware 加载过程</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/development/linux-firmware-load.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux-firmware">
+<h1>Linux 内核 firmware 加载过程<a class="headerlink" href="#linux-firmware" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-11-26 新版功能: </span>创建</p>
+</div>
+<p>Broadcom 的一些网卡需要加载一些 firmware 才能正常工作，相应的内核信息如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bnx2</span><span class="p">:</span> <span class="n">Can</span><span class="s1">&#39;t load firmware file &quot;bnx2/bnx2-mips-09-6.2.1b.fw&quot;</span>
+</pre></div>
+</div>
+<p>借这个机会对 Linux 内核加载所需的 firmware 的过程做了个了解。</p>
+<p>首先参考内核文档 <a class="reference external" href="https://www.kernel.org/doc/Documentation/firmware_class/README">firmware_class/README</a> 里的说明：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1), kernel(driver):
+       - calls request_firmware(&amp;fw_entry, $FIRMWARE, device)
+       - kernel searchs the fimware image with name $FIRMWARE directly
+       in the below search path of root filesystem:
+               User customized search path by module parameter &#39;path&#39;[1]
+               &quot;/lib/firmware/updates/&quot; UTS_RELEASE,
+               &quot;/lib/firmware/updates&quot;,
+               &quot;/lib/firmware/&quot; UTS_RELEASE,
+               &quot;/lib/firmware&quot;
+       - If found, goto 7), else goto 2)
+
+       [1], the &#39;path&#39; is a string parameter which length should be less
+       than 256, user should pass &#39;firmware_class.path=$CUSTOMIZED_PATH&#39;
+       if firmware_class is built in kernel(the general situation)
+
+2), userspace:
+       - /sys/class/firmware/xxx/{loading,data} appear.
+       - hotplug gets called with a firmware identifier in $FIRMWARE
+         and the usual hotplug environment.
+               - hotplug: echo 1 &gt; /sys/class/firmware/xxx/loading
+
+3), kernel: Discard any previous partial load.
+
+4), userspace:
+               - hotplug: cat appropriate_firmware_image &gt; \
+                                       /sys/class/firmware/xxx/data
+
+5), kernel: grows a buffer in PAGE_SIZE increments to hold the image as it
+        comes in.
+
+6), userspace:
+               - hotplug: echo 0 &gt; /sys/class/firmware/xxx/loading
+
+7), kernel: request_firmware() returns and the driver has the firmware
+        image in fw_entry-&gt;{data,size}. If something went wrong
+        request_firmware() returns non-zero and fw_entry is set to
+        NULL.
+
+8), kernel(driver): Driver code calls release_firmware(fw_entry) releasing
+                the firmware image and any related resource.
+</pre></div>
+</div>
+<p>从这里描述的过程我们能看到，内核本身并不加载任何 firmware，而只是发一个通知
+“我需要名字为 xxx 的 firmware” 给用户空间，然后等待用户空间的程序将该
+firmware 的镜像文件推送给内核。这里用户空间的进程一般对应于 udev
+或其他类似功能的程序。</p>
+<p>以 udev 为例，在 Ubuntu 12.04 上，</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ grep firmware /lib/udev/rules.d/*
+/lib/udev/rules.d/50-firmware.rules:# firmware-class requests, copies files into the kernel
+/lib/udev/rules.d/50-firmware.rules:SUBSYSTEM==&quot;firmware&quot;, ACTION==&quot;add&quot;, RUN+=&quot;firmware --firmware=$env{FIRMWARE} --devpath=$env{DEVPATH}&quot;
+</pre></div>
+</div>
+<p>可以看到当内核请求 firmware， udev 会调用 firmware 程序处理。接下来我们查看
+firmware 的源代码（使用 <cite>apt-get source udev</cite> 安装）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ vi udev-175/extras/firmware/firmware.c
+...
+ 82     static const char *searchpath[] = { FIRMWARE_PATH };
+...
+131     /* lookup firmware file */
+132     uname(&amp;kernel);
+133     for (i = 0; i &lt; ARRAY_SIZE(searchpath); i++) {
+134         util_strscpyl(fwpath, sizeof(fwpath), searchpath[i], kernel.release, &quot;/&quot;, firmware, NULL);
+135         dbg(udev, &quot;trying %s\n&quot;, fwpath);
+136         fwfile = fopen(fwpath, &quot;r&quot;);
+137         if (fwfile != NULL)
+138             break;-
+139
+140         util_strscpyl(fwpath, sizeof(fwpath), searchpath[i], firmware, NULL);
+141         dbg(udev, &quot;trying %s\n&quot;, fwpath);
+142         fwfile = fopen(fwpath, &quot;r&quot;);
+143         if (fwfile != NULL)
+144             break;
+145     }
+...
+</pre></div>
+</div>
+<p>其中 searchpath 会在 configure 时被设置为 /lib/firmware/updates/ 和
+/lib/firmware/ 这两个路径。程序会分别在这两个目录下搜索 $(uname -r)/$FIRMWARE
+和 $FIRMWARE 文件。假设内核版本（<cite>uname -r</cite>的输出）为 3.10.20，请求的
+firmware 为 bnx2/bnx2-mips-09-6.2.1b.fw，则 firmware 程序会搜索如下 4 个文件，
+找到即退出搜索循环，并将该文件的内容传递到内核。
+如果都没有找到就会遇到本文最开始的错误。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">updates</span><span class="o">/</span><span class="mf">3.10</span><span class="o">.</span><span class="mi">20</span><span class="o">/</span><span class="n">bnx2</span><span class="o">/</span><span class="n">bnx2</span><span class="o">-</span><span class="n">mips</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mf">6.2</span><span class="o">.</span><span class="mi">1</span><span class="n">b</span><span class="o">.</span><span class="n">fw</span>
+<span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">updates</span><span class="o">/</span><span class="n">bnx2</span><span class="o">/</span><span class="n">bnx2</span><span class="o">-</span><span class="n">mips</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mf">6.2</span><span class="o">.</span><span class="mi">1</span><span class="n">b</span><span class="o">.</span><span class="n">fw</span>
+<span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="mf">3.10</span><span class="o">.</span><span class="mi">20</span><span class="o">/</span><span class="n">bnx2</span><span class="o">/</span><span class="n">bnx2</span><span class="o">-</span><span class="n">mips</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mf">6.2</span><span class="o">.</span><span class="mi">1</span><span class="n">b</span><span class="o">.</span><span class="n">fw</span>
+<span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">bnx2</span><span class="o">/</span><span class="n">bnx2</span><span class="o">-</span><span class="n">mips</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mf">6.2</span><span class="o">.</span><span class="mi">1</span><span class="n">b</span><span class="o">.</span><span class="n">fw</span>
+</pre></div>
+</div>
+<p>其他发行版本的处理过程都是类似的，找到 udev 对应的规则文件，该文件里会指定由
+哪个程序来处理。例如，对 Gentoo：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ grep firmware /lib/udev/rules.d/*
+/lib/udev/rules.d/50-firmware.rules:SUBSYSTEM==&quot;firmware&quot;, ACTION==&quot;add&quot;, RUN{builtin}=&quot;firmware&quot;
+</pre></div>
+</div>
+<p>Gentoo 里 firmware 的加载时由 udev 内置的 firmware 命令来处理。分析其源代码后
+确认其处理逻辑和 Ubuntu 的处理是类似的。</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kernel-verify.html" class="btn btn-neutral float-right" title="Linux 内核签名验证" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="linux-pktchk.html" class="btn btn-neutral" title="用于网络包检查的简单内核模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

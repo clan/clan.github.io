@@ -1,0 +1,15 @@
+clang
+#####
+
+.. versionadded:: @2019-01-18
+   创建
+
+.. index :: clang
+
+常见错误信息解决办法：
+
+    - 参数相关问题
+
+        #. `clang-6.0: error: argument unused during compilation: '-L../libinotifytools/src' [-Werror,-Wunused-command-line-argument]`
+
+            * 增加参数 `-Qunused-arguments`

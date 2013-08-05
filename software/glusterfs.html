@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Gluster FS 部署备忘 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="服务维护/管理" href="svc.html"/>
+        <link rel="next" title="LVS 的三种部署模式" href="lvs.html"/>
+        <link rel="prev" title="rsyslog 队列配置" href="rsyslog-queue.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="svc.html">服务维护/管理</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="svc_list.html">服务控制软件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daemontools.html">daemontools 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supervisor.html">supervisor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog.html">rsyslog 配置简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog-queue.html">rsyslog 队列配置</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gluster FS 部署备忘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvs.html">LVS 的三种部署模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cronie.html">cronie 和 pam_loginuuid 的问题解决</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html">通过 snmp 获取数据的几个方式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="svc.html">服务维护/管理</a> &raquo;</li>
+        
+      <li>Gluster FS 部署备忘</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/glusterfs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gluster-fs">
+<h1>Gluster FS 部署备忘<a class="headerlink" href="#gluster-fs" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-12-23 新版功能: </span>创建</p>
+</div>
+<p>假设有两台服务器，主机名分别为 g1，g2。最好在本地 DNS 中注册并维护这些
+主机名。</p>
+<p>在两台机器上安装服务程序： <cite>apt-get install glusterfs-server</cite></p>
+<p>确认服务是否正常运行：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">~</span><span class="c1"># service glusterfs-server status</span>
+<span class="n">glusterfs</span><span class="o">-</span><span class="n">server</span> <span class="n">start</span><span class="o">/</span><span class="n">running</span><span class="p">,</span> <span class="n">process</span> <span class="mi">1153</span>
+</pre></div>
+</div>
+<p>分别在两台机器上配置信任池，在 g1 上执行 <cite>gluster peer probe g2</cite>，在 g2
+上执行 <cite>gluster peer probe g1</cite>。要取消信任关系则使用
+<cite>gluster peer detach gx</cite>。</p>
+<p>接下来创建并 mount GlusterFS 卷。在任一台服务器上执行如下命令
+（gvol 为该卷的名字）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">~</span><span class="c1"># gluster volume create gvol g1:/gfs</span>
+<span class="n">Creation</span> <span class="n">of</span> <span class="n">volume</span> <span class="n">gvol</span> <span class="n">has</span> <span class="n">been</span> <span class="n">successful</span><span class="o">.</span> <span class="n">Please</span> <span class="n">start</span> <span class="n">the</span> <span class="n">volume</span> <span class="n">to</span> <span class="n">access</span> <span class="n">data</span><span class="o">.</span>
+<span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">~</span><span class="c1"># gluster volume start gvol</span>
+<span class="n">Starting</span> <span class="n">volume</span> <span class="n">gvol</span> <span class="n">has</span> <span class="n">been</span> <span class="n">successful</span>
+<span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">~</span><span class="c1"># mount -t glusterfs 127.0.0.1:/gvol /mnt/gfs</span>
+</pre></div>
+</div>
+<p>在 g2 上执行同样的 mount 操作也能访问该 GlusterFS 卷，尽管我们只将 g1
+加到该卷之中。增加其他的 brick 使用如下命令：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">~</span><span class="c1"># gluster volume add-brick gvol g2:/gfs</span>
+<span class="n">Add</span> <span class="n">Brick</span> <span class="n">successful</span>
+</pre></div>
+</div>
+<p>在上面我们使用缺省参数创建的卷其类型为 distributed，可以简单理解为 RAID0。
+在增加 g2 的 brick 后能看到 /mnt/gfs 为 g1 和 g2 上 brick 空间的和。
+显然，这种模式下的数据安全需要通过其他机制来保障。如果在创建卷时指定其他的
+选项，可以创建 Replicated 卷，更多的选择请参考官方文档。</p>
+<p>有时在增加 brick 时会碰到如下错误：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">~</span><span class="c1"># gluster volume add-brick gvol g2:/gfs</span>
+<span class="o">/</span><span class="n">gfs</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">prefix</span> <span class="n">of</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">already</span> <span class="n">part</span> <span class="n">of</span> <span class="n">a</span> <span class="n">volume</span>
+</pre></div>
+</div>
+<p>这是因为 Glusterfs 在文件系统上设置了一些扩展属性以及目录 .glusterfs 的存在。
+对于后者，只需要删除该目录即可（<cite>rm -rf $brick_path/.glusterfs</cite>）。对前者
+更多的信息如下。在将 /gfs 设置为只读时添加 brick 会出现如下错误：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">~</span><span class="c1"># gluster volume add-brick gvol g2:/gfs</span>
+<span class="n">Glusterfs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">supported</span> <span class="n">on</span> <span class="n">brick</span><span class="p">:</span> <span class="n">g2</span><span class="p">:</span><span class="o">/</span><span class="n">gfs</span><span class="o">.</span>
+<span class="n">Setting</span> <span class="n">extended</span> <span class="n">attributes</span> <span class="n">failed</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="n">Read</span><span class="o">-</span><span class="n">only</span> <span class="n">file</span> <span class="n">system</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>使用 attr 能看到相应的属性：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@g1</span><span class="p">:</span><span class="o">/</span><span class="n">gfs</span><span class="c1"># attr -l /gfs</span>
+<span class="n">Attribute</span> <span class="s2">&quot;glusterfs.volume-id&quot;</span> <span class="n">has</span> <span class="n">a</span> <span class="mi">16</span> <span class="n">byte</span> <span class="n">value</span> <span class="k">for</span> <span class="o">/</span><span class="n">gfs</span>
+<span class="n">Attribute</span> <span class="s2">&quot;gfid&quot;</span> <span class="n">has</span> <span class="n">a</span> <span class="mi">16</span> <span class="n">byte</span> <span class="n">value</span> <span class="k">for</span> <span class="o">/</span><span class="n">gfs</span>
+<span class="n">Attribute</span> <span class="s2">&quot;glusterfs.dht&quot;</span> <span class="n">has</span> <span class="n">a</span> <span class="mi">16</span> <span class="n">byte</span> <span class="n">value</span> <span class="k">for</span> <span class="o">/</span><span class="n">gfs</span>
+</pre></div>
+</div>
+<p>这种情况下最直接的处理办法是删除相应的扩展属性：
+<cite>for i in $(attr -lq $brick_path); do setfattr -x trusted.$i $brick_path; done</cite>
+或者将原来的文件夹改名后重新创建。在这些操作之后再来添加 brick 应该会成功。
+关于 GlusterFS 扩展属性的更多信息可以参考
+<a class="reference external" href="http://hekafs.org/index.php/2011/04/glusterfs-extended-attributes/">这里</a>。</p>
+<p>使用 <cite>gluster volume info</cite> 能查看 GlusterFS 卷的相关信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@g2</span><span class="p">:</span><span class="o">~</span><span class="c1"># gluster volume info</span>
+
+<span class="n">Volume</span> <span class="n">Name</span><span class="p">:</span> <span class="n">gvol</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">Distribute</span>
+<span class="n">Volume</span> <span class="n">ID</span><span class="p">:</span> <span class="mi">55</span><span class="n">ec40a1</span><span class="o">-</span><span class="mi">486</span><span class="n">f</span><span class="o">-</span><span class="mi">4</span><span class="n">d9a</span><span class="o">-</span><span class="n">a449</span><span class="o">-</span><span class="mi">64</span><span class="n">a873dbbe5b</span>
+<span class="n">Status</span><span class="p">:</span> <span class="n">Started</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">Bricks</span><span class="p">:</span> <span class="mi">2</span>
+<span class="n">Transport</span><span class="o">-</span><span class="nb">type</span><span class="p">:</span> <span class="n">tcp</span>
+<span class="n">Bricks</span><span class="p">:</span>
+<span class="n">Brick1</span><span class="p">:</span> <span class="n">g1</span><span class="p">:</span><span class="o">/</span><span class="n">gfs</span>
+<span class="n">Brick2</span><span class="p">:</span> <span class="n">g2</span><span class="p">:</span><span class="o">/</span><span class="n">gfs</span>
+</pre></div>
+</div>
+<p>如果需要将其中一个 brick 移出 GFS，则按如下步骤操作。其中 commit 操作一定要在
+status 显示对应 brick 状态为 completed 之后进行。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>root@g2:~# gluster volume remove-brick gvol  g2:/gfs start
+Remove Brick start successful
+root@g2:~# gluster volume remove-brick gvol  g2:/gfs status
+       Node Rebalanced-files          size       scanned      failures         status
+  ---------      -----------   -----------   -----------   -----------   ------------
+  localhost               75        13.2GB          2561             0    in progress
+       g1                  0        0Bytes        125212          8924    not started
+root@g2:~# gluster volume remove-brick gvol  g2:/gfs status
+       Node Rebalanced-files          size       scanned      failures         status
+  ---------      -----------   -----------   -----------   -----------   ------------
+  localhost            11445         2.4TB        118536             0      completed
+       g1                  0        0Bytes        125212          8924    not started
+root@g2:~# gluster volume remove-brick gvol  g2:/gfs commit
+Removing brick(s) can result in data loss. Do you want to Continue? (y/n) y
+Remove Brick commit successful
+</pre></div>
+</div>
+<p>GlusterFS 的更多信息可以参考 <a class="reference external" href="http://www.gluster.org/">GlusterFS</a>，
+<a class="reference external" href="http://hekafs.org/">HekaFS</a>。</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lvs.html" class="btn btn-neutral float-right" title="LVS 的三种部署模式" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rsyslog-queue.html" class="btn btn-neutral" title="rsyslog 队列配置" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

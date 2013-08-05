@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>daemontools 介绍 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="服务维护/管理" href="svc.html"/>
+        <link rel="next" title="supervisor" href="supervisor.html"/>
+        <link rel="prev" title="服务控制软件" href="svc_list.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="svc.html">服务维护/管理</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="svc_list.html">服务控制软件</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">daemontools 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supervisor.html">supervisor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog.html">rsyslog 配置简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog-queue.html">rsyslog 队列配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glusterfs.html">Gluster FS 部署备忘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvs.html">LVS 的三种部署模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cronie.html">cronie 和 pam_loginuuid 的问题解决</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html">通过 snmp 获取数据的几个方式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="svc.html">服务维护/管理</a> &raquo;</li>
+        
+      <li>daemontools 介绍</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/daemontools.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="daemontools">
+<h1>daemontools 介绍<a class="headerlink" href="#daemontools" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-01-14 新版功能: </span>创建</p>
+</div>
+<p>*nix 系统下的服务一般以守护进程的方式运行，通过 sysvinit 或 upstart 或
+systemd 启动。对那些没有提供内置 daemon 方式的程序，可以通过
+start-stop-daemon 进行封装。或采用相对轻量级的程序来实现，
+例如本文要介绍的 daemontools 来启动。daemontools
+是一套 *nix 上管理服务的工具集，其实现有两个版本，分别为
+<a class="reference external" href="http://cr.yp.to/daemontools.html">daemontools</a> 和
+<a class="reference external" href="http://untroubled.org/daemontools-encore/">daemonntools-encore</a>。
+本文仅介绍其中和服务启停有关的几个程序，其他的请参考官方文档。</p>
+<p>Gentoo 下执行 <cite>emerge -avgk daemontools</cite>， Ubuntu 下执行
+<cite>apt-get install daemontools-run</cite> 安装软件，然后通过
+<cite>service svscan start</cite> 即可启动服务，其对应的主程序为 svscan，
+该程序会启动指定目录（Gentoo 下为 /service， Ubuntu 下为 /etc/service）
+下的服务，如果服务崩溃会自动重启。</p>
+<p>添加服务只需要在 service 目录下创建一个目录，在该目录下放置一个名为
+<em>run</em> 的可执行程序（shell/python 脚本，或二进制程序等）即可，svscan 会自动
+执行该程序（用 <cite>supervise</cite>）。对 run 程序的要求是该程序不能主动退出，否则
+svscan 会检测到退出并再次执行该程序，这样即可保障服务一直运行。当然，svscan
+服务本身需要添加到开机自启动并有中断恢复机制，参考
+<a class="reference external" href="http://cr.yp.to/daemontools/start.html">How to start daemontools</a>。</p>
+<p>停止某个服务则先使用 <cite>svc -d /service/aa</cite> 停止 run 程序，然后删除文件夹
+aa（或改名为 .aa，svscan 会忽略以 . 开头的文件夹）。</p>
+<p>命令 svc 可以对 daemontools 管理下的服务进行控制：</p>
+<ul class="simple">
+<li><cite>svc -h /service/aa</cite> 发送 HUP 信号</li>
+<li><cite>svc -t /service/aa</cite> 发送 TERM 信号，daemon 退出后重启该程序。修改 run
+程序或其他相关程序后可以使用该命令更新服务。</li>
+<li><cite>svc -d /service/aa</cite> 发送 TERM 信号，daemon 不会被重启</li>
+<li><cite>svc -u /service/aa</cite> 启动该 daemon</li>
+<li><cite>svc -o /service/aa</cite> 启动该 daemon，但不自动重启</li>
+</ul>
+<p>命令 svstat 输出服务运行信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># svstat /service/aa/</span>
+<span class="o">/</span><span class="n">service</span><span class="o">/</span><span class="n">aa</span><span class="o">/</span><span class="p">:</span> <span class="n">up</span> <span class="p">(</span><span class="n">pid</span> <span class="mi">26209</span><span class="p">)</span> <span class="mi">241781</span> <span class="n">seconds</span>
+</pre></div>
+</div>
+<p>对 crontab 里一些需要频繁（如每分钟一次）运行的程序，也可以在 daemontools 的
+框架内实现，例如（其中 sleep 采用了 bash 扩展实现内置命令）：</p>
+<p>需要说明的是该例子和 crontab 并不等价，任务的执行间隔不是固定的，
+而是和程序执行所需时间有关，即每运行一次后等待 60s 再运行，
+而不是每 60s 运行一次。</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="supervisor.html" class="btn btn-neutral float-right" title="supervisor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="svc_list.html" class="btn btn-neutral" title="服务控制软件" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

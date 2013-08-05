@@ -1,0 +1,123 @@
+各种接口简述
+============
+
+.. versionadded:: @2019-01-28
+   创建
+.. versionchanged:: @2019-01-30
+   增加 SAS & Thunderblot
+
+.. list-table:: 各种接口规范简述
+    :header-rows: 1
+
+    * - 名
+      - 参数
+      - 备注
+    * - PCI Express 1.0
+      - 2.5GT/s [#pcie]_ or 2Gbps
+      - 2003
+    * - PCI Express 2.0
+      - 5GT/s or 4Gbps
+      - 2007
+    * - PCI Express 3.0
+      - 8GT/s or 7.8768Gbps
+      - 2010
+    * - SAS 1
+      - 3Gbps
+      - 2005
+    * - SAS 2
+      - 6Gbps
+      - 2009
+    * - SAS 3
+      - 12Gbps
+      - 2013
+    * - SAS 4
+      - 22.5Gbps
+      - 2017
+    * - SATA 1.0
+      - 1.5Gbps
+      - 2003
+    * - SATA 2.0
+      - 3Gbps
+      - 2004
+    * - SATA 3.0
+      - 6Gbps
+      - 2009
+    * - Thunderbolt
+      - 10Gbps
+      - 2011
+    * - Thunderbolt 2
+      - 20Gbps
+      - 2013
+    * - Thunderbolt 3
+      - 40Gbps
+      - 2016
+    * - USB/1.0
+      - * 1.5Mbps (Low)
+        * 12Mbps (Full)
+      - 1996
+    * - USB/2.0
+      - 480Mbps
+      - 2001
+    * - USB/3.0
+      - 5Gbps (SuperSpeed)
+      - 2011
+    * - USB/3.1 & 3.2
+      - * 10Gbps
+        * 20Gbps (SuperSpeed+)
+      - 2014 & 2017
+    * - USB/4
+      - 40Gbps
+      - 2019
+
+USB
+---
+
+参考 :wiki:`Host controller interface (USB, Firewire) <Host_controller_interface_(USB,_Firewire)#USB>`\，
+`USB in a NutShell <https://www.beyondlogic.org/usbnutshell/usb1.shtml>`_
+
+OHCI、UHCI 都是 USB1.1 的接口标准，EHCI 是对应 USB2.0 的接口标准，
+xHCI 是 USB3.0 的接口标准。
+
+#. OHC （Open Host Controller Interface）是 USB1.1 的标准，
+   除 USB 外，它还支持其他的一些接口，例如 Apple 的火线
+   （Firewire，IEEE 1394）接口。与 UHCI 相比，OHCI 的硬件复杂，
+   硬件做的事情更多，所以实现对应的软件驱动的任务，就相对较简单。
+   主要用于非 x86 的USB，如扩展卡、嵌入式开发板的 USB 主控。
+#. UHCI（Universal Host Controller Interface）是 Intel 主导的对 USB1.0、1.1
+   的接口标准，与 OHCI 不兼容。UHCI 的软件驱动的任务重，需要做得比较复杂，
+   但可以使用较便宜、较简单的硬件的 USB 控制器。Intel 和 VIA 使用 UHCI，
+   而其余的硬件提供商使用 OHCI。
+#. EHCI（Enhanced Host Controller Interface），是 Intel 主导的 USB2.0
+   的接口标准。EHCI 仅提供 USB2.0 的高速功能，而依靠 UHCI 或 OHCI
+   来提供对全速（Full-Speed）或低速（Low-Speed）设备的支持。
+#. xHCI（eXtensible Host Controller Interface），是 USB3.0 的接口标准，
+   它在速度、节能、虚拟化等方面都比前面三种有了较大的提高。
+   xHCI 支持所有种类速度的USB设备（USB 3.0 SuperSpeed，
+   USB 2.0 Low-， Full-， and High-speed， USB 1.1 Low- and Full-speed）。
+   xHCI 的目的是为了替换前面三种（UHCI/OHCI/EHCI）。
+
+USB 3.x 接口一般为蓝色。
+
+常用接口图例/物理接口
+---------------------
+
+======= ===========================
+ESATA    .. image:: esata.png
+            :align: center
+            :scale: 40%
+RS232    .. image:: rs232-db9.jpg
+            :align: center
+            :scale: 50%
+USB      .. image:: usb.png
+            :align: center
+            :scale: 20%
+VGA      .. image:: svga_port.jpg
+            :align: center
+            :scale: 10%
+======= ===========================
+
+.. rubric:: 附注
+
+.. [#pcie] PCIE 传输率单位为 GT/s，PCIE 1.0/2.0 使用 line code 8b/10b，
+           有效数据为 80%；PCIE 3.0/4.0 使用 line code 128b/130b，
+           有效数据为 98.46%。

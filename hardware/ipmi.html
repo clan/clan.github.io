@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>IPMI &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="内存" href="memory.html"/>
+        <link rel="prev" title="综述" href="intro.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">综述</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">IPMI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">常用命令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">功能介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kipmi0-100-cpu">kipmi0 占用 100% CPU 的问题</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>IPMI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hardware/ipmi.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ipmi">
+<h1>IPMI<a class="headerlink" href="#ipmi" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2015-03-15 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2015-03-15 版更改: </span>增加 BMC reset &amp; lan access</p>
+</div>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/IPMI">IPMI</a> 原本是一种 Intel 架构的企业系统的
+周边设备所采用的一种工业标准。</p>
+<p>使用到的命令为 <strong>ipmitool</strong> 。<cite>man ipmitool</cite> 获取详细的文档。常用参数如下：</p>
+<blockquote>
+<div><ul class="simple">
+<li>-I [open|lan|lanplus] 指定使用的IPMI接口，lan/lanplus 是网络连接方式。</li>
+<li>-H &lt;address&gt;  IPMI 服务器地址</li>
+<li>-U &lt;username&gt; IPMI 服务器用户名</li>
+<li>-y &lt;hexkey&gt;  IPMIv2 认证密钥</li>
+<li>-P &lt;password&gt; IPMIv2 服务器密码</li>
+</ul>
+</div></blockquote>
+<p>需要注意的是，在通过网络接口使用 IPMI 时，任何人在任一个网络可达的地方即可完全
+控制系统的电源状态、获取系统的平台信息等等。等同于在坐在服务器前面。
+因此，IPMI 的设置一定要注意安全性：一定要设置密码，密码绝对不可以泄漏。
+IPMI v1.5 时的密码是明文传输，最好禁用。</p>
+<div class="admonition important">
+<p class="first admonition-title">重要</p>
+<p class="last">安全方面的更多细节请参考
+<a class="reference external" href="http://fish2.com/ipmi/">All the IPMI that's fit to print</a>。</p>
+</div>
+<div class="section" id="id1">
+<h2>常用命令<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p><strong>请在清楚这些命令的目的和后果后在再对线上系统进行相关操作。</strong> 如果没有指定 -H
+选项，则 ipmi 会通过本地接口（等价于 -I open）执行相关的操作
+（可能需要加载相关的驱动，例如 <cite>modprobe ipmi_devintf</cite> ）。</p>
+<blockquote>
+<div><ul class="simple">
+<li>ipmitool -H ipmi.ip -U root -P pass power off (关机，直接切断电源)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass power soft (软关机，如同按一下电源开关)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass power on (开机，启动电源)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass power reset (硬重启)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass power status (获取当前电源状态)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass user set password 2 XXX (修改密码)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass lan set 1 ipaddr X.X.X.X (修改 IPMI 接口地址)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass lan set 1 netmask X.X.X.X (修改 IPMI 接口掩码)</li>
+<li>ipmitool -H ipmi.ip -U root -P pass lan set 1 defgw ipaddr X.X.X.X (修改 IPMI 接口网关地址)</li>
+</ul>
+</div></blockquote>
+<p>其中对 IPMI 接口地址的相关调整在有条件的情况下最好不要远程修改，而是在宿主机的
+操作系统上（即通过 -I open）修改。</p>
+<p>在比较老的设备上，ping IPMI 地址可能会没有响应，但可以执行正常的 IPMI 操作。</p>
+</div>
+<div class="section" id="id2">
+<h2>功能介绍<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">[bmc|mc] 底板控制器信息</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool bmc info
+Device ID                 : 32
+Device Revision           : 0
+Firmware Revision         : 1.92
+IPMI Version              : 2.0
+Manufacturer ID           : 674
+Manufacturer Name         : DELL Inc
+... ...
+</pre></div>
+</div>
+<p>重启 BMC：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool mc reset cold
+ipmitool mc reset cold
+</pre></div>
+</div>
+</li>
+<li><p class="first">chassis 主板及电源信息</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool chassis status
+System Power         : on
+Power Overload       : false
+Power Interlock      : inactive
+Main Power Fault     : false
+Power Control Fault  : false
+Power Restore Policy : previous
+Last Power Event     :
+Chassis Intrusion    : inactive
+Front-Panel Lockout  : inactive
+... ...
+</pre></div>
+</div>
+</li>
+<li><p class="first">lan</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool lan set 1 access on # 终止超时会话
+Set Channel Access for channel 1 was successful.
+</pre></div>
+</div>
+</li>
+<li><p class="first">power 电源控制 <cite>power [status|on|off|cycle|reset|diag|soft]</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool power status
+Chassis Power is on
+</pre></div>
+</div>
+</li>
+<li><p class="first">sdr 传感器数据记录</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool sdr
+CPU 1 Temp       | 11 degrees C      | ok
+CPU 2 Temp       | 13 degrees C      | ok
+PS 1 Temp        | 30 degrees C      | ok
+... ...
+</pre></div>
+</div>
+</li>
+<li><p class="first">sel 系统事件日志</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool sel
+SEL Information
+Version          : 1.5 (v1.5, v2 compliant)
+Entries          : 8
+Free Space       : 8064 bytes
+Percent Used     : 1%
+Last Add Time    : 12/06/2013 08:52:36
+Last Del Time    : 11/24/2012 03:47:49
+Overflow         : false
+Supported Cmds   : &#39;Reserve&#39;
+$ ipmitool sel list
+   ... ...
+   6 | 11/29/2013 | 10:20:42 | Drive Slot #0x84 | Drive Present | Deasserted
+   7 | 11/29/2013 | 10:20:47 | Drive Slot #0x84 | Drive Present | Asserted
+   8 | 12/06/2013 | 08:52:36 | Battery #0x11 | Failed | Asserted
+</pre></div>
+</div>
+</li>
+<li><p class="first">sensor 传感器</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool sensor
+CPU 1 Temp | na | degrees C  | na | na | na | na | 80.000 | 85.000 | na
+CPU 2 Temp | na | degrees C  | na | na | na | na | 80.000 | 85.000 | na
+... ...
+</pre></div>
+</div>
+</li>
+<li><p class="first">session 会话</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool session info all
+session handle                : 32
+slot count                    : 5
+active sessions               : 1
+user id                       : 2
+privilege level               : ADMINISTRATOR
+session type                  : IPMIv1.5
+channel number                : 0x01
+console ip                    : 10.2.11.2
+console mac                   : 10:00:00:3c:1b:16
+console port                  : 50056
+... ...
+</pre></div>
+</div>
+</li>
+<li><p class="first">shell 交互接口，输入 ipmi 相关命令</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipmitool shell
+ipmitool&gt; quit
+</pre></div>
+</div>
+</li>
+<li><p class="first">sol Serial-Over-LAN 接口
+相当于远程 Console，重定向系统串口 I/O 到网络。
+可能需要通过 lanplus 接口访问（指定 -I lanplus）。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sol</span> <span class="n">info</span>  <span class="n">获取信息</span>
+<span class="n">sol</span> <span class="n">activate</span> <span class="n">激活接口</span>
+<span class="n">sol</span> <span class="n">deactivate</span>
+</pre></div>
+</div>
+<p>使用 SOL 接口时，有些功能键不能直接输入，对 Dell 的设备参考</p>
+<div class="figure">
+<img alt="../_images/ipmi_key.jpg" src="../_images/ipmi_key.jpg" />
+</div>
+</li>
+<li><p class="first">exec 执行批量命令</p>
+</li>
+</ol>
+</div>
+<div class="section" id="kipmi0-100-cpu">
+<h2>kipmi0 占用 100% CPU 的问题<a class="headerlink" href="#kipmi0-100-cpu" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-08-27 新版功能: </span>创建</p>
+</div>
+<p>最近在某台设备上发现 kipmi0 这个内核线程会占用 100% CPU。</p>
+<p>最快的临时解决办法是：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># rmmod ipmi_si</span>
+</pre></div>
+</div>
+<p>显然，该方法是以牺牲一定的功能为代价。根本解决办法需要清楚为什么 kipmi0
+会占用 CPU 资源呢？摘录部分内核文档 <a class="reference external" href="https://www.kernel.org/doc/Documentation/IPMI.txt">IPMI.txt</a> 如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">If</span> <span class="n">your</span> <span class="n">IPMI</span> <span class="n">interface</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">interrupts</span> <span class="ow">and</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">KCS</span> <span class="ow">or</span>
+<span class="n">SMIC</span> <span class="n">interface</span><span class="p">,</span> <span class="n">the</span> <span class="n">IPMI</span> <span class="n">driver</span> <span class="n">will</span> <span class="n">start</span> <span class="n">a</span> <span class="n">kernel</span> <span class="n">thread</span> <span class="k">for</span> <span class="n">the</span>
+<span class="n">interface</span> <span class="n">to</span> <span class="n">help</span> <span class="n">speed</span> <span class="n">things</span> <span class="n">up</span><span class="o">.</span>  <span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">low</span><span class="o">-</span><span class="n">priority</span> <span class="n">kernel</span>
+<span class="n">thread</span> <span class="n">that</span> <span class="n">constantly</span> <span class="n">polls</span> <span class="n">the</span> <span class="n">IPMI</span> <span class="n">driver</span> <span class="k">while</span> <span class="n">an</span> <span class="n">IPMI</span> <span class="n">operation</span>
+<span class="ow">is</span> <span class="ow">in</span> <span class="n">progress</span><span class="o">.</span>  <span class="n">The</span> <span class="n">force_kipmid</span> <span class="n">module</span> <span class="n">parameter</span> <span class="n">will</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">user</span> <span class="n">to</span>
+<span class="n">force</span> <span class="n">this</span> <span class="n">thread</span> <span class="n">on</span> <span class="ow">or</span> <span class="n">off</span><span class="o">.</span>  <span class="n">If</span> <span class="n">you</span> <span class="n">force</span> <span class="n">it</span> <span class="n">off</span> <span class="ow">and</span> <span class="n">don</span><span class="s1">&#39;t have</span>
+<span class="n">interrupts</span><span class="p">,</span> <span class="n">the</span> <span class="n">driver</span> <span class="n">will</span> <span class="n">run</span> <span class="n">VERY</span> <span class="n">slowly</span><span class="o">.</span>  <span class="n">Don</span><span class="s1">&#39;t blame me,</span>
+<span class="n">these</span> <span class="n">interfaces</span> <span class="n">suck</span><span class="o">.</span>
+
+<span class="n">Unfortunately</span><span class="p">,</span> <span class="n">this</span> <span class="n">thread</span> <span class="n">can</span> <span class="n">use</span> <span class="n">a</span> <span class="n">lot</span> <span class="n">of</span> <span class="n">CPU</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">the</span>
+<span class="n">interface</span><span class="s1">&#39;s performance.  This can waste a lot of CPU and cause</span>
+<span class="n">various</span> <span class="n">issues</span> <span class="k">with</span> <span class="n">detecting</span> <span class="n">idle</span> <span class="n">CPU</span> <span class="ow">and</span> <span class="n">using</span> <span class="n">extra</span> <span class="n">power</span><span class="o">.</span>  <span class="n">To</span>
+<span class="n">avoid</span> <span class="n">this</span><span class="p">,</span> <span class="n">the</span> <span class="n">kipmid_max_busy_us</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">time</span><span class="p">,</span> <span class="ow">in</span>
+<span class="n">microseconds</span><span class="p">,</span> <span class="n">that</span> <span class="n">kipmid</span> <span class="n">will</span> <span class="n">spin</span> <span class="n">before</span> <span class="n">sleeping</span> <span class="k">for</span> <span class="n">a</span> <span class="n">tick</span><span class="o">.</span>  <span class="n">This</span>
+<span class="n">value</span> <span class="n">sets</span> <span class="n">a</span> <span class="n">balance</span> <span class="n">between</span> <span class="n">performance</span> <span class="ow">and</span> <span class="n">CPU</span> <span class="n">waste</span> <span class="ow">and</span> <span class="n">needs</span> <span class="n">to</span> <span class="n">be</span>
+<span class="n">tuned</span> <span class="n">to</span> <span class="n">your</span> <span class="n">needs</span><span class="o">.</span>  <span class="n">Maybe</span><span class="p">,</span> <span class="n">someday</span><span class="p">,</span> <span class="n">auto</span><span class="o">-</span><span class="n">tuning</span> <span class="n">will</span> <span class="n">be</span> <span class="n">added</span><span class="p">,</span> <span class="n">but</span>
+<span class="n">that</span><span class="s1">&#39;s not a simple thing and even the auto-tuning would need to be</span>
+<span class="n">tuned</span> <span class="n">to</span> <span class="n">the</span> <span class="n">user</span><span class="s1">&#39;s desired performance.</span>
+</pre></div>
+</div>
+<p>可以看到，本质原因是由于部分 IPMI 接口不支持中断，只能通过轮询来获取相应的
+信息。通过设置模块参数能控制每次轮询最多持续的时间。该参数名为
+kipmid_max_busy_us。如果内核模块已经加载，可以使用如下命令调整：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># echo 100 &gt; /sys/module/ipmi_si/parameters/kipmid_max_busy_us</span>
+</pre></div>
+</div>
+<p>如果希望模块加载时自动设置该参数，则可以配置如下文件：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /etc/modprobe.d/ipmi.conf</span>
+<span class="n">options</span> <span class="n">ipmi_si</span> <span class="n">kipmid_max_busy_us</span><span class="o">=</span><span class="mi">100</span>
+</pre></div>
+</div>
+<p>另外，从上面文档中可以看到，尽管 kipmi0 会占用比较多的 CPU 资源，但该内核线程
+的优先级设置比较低，对系统性能的冲击是有限的。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="memory.html" class="btn btn-neutral float-right" title="内存" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="intro.html" class="btn btn-neutral" title="综述" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

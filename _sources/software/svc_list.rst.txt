@@ -1,0 +1,15 @@
+服务控制软件
+============
+
+参考 :wiki:`Operating system service management<Operating_system_service_management>`
+
+* :wiki:`init<Init>`
+* `openrc <http://www.gentoo.org/proj/en/base/openrc/>`_
+* `upstart <http://upstart.ubuntu.com/>`_
+* `systemd <https://freedesktop.org/wiki/Software/systemd/>`_
+* `supervisord <http://supervisord.org/>`_
+* `daemonize <http://bmc.github.com/daemonize/>`_
+* `runit <http://smarden.sunsite.dk/runit/>`_
+* `perp <http://b0llix.net/perp/>`_
+* `launchd <http://launchd.macosforge.org/>`_
+* `DJB's daemontools <http://cr.yp.to/daemontools.html>`_

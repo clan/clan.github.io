@@ -1,0 +1,90 @@
+LVS 的三种部署模式
+==================
+
+.. versionadded:: @2013-11-18
+   创建
+
+`LVS <http://www.linuxvirtualserver.org/>`_ 的部署有三种模式：NAT，DR 和 TUN。
+在所有的模式下， VIP 配置在 LVS Director 上，Director 在收到客户端来的请求后
+检查其目标地址和端口，如果发现该目标地址和端口配置上某个已经配置好的虚拟服务，
+则会根据该服务配置的对应调度策略选择其中一个真实服务器（Real Server 简称 RS），
+然后按照该 RS 对应的工作模式将请求转发到该服务器。各种工作模式的配置原理，数据
+转发逻辑以及优缺点如下：
+
+NAT 模式
+--------
+
+在该模式下， Director 和 RS 需要在同一个网段内，将 RS 的网关需要设置为 Director
+的 IP（实际的目的是要求 RS 返回的数据包也需要经过 Director）。Director 会改写
+该数据包的目标地址和端口为选中的 RS 地址和端口后转发数据包到该 RS，RS 的回应包
+也会经过 Director 并返回给客户端。在该模式下， Director 需要同时处理请求和响应
+的数据包，因此可能成为系统的瓶颈（尤其对响应数据是请求数据倍数时会限制整个系统
+的处理带宽）。其优点是可以实现端口映射，即真实服务器监听的端口可以不同于对外公
+布的端口。另外 RS 不需要任何特殊的配置即可提供服务。
+
+TUN 模式
+--------
+
+在该模式下， Director 和 RS 可以不在同一个网段内，Director 到 RS 能路由可达即
+可。Director 会将数据包封装在到 RS 的 IPIP （IP 隧道）包后转发到 RS。RS 接收
+到该数据包后会解封该数据包并处理该请求。回应的数据包会根据自身路由表直接发送
+到客户端，即不再经过 Director。RS 要能正常处理该请求必须要能支持 IPIP 隧道功能
+（目前只有 Linux 系统支持），配置一虚拟接口（类型为 IPIP）并配置地址为 VIP。
+该模式的优点是Director 仅处理入站请求，RS 的网关也不需要指向 Director，但不支持
+端口映射。
+
+Linux 上配置 IPIP 接口的命令为：
+`ip addr add 1.2.3.4/32 dev tunl0 && ip link set dev tunl0 up`
+
+此外， :ref:`rp_filter <rp_filter>` 也会影响数据包的正常接收，需要配置如下： ::
+
+  net.ipv4.conf.all.rp_filter = 0
+  net.ipv4.conf.tunl0.rp_filter = 0
+
+DR 模式
+-------
+
+在该模式下，Director 和 RS 必须在同一个物理网段内。Director 收到客户端的数据
+包后会修改目标 MAC 地址为对应 RS 的 MAC 地址后转发到 RS，即二层转发。RS 上在
+正确配置了 VIP 后能正常接收并处理该数据包，响应数据包会和 TUN 模式下一样，
+根据其自身路由表直接返回给客户端。该模式的优点同 TUN 模式，同样也不支持端口
+映射。此外，由于 RS 上也配置了 VIP，因此需要对 RS 的 ARP 响应做一些限制，即
+RS 不能回应对 VIP 的 ARP 请求，也不能对外广播该 VIP 的 ARP。Linux 系统的配置
+如下： ::
+
+  net.ipv4.conf.all.arp_announce = 2
+  net.ipv4.conf.all.arp_ignore = 1
+  net.ipv4.conf.default.arp_announce = 2
+  net.ipv4.conf.default.arp_ignore = 1
+
+请参考 :ref:`arp_announce` 和 :ref:`arp_filter`\。
+
+此外，VIP 可以配置在 lo 上，如：`ip addr add 1.2.3.4/32 dev lo`。
+
+LVS Director 配置
+-----------------
+
+上面三种模式都需要在 RS 上根据工作模式进行相应的配置，在 LVS Director 上的
+配置则相对简单多了。假设 VIP 是 1.2.3.1/24，端口为 80，协议为 TCP，RS IP 为
+1.2.3.[2-4]/24，执行如下命令： ::
+
+  ipvsadm -A -t 1.2.3.1:80 -s rr
+  ipvsadm -a -t 1.2.3.1:80 -r 1.2.3.2:80 -m # NAT 模式
+  ipvsadm -a -t 1.2.3.1:80 -r 1.2.3.4:80 -i # TUN 模式
+  ipvsadm -a -t 1.2.3.1:80 -r 1.2.3.3:80 -g # DR 模式
+
+即可配置 Director 将请求按指定的调度策略（这是是 rr）转发到响应的后端 RS
+处理。需要说明的是，LVS 并没有要求 RS 必须都处于同一种模式，也就是说只要
+RS 满足部署条件， 单个 LVS 上可以支持不同模式的后端 RS 部署。
+
+如果配置了 LVS 使用 NAT 模式，Director 的 IP 转发功能需要启用。
+`sysctl -w net.ipv4.ip_forward=1`
+
+对重要的业务来说，配置单台 LVS 会带来很大的单点故障风险，因此 LVS 最好做冗余
+部署来增加可靠性。具体的做法可以结合 keepalived 来进行。LVS 本身也支持状态的
+同步，将设备由备份角色向主要角色迁移时对客户端的影响将到最低。
+
+除上面的三种模式之外，LVS 还支持一种所谓的
+`FULLNAT <http://kb.linuxvirtualserver.org/wiki/IPVS_FULLNAT_and_SYNPROXY>`_
+模式。不过该模式还未集成到 Linux 内核之中。其优点是解决了 NAT 模式下对 RS
+的一些部署要求，但同时该模式也引入新的要求，如 RS 上必须增加新的内核模块等。

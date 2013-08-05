@@ -1,0 +1,487 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ARP &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="IP 地址" href="address.html"/>
+        <link rel="prev" title="链路层地址（ARP/Neighbor）相关信息" href="ip-neigh.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ARP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#linux-arp">Linux ARP 配置参数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arp-announce">arp_announce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arp-filter">arp_filter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#howto-remove-incomplete-arp-entry">howto remove incomplete arp entry</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>ARP</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/network/arp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="arp">
+<h1>ARP<a class="headerlink" href="#arp" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2012-08-15 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2013-09-27 版更改: </span>增加 arp_announce</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2013-10-30 版更改: </span>增加 arp_filter</p>
+</div>
+<div class="section" id="linux-arp">
+<h2>Linux ARP 配置参数<a class="headerlink" href="#linux-arp" title="永久链接至标题">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>arp_announce</td>
+<td>arp 请求</td>
+</tr>
+<tr class="row-even"><td>arp_filter</td>
+<td>arp 响应</td>
+</tr>
+<tr class="row-odd"><td>arp_ignore</td>
+<td>arp 响应</td>
+</tr>
+<tr class="row-even"><td>arp_accept</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>arp_notify</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>官方参考文档： <a class="reference external" href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">IP Sysctl</a></p>
+<div class="section" id="arp-announce">
+<span id="id1"></span><h3>arp_announce<a class="headerlink" href="#arp-announce" title="永久链接至标题">¶</a></h3>
+<p>公司办公网络入口新增一接入带宽，接入网关是一 Linux 服务器，比较奇怪的是在
+新增了相应的 IP 地址后，ping 其对应的网关总是失败。tcpdump 抓 ICMP 包根本
+就看不到 ICMP 包出去。 <cite>arp -an</cite> 也没有看到该网关地址的 MAC 记录。于是，
+只抓 ARP 包，结果如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># tcpdump -nn -p -i eno2 arp</span>
+<span class="mi">18</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mf">33.846927</span> <span class="n">ARP</span><span class="p">,</span> <span class="n">Request</span> <span class="n">who</span><span class="o">-</span><span class="n">has</span> <span class="mf">124.</span><span class="n">xxx</span><span class="o">.</span><span class="n">xxx</span><span class="o">.</span><span class="n">xx</span> <span class="n">tell</span> <span class="mf">106.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">xxx</span><span class="p">,</span> <span class="n">length</span> <span class="mi">28</span>
+</pre></div>
+</div>
+<p>很快发现问题，ARP 请求的地址和要求回应的地址不在一个局域网内。为什么不用同一
+局域网内的地址作为回应地址呢？应该有个参数控制这种行为才对。于是通过
+<cite>sysctl -a | grep arp</cite> 寻找相关的配置参数，发现 arp_announce 这个参数可能和
+碰到的问题相关。修改值为 2 （<cite>sysctl -w net.ipv4.conf.eno2.arp_announce=2</cite>）
+后问题迅速解决。当然，要重启后配置生效则需要配置 /etc/sysctl.d/local.conf
+文件内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">arp_announce</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">arp_announce</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>arp_announce 的文档摘录如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">arp_announce</span> <span class="o">-</span> <span class="n">INTEGER</span>
+     <span class="n">Define</span> <span class="n">different</span> <span class="n">restriction</span> <span class="n">levels</span> <span class="k">for</span> <span class="n">announcing</span> <span class="n">the</span> <span class="n">local</span>
+     <span class="n">source</span> <span class="n">IP</span> <span class="n">address</span> <span class="kn">from</span> <span class="nn">IP</span> <span class="n">packets</span> <span class="ow">in</span> <span class="n">ARP</span> <span class="n">requests</span> <span class="n">sent</span> <span class="n">on</span>
+     <span class="n">interface</span><span class="p">:</span>
+     <span class="mi">0</span> <span class="o">-</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span> <span class="n">Use</span> <span class="nb">any</span> <span class="n">local</span> <span class="n">address</span><span class="p">,</span> <span class="n">configured</span> <span class="n">on</span> <span class="nb">any</span> <span class="n">interface</span>
+     <span class="mi">1</span> <span class="o">-</span> <span class="n">Try</span> <span class="n">to</span> <span class="n">avoid</span> <span class="n">local</span> <span class="n">addresses</span> <span class="n">that</span> <span class="n">are</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">target</span><span class="s1">&#39;s</span>
+     <span class="n">subnet</span> <span class="k">for</span> <span class="n">this</span> <span class="n">interface</span><span class="o">.</span> <span class="n">This</span> <span class="n">mode</span> <span class="ow">is</span> <span class="n">useful</span> <span class="n">when</span> <span class="n">target</span>
+     <span class="n">hosts</span> <span class="n">reachable</span> <span class="n">via</span> <span class="n">this</span> <span class="n">interface</span> <span class="n">require</span> <span class="n">the</span> <span class="n">source</span> <span class="n">IP</span>
+     <span class="n">address</span> <span class="ow">in</span> <span class="n">ARP</span> <span class="n">requests</span> <span class="n">to</span> <span class="n">be</span> <span class="n">part</span> <span class="n">of</span> <span class="n">their</span> <span class="n">logical</span> <span class="n">network</span>
+     <span class="n">configured</span> <span class="n">on</span> <span class="n">the</span> <span class="n">receiving</span> <span class="n">interface</span><span class="o">.</span> <span class="n">When</span> <span class="n">we</span> <span class="n">generate</span> <span class="n">the</span>
+     <span class="n">request</span> <span class="n">we</span> <span class="n">will</span> <span class="n">check</span> <span class="nb">all</span> <span class="n">our</span> <span class="n">subnets</span> <span class="n">that</span> <span class="n">include</span> <span class="n">the</span>
+     <span class="n">target</span> <span class="n">IP</span> <span class="ow">and</span> <span class="n">will</span> <span class="n">preserve</span> <span class="n">the</span> <span class="n">source</span> <span class="n">address</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="kn">from</span>
+     <span class="nn">such</span> <span class="n">subnet</span><span class="o">.</span> <span class="n">If</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">such</span> <span class="n">subnet</span> <span class="n">we</span> <span class="n">select</span> <span class="n">source</span>
+     <span class="n">address</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="n">rules</span> <span class="k">for</span> <span class="n">level</span> <span class="mf">2.</span>
+     <span class="mi">2</span> <span class="o">-</span> <span class="n">Always</span> <span class="n">use</span> <span class="n">the</span> <span class="n">best</span> <span class="n">local</span> <span class="n">address</span> <span class="k">for</span> <span class="n">this</span> <span class="n">target</span><span class="o">.</span>
+     <span class="n">In</span> <span class="n">this</span> <span class="n">mode</span> <span class="n">we</span> <span class="n">ignore</span> <span class="n">the</span> <span class="n">source</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">IP</span> <span class="n">packet</span>
+     <span class="ow">and</span> <span class="k">try</span> <span class="n">to</span> <span class="n">select</span> <span class="n">local</span> <span class="n">address</span> <span class="n">that</span> <span class="n">we</span> <span class="n">prefer</span> <span class="k">for</span> <span class="n">talks</span> <span class="k">with</span>
+     <span class="n">the</span> <span class="n">target</span> <span class="n">host</span><span class="o">.</span> <span class="n">Such</span> <span class="n">local</span> <span class="n">address</span> <span class="ow">is</span> <span class="n">selected</span> <span class="n">by</span> <span class="n">looking</span>
+     <span class="k">for</span> <span class="n">primary</span> <span class="n">IP</span> <span class="n">addresses</span> <span class="n">on</span> <span class="nb">all</span> <span class="n">our</span> <span class="n">subnets</span> <span class="n">on</span> <span class="n">the</span> <span class="n">outgoing</span>
+     <span class="n">interface</span> <span class="n">that</span> <span class="n">include</span> <span class="n">the</span> <span class="n">target</span> <span class="n">IP</span> <span class="n">address</span><span class="o">.</span> <span class="n">If</span> <span class="n">no</span> <span class="n">suitable</span>
+     <span class="n">local</span> <span class="n">address</span> <span class="ow">is</span> <span class="n">found</span> <span class="n">we</span> <span class="n">select</span> <span class="n">the</span> <span class="n">first</span> <span class="n">local</span> <span class="n">address</span>
+     <span class="n">we</span> <span class="n">have</span> <span class="n">on</span> <span class="n">the</span> <span class="n">outgoing</span> <span class="n">interface</span> <span class="ow">or</span> <span class="n">on</span> <span class="nb">all</span> <span class="n">other</span> <span class="n">interfaces</span><span class="p">,</span>
+     <span class="k">with</span> <span class="n">the</span> <span class="n">hope</span> <span class="n">we</span> <span class="n">will</span> <span class="n">receive</span> <span class="n">reply</span> <span class="k">for</span> <span class="n">our</span> <span class="n">request</span> <span class="ow">and</span>
+     <span class="n">even</span> <span class="n">sometimes</span> <span class="n">no</span> <span class="n">matter</span> <span class="n">the</span> <span class="n">source</span> <span class="n">IP</span> <span class="n">address</span> <span class="n">we</span> <span class="n">announce</span><span class="o">.</span>
+
+     <span class="n">The</span> <span class="nb">max</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">conf</span><span class="o">/</span><span class="p">{</span><span class="nb">all</span><span class="p">,</span><span class="n">interface</span><span class="p">}</span><span class="o">/</span><span class="n">arp_announce</span> <span class="ow">is</span> <span class="n">used</span><span class="o">.</span>
+
+     <span class="n">Increasing</span> <span class="n">the</span> <span class="n">restriction</span> <span class="n">level</span> <span class="n">gives</span> <span class="n">more</span> <span class="n">chance</span> <span class="k">for</span>
+     <span class="n">receiving</span> <span class="n">answer</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">resolved</span> <span class="n">target</span> <span class="k">while</span> <span class="n">decreasing</span>
+     <span class="n">the</span> <span class="n">level</span> <span class="n">announces</span> <span class="n">more</span> <span class="n">valid</span> <span class="n">sender</span><span class="s1">&#39;s information.</span>
+</pre></div>
+</div>
+<p>P.S. 这个参数在 LVS DR 模式里也会用到。</p>
+</div>
+<div class="section" id="arp-filter">
+<span id="id2"></span><h3>arp_filter<a class="headerlink" href="#arp-filter" title="永久链接至标题">¶</a></h3>
+<p>在某台 ESXi 部署了一台虚拟机 A。ESXi 宿主机上一个物理网卡和交换机的 trunk
+端口相连，即通过该物理网卡能访问多个网段，假设有两个网段分别为
+192.168.1.0/24 和 192.168.2.0/24。虚拟机 A 上配置了两个网卡，分别和其中
+一个网段通讯，假设其对应地址分别为 192.168.1.1 和 192.168.2.1，
+详细信息如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ip addr</span>
+<span class="mi">1</span><span class="p">:</span> <span class="n">lo</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">LOOPBACK</span><span class="p">,</span><span class="n">UP</span><span class="p">,</span><span class="n">LOWER_UP</span><span class="o">&gt;</span> <span class="n">mtu</span> <span class="mi">65536</span> <span class="n">qdisc</span> <span class="n">noqueue</span> <span class="n">state</span> <span class="n">UNKNOWN</span>
+    <span class="n">link</span><span class="o">/</span><span class="n">loopback</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="n">brd</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+    <span class="n">inet</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">/</span><span class="mi">8</span> <span class="n">scope</span> <span class="n">host</span> <span class="n">lo</span>
+<span class="mi">2</span><span class="p">:</span> <span class="n">eth0</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">BROADCAST</span><span class="p">,</span><span class="n">MULTICAST</span><span class="p">,</span><span class="n">UP</span><span class="p">,</span><span class="n">LOWER_UP</span><span class="o">&gt;</span> <span class="n">mtu</span> <span class="mi">1500</span> <span class="n">qdisc</span> <span class="n">mq</span> <span class="n">state</span> <span class="n">UP</span> <span class="n">qlen</span> <span class="mi">1000</span>
+    <span class="n">link</span><span class="o">/</span><span class="n">ether</span> <span class="mi">00</span><span class="p">:</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">88</span><span class="p">:</span><span class="mi">8</span><span class="n">b</span><span class="p">:</span><span class="n">c5</span> <span class="n">brd</span> <span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span>
+    <span class="n">inet</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.1</span><span class="o">/</span><span class="mi">24</span> <span class="n">brd</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.255</span> <span class="n">scope</span> <span class="k">global</span> <span class="n">secondary</span> <span class="n">eth0</span>
+<span class="mi">3</span><span class="p">:</span> <span class="n">eth1</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">BROADCAST</span><span class="p">,</span><span class="n">MULTICAST</span><span class="p">,</span><span class="n">UP</span><span class="p">,</span><span class="n">LOWER_UP</span><span class="o">&gt;</span> <span class="n">mtu</span> <span class="mi">1500</span> <span class="n">qdisc</span> <span class="n">mq</span> <span class="n">state</span> <span class="n">UP</span> <span class="n">qlen</span> <span class="mi">1000</span>
+    <span class="n">link</span><span class="o">/</span><span class="n">ether</span> <span class="mi">00</span><span class="p">:</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">88</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">77</span> <span class="n">brd</span> <span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span><span class="p">:</span><span class="n">ff</span>
+    <span class="n">inet</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.1</span><span class="o">/</span><span class="mi">24</span> <span class="n">brd</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.255</span> <span class="n">scope</span> <span class="k">global</span> <span class="n">eth1</span>
+</pre></div>
+</div>
+<p>现在有另外一台机器 B （A 和 B 不在同一台 ESXi 上）ip 地址为 192.168.2.2。
+问题表现如下，ping 192.168.2.1 时有时正常有时却收不到任何响应。排除任何物理
+链路以及交换机配置的原因。在跟踪问题一段时间后发现 ping 收不到回应时
+192.168.2.2 上的 arp 表里 192.168.2.1 的 MAC 地址为 192.168.1.1
+对应接口的 MAC 地址，如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># arp -an
+? (192.168.2.1) at 00:50:56:88:8b:c5 [ether] on eth0
+</pre></div>
+</div>
+<p>在虚拟机 A 上分别在 eth0 和 eth1 上抓包，能看到如下过程：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># tcpdump -nn -p -i eth1 arp</span>
+<span class="n">tcpdump</span><span class="p">:</span> <span class="n">verbose</span> <span class="n">output</span> <span class="n">suppressed</span><span class="p">,</span> <span class="n">use</span> <span class="o">-</span><span class="n">v</span> <span class="ow">or</span> <span class="o">-</span><span class="n">vv</span> <span class="k">for</span> <span class="n">full</span> <span class="n">protocol</span> <span class="n">decode</span>
+<span class="n">listening</span> <span class="n">on</span> <span class="n">eth1</span><span class="p">,</span> <span class="n">link</span><span class="o">-</span><span class="nb">type</span> <span class="n">EN10MB</span> <span class="p">(</span><span class="n">Ethernet</span><span class="p">),</span> <span class="n">capture</span> <span class="n">size</span> <span class="mi">65535</span> <span class="nb">bytes</span>
+<span class="mi">23</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mf">41.815226</span> <span class="n">ARP</span><span class="p">,</span> <span class="n">Request</span> <span class="n">who</span><span class="o">-</span><span class="n">has</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.1</span> <span class="n">tell</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">length</span> <span class="mi">46</span>
+<span class="mi">23</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mf">41.815237</span> <span class="n">ARP</span><span class="p">,</span> <span class="n">Reply</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.1</span> <span class="ow">is</span><span class="o">-</span><span class="n">at</span> <span class="mi">00</span><span class="p">:</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">88</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">77</span><span class="p">,</span> <span class="n">length</span> <span class="mi">28</span>
+
+<span class="c1"># tcpdump -nn -p -i eth0 arp</span>
+<span class="n">tcpdump</span><span class="p">:</span> <span class="n">verbose</span> <span class="n">output</span> <span class="n">suppressed</span><span class="p">,</span> <span class="n">use</span> <span class="o">-</span><span class="n">v</span> <span class="ow">or</span> <span class="o">-</span><span class="n">vv</span> <span class="k">for</span> <span class="n">full</span> <span class="n">protocol</span> <span class="n">decode</span>
+<span class="n">listening</span> <span class="n">on</span> <span class="n">eth0</span><span class="p">,</span> <span class="n">link</span><span class="o">-</span><span class="nb">type</span> <span class="n">EN10MB</span> <span class="p">(</span><span class="n">Ethernet</span><span class="p">),</span> <span class="n">capture</span> <span class="n">size</span> <span class="mi">65535</span> <span class="nb">bytes</span>
+<span class="mi">23</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mf">45.337662</span> <span class="n">ARP</span><span class="p">,</span> <span class="n">Request</span> <span class="n">who</span><span class="o">-</span><span class="n">has</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.1</span> <span class="n">tell</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">length</span> <span class="mi">46</span>
+<span class="mi">23</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mf">45.337667</span> <span class="n">ARP</span><span class="p">,</span> <span class="n">Reply</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.1</span> <span class="ow">is</span><span class="o">-</span><span class="n">at</span> <span class="mi">00</span><span class="p">:</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">88</span><span class="p">:</span><span class="mi">8</span><span class="n">b</span><span class="p">:</span><span class="n">c5</span><span class="p">,</span> <span class="n">length</span> <span class="mi">28</span>
+</pre></div>
+</div>
+<p>可以看到在两个接口上都收到了 arp 请求，这是由于部署的环境（trunk链路）和 arp
+的广播特性决定的。但同时两个接口也都以自己的 MAC 地址回应了该请求，正是由于
+这个原因导致主机 B 上 ping 的结果反复。因为在主机 A 上的 MAC 地址表里对应
+192.168.2.1 的 MAC 地址会和这两个回应达到的先后顺序有关，如果设置为错误的
+MAC 地址时就会导致 ping 收不到回应。</p>
+<p>利用之前找到 arp_announce 相关设置的方法很快找到 arp_filter 这个参数，在
+设置其值为 1 后再次抓包测试，主机 A 上的 eth0 接口仍能收到 arp 请求，但不再
+有 arp 回应， eth1 接口则有正常的 arp 请求和回应。问题解决。</p>
+<p>需要修改的配置为：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">arp_filter</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">arp_filter</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>arp_filter 的文档摘录如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">arp_filter</span> <span class="o">-</span> <span class="n">BOOLEAN</span>
+    <span class="mi">1</span> <span class="o">-</span> <span class="n">Allows</span> <span class="n">you</span> <span class="n">to</span> <span class="n">have</span> <span class="n">multiple</span> <span class="n">network</span> <span class="n">interfaces</span> <span class="n">on</span> <span class="n">the</span> <span class="n">same</span>
+    <span class="n">subnet</span><span class="p">,</span> <span class="ow">and</span> <span class="n">have</span> <span class="n">the</span> <span class="n">ARPs</span> <span class="k">for</span> <span class="n">each</span> <span class="n">interface</span> <span class="n">be</span> <span class="n">answered</span>
+    <span class="n">based</span> <span class="n">on</span> <span class="n">whether</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">the</span> <span class="n">kernel</span> <span class="n">would</span> <span class="n">route</span> <span class="n">a</span> <span class="n">packet</span> <span class="kn">from</span>
+    <span class="nn">the</span> <span class="n">ARP</span><span class="s1">&#39;d IP out that interface (therefore you must use source</span>
+    <span class="n">based</span> <span class="n">routing</span> <span class="k">for</span> <span class="n">this</span> <span class="n">to</span> <span class="n">work</span><span class="p">)</span><span class="o">.</span> <span class="n">In</span> <span class="n">other</span> <span class="n">words</span> <span class="n">it</span> <span class="n">allows</span> <span class="n">control</span>
+    <span class="n">of</span> <span class="n">which</span> <span class="n">cards</span> <span class="p">(</span><span class="n">usually</span> <span class="mi">1</span><span class="p">)</span> <span class="n">will</span> <span class="n">respond</span> <span class="n">to</span> <span class="n">an</span> <span class="n">arp</span> <span class="n">request</span><span class="o">.</span>
+
+    <span class="mi">0</span> <span class="o">-</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span> <span class="n">The</span> <span class="n">kernel</span> <span class="n">can</span> <span class="n">respond</span> <span class="n">to</span> <span class="n">arp</span> <span class="n">requests</span> <span class="k">with</span> <span class="n">addresses</span>
+    <span class="kn">from</span> <span class="nn">other</span> <span class="n">interfaces</span><span class="o">.</span> <span class="n">This</span> <span class="n">may</span> <span class="n">seem</span> <span class="n">wrong</span> <span class="n">but</span> <span class="n">it</span> <span class="n">usually</span> <span class="n">makes</span>
+    <span class="n">sense</span><span class="p">,</span> <span class="n">because</span> <span class="n">it</span> <span class="n">increases</span> <span class="n">the</span> <span class="n">chance</span> <span class="n">of</span> <span class="n">successful</span> <span class="n">communication</span><span class="o">.</span>
+    <span class="n">IP</span> <span class="n">addresses</span> <span class="n">are</span> <span class="n">owned</span> <span class="n">by</span> <span class="n">the</span> <span class="n">complete</span> <span class="n">host</span> <span class="n">on</span> <span class="n">Linux</span><span class="p">,</span> <span class="ow">not</span> <span class="n">by</span>
+    <span class="n">particular</span> <span class="n">interfaces</span><span class="o">.</span> <span class="n">Only</span> <span class="k">for</span> <span class="n">more</span> <span class="nb">complex</span> <span class="n">setups</span> <span class="n">like</span> <span class="n">load</span><span class="o">-</span>
+    <span class="n">balancing</span><span class="p">,</span> <span class="n">does</span> <span class="n">this</span> <span class="n">behaviour</span> <span class="n">cause</span> <span class="n">problems</span><span class="o">.</span>
+
+    <span class="n">arp_filter</span> <span class="k">for</span> <span class="n">the</span> <span class="n">interface</span> <span class="n">will</span> <span class="n">be</span> <span class="n">enabled</span> <span class="k">if</span> <span class="n">at</span> <span class="n">least</span> <span class="n">one</span> <span class="n">of</span>
+    <span class="n">conf</span><span class="o">/</span><span class="p">{</span><span class="nb">all</span><span class="p">,</span><span class="n">interface</span><span class="p">}</span><span class="o">/</span><span class="n">arp_filter</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">TRUE</span><span class="p">,</span>
+    <span class="n">it</span> <span class="n">will</span> <span class="n">be</span> <span class="n">disabled</span> <span class="n">otherwise</span>
+</pre></div>
+</div>
+<p>P.S. 控制 ARP回应包的还有另外一个参数 arp_ignore，在本文的例子中调整该参数
+值为 1 也能解决问题。该参数在 LVS 的 DR 模式配置里会用到。</p>
+</div>
+</div>
+<div class="section" id="howto-remove-incomplete-arp-entry">
+<h2>howto remove incomplete arp entry<a class="headerlink" href="#howto-remove-incomplete-arp-entry" title="永久链接至标题">¶</a></h2>
+<p>arp -d 无法删除 incomplete 的 表项，只能通过如下的命令
+（假设删除设备 eth1 上的表项）：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ip</span> <span class="pre">link</span> <span class="pre">set</span> <span class="pre">dev</span> <span class="pre">eth1</span> <span class="pre">arp</span> <span class="pre">off</span> <span class="pre">&amp;&amp;</span> <span class="pre">ip</span> <span class="pre">link</span> <span class="pre">set</span> <span class="pre">dev</span> <span class="pre">eth1</span> <span class="pre">arp</span> <span class="pre">on</span></code></p>
+<p>其副作用是会删除该接口上的所有 ARP 表项。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="address.html" class="btn btn-neutral float-right" title="IP 地址" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ip-neigh.html" class="btn btn-neutral" title="链路层地址（ARP/Neighbor）相关信息" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

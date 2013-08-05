@@ -1,0 +1,20 @@
+各种软件的离线版下载地址
+========================
+
+.. versionadded:: @2014-04-29
+   创建
+
+`Google Earth <http://earth.google.com>`_
+    * `Windows 版 <http://dl.google.com/earth/client/advanced/current/googleearthwin.exe>`_
+    * `Mac 版 <http://dl.google.com/earth/client/advanced/current/googleearthmac.dmg>`_
+      或 `这里 <https://support.google.com/earth/answer/168344?hl=en&topic=2376075&ctx=topic>`_
+
+Download the installer, run it, then sign in using your e-mail address
+(as your username) and license code *GEPFREE*. 参考
+`这里 <https://support.google.com/earth/answer/168344?hl=en&topic=2376075&ctx=topic>`_ 。
+
+`Google Chrome <https://www.google.com/chrome/>`_
+    * 将下载 URL 中的 ChromeSetup.exe 改为 ChromeStandaloneSetup.exe
+
+`Skype <http://www.skype.com>`_
+    * 将下载URL中的 SkypeSetup.exe 改为 SkypeSetupFull.exe，注意需要翻墙。

@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>房贷还款计算的 python 程序 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="Nexus 5" href="nexus5.html"/>
+        <link rel="prev" title="reStructuredText 备忘" href="restructuredtext.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>房贷还款计算的 python 程序</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/misc/debit.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python">
+<h1>房贷还款计算的 python 程序<a class="headerlink" href="#python" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2010-08-25 新版功能: </span>创建</p>
+</div>
+<p>贴一个几年前用python写的房贷还款计算程序，:)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">pay</span> <span class="o">=</span> <span class="p">(</span> <span class="c1"># 月还款额</span>
+                                                              <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="c1"># 2007</span>
+        <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="c1"># 2008</span>
+        <span class="p">)</span>
+    <span class="n">year</span>  <span class="o">=</span> <span class="mi">2007</span>       <span class="c1"># 还款起始年</span>
+    <span class="n">month</span> <span class="o">=</span> <span class="mi">10</span>         <span class="c1"># 还款起始月</span>
+    <span class="n">day</span>   <span class="o">=</span> <span class="mi">15</span>         <span class="c1"># 还款日</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mf">600000.00</span><span class="p">;</span> <span class="c1"># 贷款总额</span>
+    <span class="c1"># 从还款起始上一年开始的年利率</span>
+    <span class="c1"># 如果还款起始月是一月，需要上一年的利率</span>
+    <span class="n">rate</span> <span class="o">=</span>  <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">5.04</span><span class="p">,</span> <span class="mf">5.22</span><span class="p">,</span> <span class="mf">3.87</span><span class="p">,</span> <span class="mf">3.87</span> <span class="p">)</span>
+    <span class="n">capital</span> <span class="o">=</span> <span class="mf">0.</span>       <span class="c1"># 本金</span>
+    <span class="n">t_pay</span> <span class="o">=</span> <span class="mf">0.</span>         <span class="c1"># 总本金</span>
+    <span class="n">interest</span> <span class="o">=</span> <span class="mf">0.</span>      <span class="c1"># 利息</span>
+    <span class="n">t_interest</span> <span class="o">=</span> <span class="mf">0.</span>    <span class="c1"># 总利息</span>
+
+    <span class="n">p_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">r_counter</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; 时间      还款       本金   利息    待还本金  以还本金 总利息&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">total</span> <span class="o">&gt;</span> <span class="mf">0.009</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">month</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># 计算跨年度利率</span>
+            <span class="n">rate_m</span> <span class="o">=</span> <span class="p">(</span><span class="n">rate</span><span class="p">[</span><span class="n">r_counter</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">31</span> <span class="o">-</span> <span class="n">day</span><span class="p">)</span> <span class="o">+</span> <span class="n">rate</span><span class="p">[</span><span class="n">r_counter</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="n">day</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span><span class="mf">30.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rate_m</span> <span class="o">=</span> <span class="n">rate</span><span class="p">[</span><span class="n">r_counter</span><span class="p">]</span>
+        <span class="n">rate_m</span> <span class="o">=</span> <span class="n">rate_m</span> <span class="o">*</span> <span class="mf">0.01</span> <span class="o">/</span> <span class="mf">12.</span>         <span class="c1"># 月利率 = 年利率 / 12.</span>
+        <span class="n">interest</span> <span class="o">=</span> <span class="n">total</span> <span class="o">*</span> <span class="n">rate_m</span><span class="p">;</span>           <span class="c1"># 当月利息</span>
+        <span class="n">t_interest</span> <span class="o">+=</span> <span class="n">interest</span><span class="p">;</span>              <span class="c1"># 总利息</span>
+        <span class="n">capital</span> <span class="o">=</span> <span class="n">pay</span><span class="p">[</span><span class="n">p_counter</span><span class="p">]</span> <span class="o">-</span> <span class="n">interest</span><span class="p">;</span> <span class="c1"># 当月本金</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">total</span> <span class="o">&lt;=</span> <span class="n">capital</span><span class="p">)</span> <span class="p">:</span>              <span class="c1"># 当月本金超过余额，调整</span>
+            <span class="n">capital</span> <span class="o">=</span> <span class="n">interest</span><span class="o">/</span><span class="n">rate_m</span>
+        <span class="n">t_pay</span> <span class="o">+=</span> <span class="n">capital</span>                     <span class="c1"># 以还总本金</span>
+        <span class="n">total</span> <span class="o">-=</span> <span class="n">capital</span><span class="p">;</span>                    <span class="c1"># 剩余本金</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">month</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; 时间      还款       本金   利息    待还本金  以还本金   总利息&quot;</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d%02d</span><span class="s2"> </span><span class="si">%9.2f</span><span class="s2"> </span><span class="si">%9.2f</span><span class="s2"> </span><span class="si">%7.2f</span><span class="s2"> </span><span class="si">%9.2f</span><span class="s2">  </span><span class="si">%9.2f</span><span class="s2"> </span><span class="si">%9.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">capital</span> <span class="o">+</span> <span class="n">interest</span><span class="p">,</span> <span class="n">capital</span><span class="p">,</span> <span class="n">interest</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">t_pay</span><span class="p">,</span> <span class="n">t_interest</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">p_counter</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pay</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">:</span> <span class="n">p_counter</span> <span class="o">=</span> <span class="n">p_counter</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">month</span> <span class="o">==</span> <span class="mi">12</span><span class="p">):</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="n">year</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">month</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">r_counter</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">:</span> <span class="n">r_counter</span> <span class="o">=</span> <span class="n">r_counter</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">month</span> <span class="o">=</span> <span class="n">month</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;posix&quot;</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nexus5.html" class="btn btn-neutral float-right" title="Nexus 5" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="restructuredtext.html" class="btn btn-neutral" title="reStructuredText 备忘" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

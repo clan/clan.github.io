@@ -1,0 +1,160 @@
+macOS / OS X
+============
+
+.. versionadded:: @2019-02-11
+   创建
+.. versionchanged:: @2019-02-20
+   增加命令 sw_vers
+.. versionchanged:: @2019-03-21
+   增加快捷键
+
+版本列表
+--------
+
+参考 :wiki:`MacOS<MacOS>`
+
+============= ============= ======= =============== ==========
+Version       Codename      Darwin  CPU             Release
+============= ============= ======= =============== ==========
+Mac OS X 10.0 Cheetah       1.3.1   PPC/32          2001/03/24
+Mac OS X 10.1 Puma          1.4.1/5 PPC/32          2001/09/25
+Mac OS X 10.2 Jaguar        6       PPC/32/64       2002/08/24
+Mac OS X 10.3 Panther       7       PPC/32/64       2003/10/24
+Mac OS X 10.4 Tiger         8       Intel/PPC/32/64 2005/04/29
+Mac OS X 10.5 Leopard       9       Intel/PPC/32/64 2007/10/26
+Mac OS X 10.6 Snow Leopard  10      Intel/32/64     2009/08/28
+Mac OS X 10.7 Lion          11      Intel/64        2011/07/20
+OS X 10.8     Mountain Lion 12      Intel/64        2012/07/25
+OS X 10.9     Mavericks     13      Intel/64        2013/10/22
+OS X 10.10    Yosemite      14      Intel/64        2014/10/16
+OS X 10.11    EI Capitan    15      Intel/64        2015/09/30
+macOS 10.12   Sierra        16      Intel/64        2016/09/20
+macOS 10.13   High Sierra   17      Intel/64        2017/09/25
+macOS 10.14   Mojave        18      Intel/64        2018/09/24
+============= ============= ======= =============== ==========
+
+命令
+----
+
+* 查询系统版本信息
+
+  * sw_vers: print Mac OS X operating system version information
+
+    sw_vers [-productName|-productVersion|-buildVersion] ::
+
+      $ sw_vers
+      ProductName:    Mac OS X
+      ProductVersion: 10.13.6
+      BuildVersion:   17G4015
+
+文件权限问题
+------------
+
+10.14 版本在 iTerm2 下查看文件（例如 Time Machine 备份文件夹）时会出现::
+
+    ls: : Operation not permitted
+
+而 10.14 之前的版本并没有这个问题。原因是 10.14 开始的 macOS 增加了更多的
+隐私安全控制，按如下步骤配置权限即可修复问题：
+
+#. `open /System/Library/PreferencePanes/Security.prefPane/`
+#. 选择 隐私/Privacy
+#. 左下角解锁获取权限
+#. 选择 `Full Disk Access` ，增加相应的 App
+
+快捷键
+------
+
+参考 `Mac keyboard shortcuts <https://support.apple.com/en-us/HT201236>`_
+
+* 截图
+
+  * 屏幕部分画面 :kbd:`⌘` + :kbd:`⇧` + :kbd:`4`
+  * 截取当前窗口 :kbd:`⌘` + :kbd:`⇧` + :kbd:`4`\，:kbd:`SPACE`
+  * 全屏截图 :kbd:`⌘` + :kbd:`⇧` + :kbd:`3`
+
+  截图文件保存在桌面，格式为 PNG。
+
+* 浏览器
+
+  * :kbd:`⌘` + :kbd:`L` 光标定位到地址栏，按 :kbd:`TAB` 取消。
+
+* 编辑
+
+  * :kbd:`⌘` + :kbd:`z` Undo
+  * :kbd:`⌘` + :kbd:`⇧` + :kbd:`z` Redo
+  * :kbd:`⌘` + :kbd:`v` Paste
+
+* 窗口管理
+
+  * :kbd:`⌘` + :kbd:`⌥` + :kbd:`h` 将所有已打开的程序窗口
+    （除了当前正在运行的应用程序窗口）隐藏到 Dock 栏上。
+  * :kbd:`⌘` + :kbd:`⌥` 并点击桌面上空白区域，将除 Finder
+    窗口以外的所有窗口隐藏到 Dock 栏，直接显示桌面。
+  * :kbd:`⌘` + :kbd:`m` 最小化到右下角
+  * :kbd:`⌘` + :kbd:`w` 关闭窗口
+  * 文件剪切： 选中目标文件，:kbd:`⌘` + :kbd:`c` 复制，然后
+    :kbd:`⌘` + :kbd:`⌥` + :kbd:`w` 移动到目标目录。
+
+* Finder
+
+  * :kbd:`⌘` + :kbd:`o` 打开文件
+  * 选择文件后
+
+    * 快速预览文件
+
+      * :kbd:`SPACE`
+      * :kbd:`⌘` + :kbd:`y`
+      * :kbd:`⌘` + :kbd:`⌥` + :kbd:`y` 全屏模式
+
+    * :kbd:`↩︎` 重命名（Windows 下是打开文件）
+
+  * :kbd:`⌘` + :kbd:`↑` 回上一级目录
+  * :kbd:`⌘` + :kbd:`⌥` + :kbd:`p` 隐藏或显示路径栏
+  * :kbd:`⌘` + :kbd:`⌥` + :kbd:`s` 隐藏或显示边栏
+  * :kbd:`⌘` + :kbd:`/` 隐藏或显示状态栏。
+  * :kbd:`⌥` + :kbd:`双击左键` 在新窗口中打开该文件/文件夹，并关闭当前窗口。
+
+* 多窗口应用
+
+  * :kbd:`⌘` + :kbd:`\`` 多窗口之间切换
+  * 按住 :kbd:`⌘` 拖动后面窗口，此时焦点任是前窗口
+
+* :kbd:`⌃` + :kbd:`⇧` + :kbd:`电源键` 关闭屏幕
+* 将文件拖到终端，会直接得到其路径
+
+* 触控板
+
+  * 双指左右滚动：在页面之间轻扫
+  * 双指从右边缘向左轻扫：显示通知中心
+  * 张开拇指和其他三指：显示桌面
+  * 提拢拇指和其他三指：显示启动台（Launchpad）
+  * 三指左右轻扫：在全屏幕显示的应用之间切换
+  * 三指向上轻扫：调度中心
+  * 辅助功能开启更多功能后
+
+    * 在窗口标题栏处三指拖移，移动过程中可以两指
+
+* 声音/屏幕亮度“小调节”：
+
+  按住 :kbd:`⇧` + :kbd:`⌥` 后按音量/亮度，以更细微的粒度调节
+
+====== =========================================================================
+Symbol Key on Keyboard
+ ⌘      Command (or Cmd) Like the Control key on Windows/PC. a.k.a Apple key.
+⌥      Option (like Alt on Windows/PC)
+⇧      Shift
+⌃      Control (Control-click = Right-click)
+⇥      Tab
+↩︎     Return
+⌅      Enter (on Number Pad, or fn-Return on compact keyboards)
+⏏︎     Eject
+⎋      Escape
+⇞      Page Up (fn-Up Arrow on compact keyboards)
+⇟      Page Down (fn-Down Arrow on compact keyboards)
+↖︎     Home (fn-Left Arrow on compact keyboards)
+↘︎     End (fn-Right Arrow on compact keyboards)
+←↑↓→   Arrow Keys
+⌫      Delete Left (like Backspace on Windows/PC)
+⌦      Delete Right (fn-Delete on compact keyboards. Also called Forward Delete)
+====== =========================================================================

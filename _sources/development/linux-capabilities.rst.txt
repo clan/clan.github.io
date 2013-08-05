@@ -1,0 +1,54 @@
+Linux Capabilities
+==================
+
+.. versionadded:: @2013-11-29
+   创建
+
+\*nix 系统上某些程序（如 passwd，ping等）在正常运行时的某些操作需要有 root 权限
+才可以正常进行。如 passwd 需要能修改 /etc/shadow 文件，ping 需要能操作 RAW
+Socket。传统的应对方法是通过 `chmod +s file` 给这些程序添加
+:wiki:`SUID<Setuid>`\ 位，
+这样程序执行时会以其属主的身份来执行，即该程序运行时的 euid 为文件属主。
+如果文件属主为 root，那么程序就能正常执行需要 root 身份才能操作的任务。
+
+但这种方式会有相应的安全隐患，尤其是对那些对安全性考虑不周的程序。其原因是
+SUID 对权限的控制是 "all or nothing"，即要么没有权限，要么全都有。
+针对这个问题，Linux 提供了一种新的方式即 :manpage:`capabilities(7)`
+来（部分）解决这个问题。通过赋给可执行程序一些系统预定义好的细粒度的权限，
+程序正常执行时就不再需要具有完全的 root 权限。如
+`setcap cap_net_raw+ep /bin/ping` 给 ping 赋予仅能操作 RAW Socket 的权限。
+可用的权限请参考 :manpage:`capabilities(7)`\。
+
+通过 :manpage:`setcap(8)` 使用 capabilities 需要内核和文件系统（支持扩展属性）
+的支持。还有一种办法是直接在代码里调用相关的 api。例如，基于安全考虑，
+web 服务器一般在以 root 身份完成 bind 操作后（因为 <1024 的端口需要 root
+权限才能 bind）通常都会以另一个非 root 身份来运行。但如果这时我们修改了配置
+文件要求其在另外一个端口（<1024）也监听，除了完全重启该程序外没有别的办法。
+如果我们正确的保留了相应的 capabilities，则可以简单的监听新的端口即可，
+用不着重启程序。其大致流程如下： ::
+
+  prctl(PR_SET_KEEPCAPS, 1, 0, 0, 0);
+  caps = cap_init();
+  curcaps = cap_get_proc();
+  capval = CAP_NET_BIND_SERVICE;
+  cap_flag_value_t curval;
+  err = cap_get_flag(curcaps, capval, CAP_PERMITTED, &curval)
+  if (err != -1 && curval) {
+      cap_set_flag(caps, CAP_EFFECTIVE, 1, &capval, CAP_SET);
+      cap_set_flag(caps, CAP_PERMITTED, 1, &capval, CAP_SET);
+  }
+
+  cap_set_proc(caps);
+  ...
+
+  setuid
+  fork or pthread_create
+
+  ...
+  cap_free(caps);
+  cap_free(curcaps);
+
+需要说明的是 capabilities 也并不能用来完全解决 SUID 所面临的问题，使用不当也会
+有相应的安全问题。可以参考
+`False Boundaries and Arbitrary Code Execution
+<http://forums.grsecurity.net/viewtopic.php?f=7&t=2522&sid=c6fbcf62fd5d3472562540a7e608ce4e>`_

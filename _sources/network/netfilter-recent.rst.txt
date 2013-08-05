@@ -1,0 +1,38 @@
+iptables recent 模块配置
+========================
+
+.. versionadded:: @2014-09-16
+   创建
+
+假设有如下需求，需要对来自每个 IP 的 SSH 连接尝试频率做限制，
+例如 10 次/每分钟。netfilter 里 recent 模块正好可以实现该需求。
+但在具体的实现过程中走过一些弯路，本文尝试做一个总结如下。
+
+如下两种配置方式在命令行上的区别为顺序完全相反。
+考虑如下两种配置方式的差别在哪？ ::
+
+  iptables -A INPUT -i eth1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+  iptables -A INPUT -i eth1 -p tcp -m multiport --dports 22 -m conntrack --ctstate NEW -m recent --update --seconds 60 --hitcount 10 --rttl --name SSH --rsource -j DROP
+  iptables -A INPUT -i eth1 -p tcp -m multiport --dports 22 -m conntrack --ctstate NEW -m recent --set --name SSH --rsource -j ACCEPT
+
+::
+
+  iptables -A INPUT -i eth1 -p tcp -m multiport --dports 22 -m conntrack --ctstate NEW -m recent --set --name SSH --rsource -j ACCEPT
+  iptables -A INPUT -i eth1 -p tcp -m multiport --dports 22 -m conntrack --ctstate NEW -m recent --update --seconds 60 --hitcount 10 --rttl --name SSH --rsource -j DROP
+  iptables -A INPUT -i eth1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+在实现效果上前者会允许一分钟内 10 次新建连接（可以使用 nc 测试），第 11
+次请求会被 drop；而后者则是丢弃第 10 次请求。原因体现在连接率的原始计算数据
+是由 “-m recent --set --name SSH ...” 这条规则来更新的，如果 DROP 规则在这
+之前，则率的判断只有在下一次新建请求到达时才会匹配。
+
+对后一种配置方式，如果 "--ctstate RELATED,ESTABLISHED -j ACCEPT"
+规则的位置在 drop 之前，会导致 drop 规则永远无法匹配上。这是因为连接状态
+处于 NEW 时被放过，回应包返回后状态就会改变为 ESTABLISHED。状态变迁的细节信息可
+以参考 `The state machine <http://www.iptables.info/en/connection-state.html>`_\。
+
+.. TODO::
+   状态图链接失效，整理一个本地版本备查
+
+最后说明一下，recent 模块的 --rcheck 和 --update 参数的区别是后者会更新最后到达
+包的时间戳，也就是说，所有被 drop 的包依然参与率的计算。

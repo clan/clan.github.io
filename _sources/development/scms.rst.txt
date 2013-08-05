@@ -1,0 +1,7 @@
+配置管理
+========
+
+.. toctree::
+   :maxdepth: 5
+
+   gitolite

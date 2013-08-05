@@ -1,0 +1,40 @@
+综述
+====
+
+命令
+----
+
+#. `lshw`
+
+   * `lshw -short`
+
+#. `dmidecode`
+#. `sensors`
+#. `mcelog`
+
+状态监测
+--------
+
+#. :kernelhtml:`Error Detection And Correction (EDAC) Devices<driver-api/edac.html>`
+
+    * /sys/devices/system/edac/mc/mc*/csrow*/ch*_ce_count
+    * /sys/devices/system/edac/mc/mc*/csrow*/ue_count
+
+#. :kernelhtml:`Reliability, Availability and Serviceability<admin-guide/ras.html>`
+
+    * mcelog
+
+资源
+----
+
+* `Open Compute Project (OCP) <https://www.opencompute.org/>`_
+
+术语
+----
+
+==== =========================
+FRU  Field Replaceable Unit
+DIMM Dual Inline Memory Module
+CE   Correctable Error
+UE   Uncorrected Error
+==== =========================

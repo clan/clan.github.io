@@ -1,0 +1,15 @@
+HBase
+=====
+
+.. versionadded:: @2019-02-12
+   创建
+
+* 让废弃的 region server 不出现在 *dead regionservers* 列表里
+
+  查看 hdfs 上 hbase 的 WALs（Write-Ahead Log）目录，就会发现以废弃的 region
+  server 主机名开头的目录，结尾为 splitting： ::
+
+      # hdfs dfs -ls /hbase/WALs/
+      dead-server.example.com,3620,1540904047928-splitting
+
+  删除这些目录，然后重启 master 即可。

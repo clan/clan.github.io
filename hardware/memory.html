@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>内存 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="通过 SMART 查看和跟踪硬盘健康状态" href="smart.html"/>
+        <link rel="prev" title="IPMI" href="ipmi.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipmi.html">IPMI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">内存</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">分类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">封装</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>内存</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hardware/memory.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>内存<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2016-07-02 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-13 版更改: </span>添加内存分类</p>
+</div>
+<p>参考 <a class="reference external" href="https://en.wikipedia.org/wiki/Computer_memory">Computer memory</a></p>
+<div class="section" id="id2">
+<h2>分类<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<ul>
+<li><p class="first">非易失性内存</p>
+<ul class="simple">
+<li>ROM：PROM/EPROM/EEPROM/...</li>
+<li>NVRAM</li>
+<li>Tape/Hard Disk/CD/...</li>
+</ul>
+</li>
+<li><p class="first">易失性内存</p>
+<blockquote>
+<div><ul>
+<li><p class="first">RAM</p>
+<ul>
+<li><p class="first">SRAM</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://en.wikipedia.org/wiki/Dynamic_random-access_memory">DRAM</a></p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/ECC_memory">ECC</a>
+ECC memory is higher cost, as each bank is 9 memory chips
+compared to 8 for non-ECC memory.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>封装<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>DIMM：</p>
+<ul class="simple">
+<li>UDIMM: Unbuffered DIMM. Unbuffered, low density, low-latency DIMM that
+doesn't include a register or buffer chip. Generally used in applications
+requiring the lowest possible latency.</li>
+<li>RDIMM: Registered DIMM. Registered DIMM that provides high signal integrity
+(performing parity checking to detect improper addresses or commands) and
+increased performance for heavy workloads. RDIMMs experience slightly
+increased latency and power consumption over UDIMMs due to the onboard
+register.</li>
+<li>LRDIMM: Uses a buffer to reduce memory loading to a single load on all
+DDR signals, allowing for greater density.</li>
+</ul>
+<p>电压：</p>
+<ul class="simple">
+<li>Standard Voltage (SV) DDR3 operates at 1.5 volts which is currently
+required for 1600 million transfers per second (MT/s)</li>
+<li>Low Voltage (LV) DDR3 operates at 1.35 volts or 1.5 volts. At 1.35 volts
+the memory can consume less power and reduce heat, but can still be boosted
+to 1.5V when the memory channel requires additional voltage to help maintain
+maximum speed.</li>
+</ul>
+<p>工作模式：</p>
+<ul class="simple">
+<li>Advanced ECC mode (otherwise known as lockstep mode) uses two memory
+channels and &quot;ties&quot; them together to emulate a 128-bit data bus DIMM.
+This is primarily used to achieve Single Device Data Correction (SDDC)
+for DIMMs based on x8 DRAM technology. SDDC is supported with x4 based
+DIMMs in every memory mode.</li>
+<li>Memory Optimized mode (or Independent Channel mode) allows memory channels
+to run independently of each other; for example, one can be idle, one can be
+performing a write operation, and the other can be preparing for a read
+operation. Memory may be installed in one, two, three, or four channels.
+To fully realize the performance benefit of the memory optimized mode,
+all four channels per physical processor should be populated.</li>
+<li>Memory Mirroring mode allows memory to be &quot;mirrored&quot; from one channel into
+a paired channel. This provides 100% memory redundancy, but cuts the
+available memory to the operating system in half in addition to halving the
+available memory controllers and channels. This will have a direct impact on
+memory bandwidth, which should see less than half the memory bandwidth as
+compared to memory Optimized mode. This will have seriously negative
+performance implications, and should only be considered for applications
+that require mission critical levels of memory <a class="reference internal" href="../glossary.html#term-ras"><span class="xref std std-term">RAS</span></a>.</li>
+<li>Memory Rank Sparing mode reserves a memory rank as a spare as long as there
+are at least 2 DIMMs or 4 ranks available in a memory channel. If a memory
+rank experiences a high number of correctable errors above a certain
+threshold, the memory controller will swap the failing rank with the
+spare rank. The spare rank is invisible to the operating system, thus
+overall memory available to the operating system is decreased.</li>
+</ul>
+<p>对 Dell 服务器，详细信息参考
+<a class="reference external" href="https://www.dell.com/support/article/us/en/19/sln292309/dell-poweredge-server-memory-configuration?lang=en">Dell PowerEdge: Server Memory Configuration</a> 。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="smart.html" class="btn btn-neutral float-right" title="通过 SMART 查看和跟踪硬盘健康状态" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ipmi.html" class="btn btn-neutral" title="IPMI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

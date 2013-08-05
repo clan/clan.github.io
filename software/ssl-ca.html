@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SSL/TLS 证书 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="SSL" href="ssl.html"/>
+        <link rel="next" title="部署最佳实践" href="ssl-deploy.html"/>
+        <link rel="prev" title="SSL" href="ssl.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ssl.html">SSL</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SSL/TLS 证书</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">证书信息查看</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openssl-ca">使用 OpenSSL 建立 CA 及签发，撤消证书</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ssl-deploy.html">部署最佳实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssl-keystore-export.html">从 JKS keystore 中迁移证书到 Nginx/Apache</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="ssl.html">SSL</a> &raquo;</li>
+        
+      <li>SSL/TLS 证书</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/ssl-ca.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ssl-tls">
+<h1>SSL/TLS 证书<a class="headerlink" href="#ssl-tls" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-01 新版功能: </span>创建</p>
+</div>
+<p>基本功能：</p>
+<ul class="simple">
+<li>数据加密</li>
+<li>签名验证</li>
+</ul>
+<p>证书级别：</p>
+<ul class="simple">
+<li>DV: Domain Validation，验证你是真正的域名所有者即可</li>
+<li>OV: Organization Validation</li>
+<li>EV: Extended Validation，需要验证更多的信息。
+浏览器会以绿色以及公司名显示该证书。</li>
+</ul>
+<div class="section" id="id1">
+<h2>证书信息查看<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<ul>
+<li><p class="first">获取站点证书</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>openssl s_client -connect g.cn:443 -showcerts &lt; /dev/null</cite></li>
+<li>SNI <cite>openssl s_client -connect 127.0.0.1:443 -servername hostname -showcerts &lt; /dev/null</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">显示证书信息</p>
+<p><cite>openssl x509 -in site.crt -noout -...</cite></p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>-text</cite> 输出证书的完整信息</li>
+<li><cite>-ocsp_uri</cite> 输出证书的 OCSP URI</li>
+<li><cite>-subject</cite> 输出主体信息</li>
+<li><cite>-issuer</cite> 输出签发者信息</li>
+<li><cite>-dates</cite> 输出有效期信息</li>
+<li><cite>-modules</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">OCSP</p>
+<p>使用 <cite>openssl ocsp</cite> 可以查询 OCSP 状态。需要注意的是：</p>
+<blockquote>
+<div><ul class="simple">
+<li>部分参数有顺序；</li>
+<li><cite>-header</cite> 参数在 ocsp 子命令的 help 里不可见。</li>
+</ul>
+</div></blockquote>
+<p>示例输出如下（test.pem 包含完整的证书链，issuer.pem 为 test.pem 的签发者）</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># export cert=/etc/ssl/test.pem
+# export ocsp_uri=$(openssl x509 -in ${cert} -noout -ocsp_uri)
+# export ocsp_host=$(echo ${ocsp_uri} | awk -F/ &#39;{print $3}&#39;)
+# openssl ocsp \
+    -text \
+    -no_nonce \
+    -issuer issuer.pem \
+    -VAfile ${cert} \
+    -cert ${cert} \
+    -url $(openssl x509 -in ${cert} -noout -ocsp_uri) \
+    -header Host ${ocsp_host}
+OCSP Request Data:
+    Version: 1 (0x0)
+    Requestor List:
+        Certificate ID:
+          Hash Algorithm: sha1
+          Issuer Name Hash: ........................................
+          Issuer Key Hash: ........................................
+          Serial Number: ....................................
+OCSP Response Data:
+    OCSP Response Status: successful (0x0)
+    Response Type: Basic OCSP Response
+    Version: 1 (0x0)
+    Responder Id: C = US, O = Let&#39;s Encrypt, CN = Let&#39;s Encrypt Authority X3
+    Produced At: Jan 28 05:45:00 2019 GMT
+    Responses:
+    Certificate ID:
+      Hash Algorithm: sha1
+      Issuer Name Hash: ........................................
+      Issuer Key Hash: ........................................
+      Serial Number: ....................................
+    Cert Status: good
+    This Update: Jan 28 05:00:00 2019 GMT
+    Next Update: Feb  4 05:00:00 2019 GMT
+
+    Signature Algorithm: sha256WithRSAEncryption
+         ..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:
+         ...
+Response verify OK
+/etc/ssl/test.pem: good
+        This Update: Jan 28 05:00:00 2019 GMT
+        Next Update: Feb  4 05:00:00 2019 GMT
+</pre></div>
+</div>
+</li>
+<li><p class="first">查看证书原始信息</p>
+<p>证书一般以 ASN.1 （Abstract Syntax Notation (.1)）描述。文件编码格式：</p>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
+<li>DER：原始格式</li>
+<li>PEM：DER 的 Base64 编码。（Privacy Enhanced Mail）</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><cite>openssl asn1parse -inform [der|pem] -in ...</cite></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="openssl-ca">
+<h2>使用 OpenSSL 建立 CA 及签发，撤消证书<a class="headerlink" href="#openssl-ca" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-09-29 新版功能: </span>创建</p>
+</div>
+<p id="index-0">首先， <a class="reference external" href="http://www.openssl.org">OpenSSL</a>  软件包自身就已经包含
+CA.[sh|pl] 脚本（前者为 shell 脚本，后者为 perl），利用该命令
+（可能需要做一些小的修改）就已经可以完成 CA 的创建和证书的签发，
+其基本命令流程如下：</p>
+<ul class="simple">
+<li>CA.sh -newca  # 建立 CA</li>
+<li>CA.sh -newreq # 生成私钥及证书请求</li>
+<li>CA.sh -sign   # 签发该证书</li>
+</ul>
+<p>这之中 CA 以及证书的一些信息会在命令运行过程中提示使用者输入，还有些信息是需要
+在某个配置文件中配置的（一般对应文件名为 openssl.cnf）。</p>
+<p>此外， openvpn 提供了一个称为
+<a class="reference external" href="https://github.com/OpenVPN/easy-rsa">easy-rsa</a>
+的工具，包含了一些辅助的脚本来进行 CA 的建立和证书的签发。感兴趣的可以参考。</p>
+<p>本文的重点在于介绍如何使用 openssl 这个命令来完成同样的任务。熟悉这些最底层的
+命令后，无论是利用上面这两个工具还是自己写脚本都可以完成建立和维护 CA 的任务。</p>
+<p>简单的说来， CA 建立和证书签发的流程是一样的，两者都需要首先生成私钥文件，基于
+私钥文件生成证书请求，然后对证书文件进行签名操作。只不过对 CA 证书来说其证书
+是自签名的，普通的证书则是由 CA 来进行签名。签名之后的证书文件是可以公开的，而
+私钥文件则需要严格保护，尤其是 CA 的私钥文件。一旦 CA 的私钥文件泄漏，则拿到该
+文件的使用者可以伪造出由该 CA 签发的证书。</p>
+<p>此外，生成的证书文件除对原始证书请求的验证外，还会包含额外的扩展信息，如该证书
+的用途等。这些信息一般在配置文件中来指定，证书签发时根据相应的命令行参数和配
+置来决定附加哪些信息。例如，
+&quot;basicConstraints = CA:FALSE&quot; 表示该证书不能用作 CA 证书，
+&quot;basicConstraints=critical,CA:TRUE, pathlen:0&quot; 则表示该证书下不能有次级 CA，
+&quot;nsCertType = server&quot; 表示该证书类别为服务器，等等。实际使用中，可以将不同的
+配置信息放在下面要提到的配置文件（openssl.cnf）中的不同 section 中，在签发证
+书时可以通过&quot;-extensions&quot; 这个参数来选择。具体这些字段的意思和如何配置都可以
+参考 OpenSSL的手册页，如 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/openssl-x509v3_config(5ssl)">openssl-x509v3_config(5ssl)</a></em>，
+<em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/openssl-req(1ssl)">openssl-req(1ssl)</a></em>，<em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/openssl-ca(1ssl)">openssl-ca(1ssl)</a></em> 等。</p>
+<p>具体如何使用这些信息是由应用程序来决定的。例如，openvpn 在使用 SSL 作认证时，
+缺省情况下，客户端会验证服务段的证书字段 ns-cert-type （或 &quot;Netscape
+Cert Type&quot;）为 server。反过来，服务端也可以要求该字段为 client。此外，
+openvpn 的服务端和客户端都还可以验证对端的证书的用途和扩展用途（参考
+--remote-cert-ku 和 --remote-cert-eku 这两个指令）。</p>
+<p>生成私钥的命令为 <cite>openssl genrsa</cite>。生成证书请求的命令为 <cite>openssl req</cite>。后者
+也可以包含前者的功能（<cite>openssl req -x509 -newkey rsa:2048</cite>）。
+证书签发的命令则为 <cite>openssl ca</cite>。</p>
+<p>生成证书请求时会要求输入一些证书相关信息，也可以通过 <cite>-subj ...</cite> 参数指定。
+例如：</p>
+<blockquote>
+<div><p><cite>openssl req ... -subj '/C=US/ST=Texas/L=Plano/O=2xoffice/OU=Architecture/CN=$1'</cite></p>
+<p>参考 <span class="target" id="index-1"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc4514.html"><strong>RFC 4514</strong></a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="95%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>CN</td>
+<td>Common Name</td>
+</tr>
+<tr class="row-even"><td>L</td>
+<td>Locality (city)</td>
+</tr>
+<tr class="row-odd"><td>ST</td>
+<td>State (or province)</td>
+</tr>
+<tr class="row-even"><td>O</td>
+<td>Organization (for example, company)</td>
+</tr>
+<tr class="row-odd"><td>OU</td>
+<td>Organizational Unit</td>
+</tr>
+<tr class="row-even"><td>C</td>
+<td>Country</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>证书主题通配符的情况请参考 <span class="target" id="index-2"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc6125.html#section-7.2"><strong>RFC 6125#section-7.2</strong></a> 和
+<a class="reference external" href="https://support.microsoft.com/en-us/help/258858/accepted-wildcards-used-by-server-certificates-for-server-authenticati">Accepted wildcards used by server certificates for server authentication</a></p>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">待处理</p>
+<p class="last">SAN 配置</p>
+</div>
+<p>执行下面的 bash 脚本即能演示 CA 建立以及证书签发和撤消的完整过程。该脚本中部分
+命令使用了 “-nodes” 选项，表示相应的文件无加密（即无密码保护），在实际环境中
+需要结具体的使用情况进行调整。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nv">CATOP</span><span class="o">=</span>./demoCA
+<span class="nv">CAKEY</span><span class="o">=</span><span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/private/cakey.pem
+<span class="nv">CAREQ</span><span class="o">=</span><span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/careq.pem
+<span class="nv">CACERT</span><span class="o">=</span><span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/cacert.pem
+
+<span class="nv">SSLCNF</span><span class="o">=</span><span class="s2">&quot;-config ./openssl.cnf&quot;</span>
+
+<span class="k">function</span> newca<span class="o">()</span>
+<span class="o">{</span>
+    <span class="k">if</span> <span class="o">[</span> ! -d <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+        mkdir -p <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>
+        mkdir -p <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/private
+        mkdir -p <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/newcerts
+        touch <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/index.txt
+        <span class="nb">echo</span> <span class="s2">&quot;unique_subject = yes&quot;</span> &gt; <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/index.txt.attr
+        <span class="nb">echo</span> <span class="s2">&quot;01&quot;</span> &gt; <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/crlnumber
+    <span class="k">fi</span>
+
+    <span class="c1"># create ca private key &amp; certificate request</span>
+    openssl req <span class="si">${</span><span class="nv">SSLCNF</span><span class="si">}</span> -new -nodes -keyout <span class="si">${</span><span class="nv">CAKEY</span><span class="si">}</span> -out <span class="si">${</span><span class="nv">CAREQ</span><span class="si">}</span>
+
+    <span class="c1"># creat ca certificate by self-signed</span>
+    openssl ca <span class="si">${</span><span class="nv">SSLCNF</span><span class="si">}</span> -keyfile <span class="si">${</span><span class="nv">CAKEY</span><span class="si">}</span> <span class="se">\</span>
+        -selfsign -create_serial           <span class="se">\</span>
+        -extensions v3_ca_cert             <span class="se">\</span>
+        -days <span class="m">7305</span> -batch                  <span class="se">\</span>
+        -out <span class="si">${</span><span class="nv">CACERT</span><span class="si">}</span>                     <span class="se">\</span>
+        -outdir <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/newcerts          <span class="se">\</span>
+        -infiles <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/careq.pem
+<span class="o">}</span>
+
+<span class="k">function</span> mkcert<span class="o">()</span>
+<span class="o">{</span>
+    <span class="c1"># create a private key certificate request</span>
+    openssl req <span class="si">${</span><span class="nv">SSLCNF</span><span class="si">}</span> -new -nodes -keyout newkey.pem -out newreq.pem
+
+    <span class="c1"># sign the certficate request</span>
+    openssl ca <span class="si">${</span><span class="nv">SSLCNF</span><span class="si">}</span> -policy policy_cert -batch <span class="se">\</span>
+        -extensions www_cert -notext                <span class="se">\</span>
+        -out newcert.pem -infiles newreq.pem
+<span class="o">}</span>
+
+<span class="k">function</span> verify_cert<span class="o">()</span>
+<span class="o">{</span>
+    openssl verify -CAfile <span class="si">${</span><span class="nv">CACERT</span><span class="si">}</span> newcert.pem
+<span class="o">}</span>
+
+<span class="k">function</span> revoke_cert<span class="o">()</span>
+<span class="o">{</span>
+    openssl ca <span class="si">${</span><span class="nv">SSLCNF</span><span class="si">}</span> -revoke newcert.pem
+    openssl ca <span class="si">${</span><span class="nv">SSLCNF</span><span class="si">}</span> -gencrl -out <span class="si">${</span><span class="nv">CATOP</span><span class="si">}</span>/crl.pem
+<span class="o">}</span>
+
+newca
+
+mkcert
+
+verify_cert
+
+revoke_cert
+</pre></div>
+</div>
+<p><cite>openssl x509 -text -noout -in newcert.pem</cite> 可以用来查看签发的证书的详细信息。
+<cite>openssl crl -in crl.pem -noout -text</cite> 可以用来查看该 CA 下所有已撤消证书的
+详细信息。</p>
+<p>脚本中用到的配置文件 openssl.cnf 为常见的 ini 文件格式，其内容如下。
+各个 section 的意义从其字面以及集合使用的命令行参数等即可大致了解，详细的解释
+则需要参考相关命令的手册。</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[ca]</span>
+<span class="na">default_ca</span> <span class="o">=</span> <span class="s">CA_default          # default ca section</span>
+
+<span class="k">[CA_default]</span>
+<span class="na">dir</span>           <span class="o">=</span> <span class="s">./demoCA</span>
+<span class="na">certs</span>         <span class="o">=</span> <span class="s">$dir/certs</span>
+<span class="na">database</span>      <span class="o">=</span> <span class="s">$dir/index.txt   # CA database index file</span>
+<span class="na">new_certs_dir</span> <span class="o">=</span> <span class="s">$dir/newcerts    # default place for new certs</span>
+
+<span class="na">serial</span>        <span class="o">=</span> <span class="s">$dir/serial            # current serial number</span>
+<span class="na">certificate</span>   <span class="o">=</span> <span class="s">$dir/cacert.pem        # CA certificate</span>
+<span class="na">crlnumber</span>     <span class="o">=</span> <span class="s">$dir/crlnumber         # current crl number</span>
+<span class="na">private_key</span>   <span class="o">=</span> <span class="s">$dir/private/cakey.pem # CA private key</span>
+
+<span class="na">default_md</span>       <span class="o">=</span> <span class="s">default        # digest method</span>
+<span class="na">default_days</span>     <span class="o">=</span> <span class="s">30             # how long to certify for</span>
+<span class="na">default_crl_days</span> <span class="o">=</span> <span class="s">30             # how long before next CRL</span>
+
+<span class="na">policy</span>        <span class="o">=</span> <span class="s">policy_ca</span>
+
+<span class="k">[policy_ca]</span>
+<span class="na">countryName</span>            <span class="o">=</span> <span class="s">match</span>
+<span class="na">stateOrProvinceName</span>    <span class="o">=</span> <span class="s">optional</span>
+<span class="na">organizationName</span>       <span class="o">=</span> <span class="s">match</span>
+<span class="na">organizationalUnitName</span> <span class="o">=</span> <span class="s">supplied</span>
+<span class="na">commonName</span>             <span class="o">=</span> <span class="s">supplied</span>
+<span class="na">emailAddress</span>           <span class="o">=</span> <span class="s">supplied</span>
+
+<span class="k">[policy_cert]</span>
+<span class="na">countryName</span>            <span class="o">=</span> <span class="s">match</span>
+<span class="na">stateOrProvinceName</span>    <span class="o">=</span> <span class="s">optional</span>
+<span class="na">organizationName</span>       <span class="o">=</span> <span class="s">match</span>
+<span class="na">organizationalUnitName</span> <span class="o">=</span> <span class="s">supplied</span>
+<span class="na">commonName</span>             <span class="o">=</span> <span class="s">supplied</span>
+<span class="na">emailAddress</span>           <span class="o">=</span> <span class="s">supplied</span>
+
+<span class="k">[req]</span>
+<span class="na">default_bits</span>       <span class="o">=</span> <span class="s">2048</span>
+<span class="na">distinguished_name</span> <span class="o">=</span> <span class="s">req_distinguished_name</span>
+
+<span class="k">[req_distinguished_name]</span>
+<span class="na">countryName</span>         <span class="o">=</span> <span class="s">Country Name (2 letter code)</span>
+<span class="na">countryName_default</span> <span class="o">=</span> <span class="s">CN</span>
+<span class="na">countryName_min</span>     <span class="o">=</span> <span class="s">2</span>
+<span class="na">countryName_max</span>     <span class="o">=</span> <span class="s">2</span>
+
+<span class="na">0.organizationName</span>         <span class="o">=</span> <span class="s">Organization Name (eg, company)</span>
+<span class="na">0.organizationName_default</span> <span class="o">=</span> <span class="s">Demo</span>
+
+<span class="na">organizationalUnitName</span>         <span class="o">=</span>  <span class="s">Organizational Unit Name (eg, section)</span>
+<span class="na">organizationalUnitName_default</span> <span class="o">=</span> <span class="s">Users</span>
+
+<span class="na">commonName</span>     <span class="o">=</span> <span class="s">Common Name (e.g. server FQDN or YOUR name)</span>
+<span class="na">commonName_max</span> <span class="o">=</span> <span class="s">64</span>
+
+<span class="na">emailAddress</span>     <span class="o">=</span> <span class="s">Email Address</span>
+<span class="na">emailAddress_max</span> <span class="o">=</span> <span class="s">64</span>
+
+<span class="k">[v3_ca_cert]</span>
+<span class="na">subjectKeyIdentifier</span>   <span class="o">=</span> <span class="s">hash</span>
+<span class="na">authorityKeyIdentifier</span> <span class="o">=</span> <span class="s">keyid:always,issuer:always</span>
+<span class="na">basicConstraints</span>       <span class="o">=</span> <span class="s">critical,CA:true</span>
+<span class="na">keyUsage</span>               <span class="o">=</span> <span class="s">cRLSign, keyCertSign</span>
+<span class="na">nsCertType</span>             <span class="o">=</span> <span class="s">sslCA, emailCA</span>
+
+<span class="k">[vpn_server_cert]</span>
+<span class="na">basicConstraints</span>       <span class="o">=</span> <span class="s">CA:FALSE</span>
+<span class="na">nsCertType</span>             <span class="o">=</span> <span class="s">server</span>
+<span class="na">keyUsage</span>               <span class="o">=</span> <span class="s">keyAgreement, digitalSignature</span>
+<span class="na">extendedKeyUsage</span>       <span class="o">=</span> <span class="s">serverAuth</span>
+<span class="na">nsComment</span>              <span class="o">=</span> <span class="s">&quot;Certificate Generated by Demo CA&quot;</span>
+<span class="na">subjectKeyIdentifier</span>   <span class="o">=</span> <span class="s">hash</span>
+<span class="na">authorityKeyIdentifier</span> <span class="o">=</span> <span class="s">keyid,issuer</span>
+
+<span class="k">[vpn_cert]</span>
+<span class="na">basicConstraints</span>       <span class="o">=</span> <span class="s">CA:FALSE</span>
+<span class="na">nsCertType</span>             <span class="o">=</span> <span class="s">client, email</span>
+<span class="na">keyUsage</span>               <span class="o">=</span> <span class="s">keyAgreement, digitalSignature</span>
+<span class="na">extendedKeyUsage</span>       <span class="o">=</span> <span class="s">clientAuth, emailProtection</span>
+<span class="na">nsComment</span>              <span class="o">=</span> <span class="s">&quot;Certificate Generated by Demo CA&quot;</span>
+<span class="na">subjectKeyIdentifier</span>   <span class="o">=</span> <span class="s">hash</span>
+<span class="na">authorityKeyIdentifier</span> <span class="o">=</span> <span class="s">keyid,issuer</span>
+
+<span class="k">[www_cert]</span>
+<span class="na">basicConstraints</span>       <span class="o">=</span> <span class="s">CA:FALSE</span>
+<span class="na">nsCertType</span>             <span class="o">=</span> <span class="s">server</span>
+<span class="na">extendedKeyUsage</span>       <span class="o">=</span> <span class="s">serverAuth, emailProtection</span>
+<span class="na">nsComment</span>              <span class="o">=</span> <span class="s">&quot;Certificate Generated by Demo CA&quot;</span>
+<span class="na">subjectKeyIdentifier</span>   <span class="o">=</span> <span class="s">hash</span>
+<span class="na">authorityKeyIdentifier</span> <span class="o">=</span> <span class="s">keyid,issuer</span>
+
+<span class="k">[crl_ext]</span>
+<span class="na">authorityKeyIdentifier</span> <span class="o">=</span> <span class="s">keyid:always,issuer:always</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ssl-deploy.html" class="btn btn-neutral float-right" title="部署最佳实践" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ssl.html" class="btn btn-neutral" title="SSL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

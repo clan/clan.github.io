@@ -1,0 +1,347 @@
+SSL/TLS 证书
+============
+
+.. versionadded:: @2019-02-01
+   创建
+
+基本功能：
+
+* 数据加密
+* 签名验证
+
+证书级别：
+
+* DV: Domain Validation，验证你是真正的域名所有者即可
+* OV: Organization Validation
+* EV: Extended Validation，需要验证更多的信息。
+  浏览器会以绿色以及公司名显示该证书。
+
+证书信息查看
+------------
+
+* 获取站点证书
+
+    * `openssl s_client -connect g.cn:443 -showcerts < /dev/null`
+    * SNI `openssl s_client -connect 127.0.0.1:443 -servername hostname -showcerts < /dev/null`
+
+* 显示证书信息
+
+  `openssl x509 -in site.crt -noout -...`
+
+    * `-text` 输出证书的完整信息
+    * `-ocsp_uri` 输出证书的 OCSP URI
+    * `-subject` 输出主体信息
+    * `-issuer` 输出签发者信息
+    * `-dates` 输出有效期信息
+    * `-modules`
+
+* OCSP
+
+  使用 `openssl ocsp` 可以查询 OCSP 状态。需要注意的是：
+
+    * 部分参数有顺序；
+    * `-header` 参数在 ocsp 子命令的 help 里不可见。
+
+  示例输出如下（test.pem 包含完整的证书链，issuer.pem 为 test.pem 的签发者） ::
+
+    # export cert=/etc/ssl/test.pem
+    # export ocsp_uri=$(openssl x509 -in ${cert} -noout -ocsp_uri)
+    # export ocsp_host=$(echo ${ocsp_uri} | awk -F/ '{print $3}')
+    # openssl ocsp \
+        -text \
+        -no_nonce \
+        -issuer issuer.pem \
+        -VAfile ${cert} \
+        -cert ${cert} \
+        -url $(openssl x509 -in ${cert} -noout -ocsp_uri) \
+        -header Host ${ocsp_host}
+    OCSP Request Data:
+        Version: 1 (0x0)
+        Requestor List:
+            Certificate ID:
+              Hash Algorithm: sha1
+              Issuer Name Hash: ........................................
+              Issuer Key Hash: ........................................
+              Serial Number: ....................................
+    OCSP Response Data:
+        OCSP Response Status: successful (0x0)
+        Response Type: Basic OCSP Response
+        Version: 1 (0x0)
+        Responder Id: C = US, O = Let's Encrypt, CN = Let's Encrypt Authority X3
+        Produced At: Jan 28 05:45:00 2019 GMT
+        Responses:
+        Certificate ID:
+          Hash Algorithm: sha1
+          Issuer Name Hash: ........................................
+          Issuer Key Hash: ........................................
+          Serial Number: ....................................
+        Cert Status: good
+        This Update: Jan 28 05:00:00 2019 GMT
+        Next Update: Feb  4 05:00:00 2019 GMT
+
+        Signature Algorithm: sha256WithRSAEncryption
+             ..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:..:
+             ...
+    Response verify OK
+    /etc/ssl/test.pem: good
+            This Update: Jan 28 05:00:00 2019 GMT
+            Next Update: Feb  4 05:00:00 2019 GMT
+
+* 查看证书原始信息
+
+  证书一般以 ASN.1 （Abstract Syntax Notation (.1)）描述。文件编码格式：
+
+      - DER：原始格式
+      - PEM：DER 的 Base64 编码。（Privacy Enhanced Mail）
+
+   * `openssl asn1parse -inform [der|pem] -in ...`
+
+使用 OpenSSL 建立 CA 及签发，撤消证书
+-------------------------------------
+
+.. versionadded:: @2013-09-29
+   创建
+
+.. index:: OpenSSL
+
+首先， `OpenSSL <http://www.openssl.org>`_  软件包自身就已经包含
+CA.[sh|pl] 脚本（前者为 shell 脚本，后者为 perl），利用该命令
+（可能需要做一些小的修改）就已经可以完成 CA 的创建和证书的签发，
+其基本命令流程如下：
+
+- CA.sh -newca  # 建立 CA
+- CA.sh -newreq # 生成私钥及证书请求
+- CA.sh -sign   # 签发该证书
+
+这之中 CA 以及证书的一些信息会在命令运行过程中提示使用者输入，还有些信息是需要
+在某个配置文件中配置的（一般对应文件名为 openssl.cnf）。
+
+此外， openvpn 提供了一个称为
+`easy-rsa <https://github.com/OpenVPN/easy-rsa>`_
+的工具，包含了一些辅助的脚本来进行 CA 的建立和证书的签发。感兴趣的可以参考。
+
+本文的重点在于介绍如何使用 openssl 这个命令来完成同样的任务。熟悉这些最底层的
+命令后，无论是利用上面这两个工具还是自己写脚本都可以完成建立和维护 CA 的任务。
+
+简单的说来， CA 建立和证书签发的流程是一样的，两者都需要首先生成私钥文件，基于
+私钥文件生成证书请求，然后对证书文件进行签名操作。只不过对 CA 证书来说其证书
+是自签名的，普通的证书则是由 CA 来进行签名。签名之后的证书文件是可以公开的，而
+私钥文件则需要严格保护，尤其是 CA 的私钥文件。一旦 CA 的私钥文件泄漏，则拿到该
+文件的使用者可以伪造出由该 CA 签发的证书。
+
+此外，生成的证书文件除对原始证书请求的验证外，还会包含额外的扩展信息，如该证书
+的用途等。这些信息一般在配置文件中来指定，证书签发时根据相应的命令行参数和配
+置来决定附加哪些信息。例如，
+"basicConstraints = CA:FALSE" 表示该证书不能用作 CA 证书，
+"basicConstraints=critical,CA:TRUE, pathlen:0" 则表示该证书下不能有次级 CA，
+"nsCertType = server" 表示该证书类别为服务器，等等。实际使用中，可以将不同的
+配置信息放在下面要提到的配置文件（openssl.cnf）中的不同 section 中，在签发证
+书时可以通过"-extensions" 这个参数来选择。具体这些字段的意思和如何配置都可以
+参考 OpenSSL的手册页，如 :manpage:`openssl-x509v3_config(5ssl)`\ ，
+:manpage:`openssl-req(1ssl)`\ ，:manpage:`openssl-ca(1ssl)` 等。
+
+具体如何使用这些信息是由应用程序来决定的。例如，openvpn 在使用 SSL 作认证时，
+缺省情况下，客户端会验证服务段的证书字段 ns-cert-type （或 "Netscape
+Cert Type"）为 server。反过来，服务端也可以要求该字段为 client。此外，
+openvpn 的服务端和客户端都还可以验证对端的证书的用途和扩展用途（参考
+--remote-cert-ku 和 --remote-cert-eku 这两个指令）。
+
+生成私钥的命令为 `openssl genrsa`\ 。生成证书请求的命令为 `openssl req`\ 。后者
+也可以包含前者的功能（`openssl req -x509 -newkey rsa:2048`）。
+证书签发的命令则为 `openssl ca`\ 。
+
+生成证书请求时会要求输入一些证书相关信息，也可以通过 `-subj ...` 参数指定。
+例如：
+
+  `openssl req ... -subj '/C=US/ST=Texas/L=Plano/O=2xoffice/OU=Architecture/CN=$1'`
+
+  参考 :rfc:`4514`
+
+  == ===================================
+  CN Common Name
+  L  Locality (city)
+  ST State (or province)
+  O  Organization (for example, company)
+  OU Organizational Unit
+  C  Country
+  == ===================================
+
+证书主题通配符的情况请参考 :rfc:`6125#section-7.2` 和
+`Accepted wildcards used by server certificates for server authentication
+<https://support.microsoft.com/en-us/help/258858/accepted-wildcards-used-by-server-certificates-for-server-authenticati>`_
+
+.. TODO::
+   SAN 配置
+
+执行下面的 bash 脚本即能演示 CA 建立以及证书签发和撤消的完整过程。该脚本中部分
+命令使用了 “-nodes” 选项，表示相应的文件无加密（即无密码保护），在实际环境中
+需要结具体的使用情况进行调整。
+
+.. code-block:: bash
+
+    #!/bin/bash
+
+    CATOP=./demoCA
+    CAKEY=${CATOP}/private/cakey.pem
+    CAREQ=${CATOP}/careq.pem
+    CACERT=${CATOP}/cacert.pem
+
+    SSLCNF="-config ./openssl.cnf"
+
+    function newca()
+    {
+        if [ ! -d ${CATOP} ] ; then
+            mkdir -p ${CATOP}
+            mkdir -p ${CATOP}/private
+            mkdir -p ${CATOP}/newcerts
+            touch ${CATOP}/index.txt
+            echo "unique_subject = yes" > ${CATOP}/index.txt.attr
+            echo "01" > ${CATOP}/crlnumber
+        fi
+
+        # create ca private key & certificate request
+        openssl req ${SSLCNF} -new -nodes -keyout ${CAKEY} -out ${CAREQ}
+
+        # creat ca certificate by self-signed
+        openssl ca ${SSLCNF} -keyfile ${CAKEY} \
+            -selfsign -create_serial           \
+            -extensions v3_ca_cert             \
+            -days 7305 -batch                  \
+            -out ${CACERT}                     \
+            -outdir ${CATOP}/newcerts          \
+            -infiles ${CATOP}/careq.pem
+    }
+
+    function mkcert()
+    {
+        # create a private key certificate request
+        openssl req ${SSLCNF} -new -nodes -keyout newkey.pem -out newreq.pem
+
+        # sign the certficate request
+        openssl ca ${SSLCNF} -policy policy_cert -batch \
+            -extensions www_cert -notext                \
+            -out newcert.pem -infiles newreq.pem
+    }
+
+    function verify_cert()
+    {
+        openssl verify -CAfile ${CACERT} newcert.pem
+    }
+
+    function revoke_cert()
+    {
+        openssl ca ${SSLCNF} -revoke newcert.pem
+        openssl ca ${SSLCNF} -gencrl -out ${CATOP}/crl.pem
+    }
+
+    newca
+
+    mkcert
+
+    verify_cert
+
+    revoke_cert
+
+`openssl x509 -text -noout -in newcert.pem` 可以用来查看签发的证书的详细信息。
+`openssl crl -in crl.pem -noout -text` 可以用来查看该 CA 下所有已撤消证书的
+详细信息。
+
+脚本中用到的配置文件 openssl.cnf 为常见的 ini 文件格式，其内容如下。
+各个 section 的意义从其字面以及集合使用的命令行参数等即可大致了解，详细的解释
+则需要参考相关命令的手册。
+
+.. code-block:: cfg
+
+    [ca]
+    default_ca = CA_default          # default ca section
+
+    [CA_default]
+    dir           = ./demoCA
+    certs         = $dir/certs
+    database      = $dir/index.txt   # CA database index file
+    new_certs_dir = $dir/newcerts    # default place for new certs
+
+    serial        = $dir/serial            # current serial number
+    certificate   = $dir/cacert.pem        # CA certificate
+    crlnumber     = $dir/crlnumber         # current crl number
+    private_key   = $dir/private/cakey.pem # CA private key
+
+    default_md       = default        # digest method
+    default_days     = 30             # how long to certify for
+    default_crl_days = 30             # how long before next CRL
+
+    policy        = policy_ca
+
+    [policy_ca]
+    countryName            = match
+    stateOrProvinceName    = optional
+    organizationName       = match
+    organizationalUnitName = supplied
+    commonName             = supplied
+    emailAddress           = supplied
+
+    [policy_cert]
+    countryName            = match
+    stateOrProvinceName    = optional
+    organizationName       = match
+    organizationalUnitName = supplied
+    commonName             = supplied
+    emailAddress           = supplied
+
+    [req]
+    default_bits       = 2048
+    distinguished_name = req_distinguished_name
+
+    [req_distinguished_name]
+    countryName         = Country Name (2 letter code)
+    countryName_default = CN
+    countryName_min     = 2
+    countryName_max     = 2
+
+    0.organizationName         = Organization Name (eg, company)
+    0.organizationName_default = Demo
+
+    organizationalUnitName         =  Organizational Unit Name (eg, section)
+    organizationalUnitName_default = Users
+
+    commonName     = Common Name (e.g. server FQDN or YOUR name)
+    commonName_max = 64
+
+    emailAddress     = Email Address
+    emailAddress_max = 64
+
+    [v3_ca_cert]
+    subjectKeyIdentifier   = hash
+    authorityKeyIdentifier = keyid:always,issuer:always
+    basicConstraints       = critical,CA:true
+    keyUsage               = cRLSign, keyCertSign
+    nsCertType             = sslCA, emailCA
+
+    [vpn_server_cert]
+    basicConstraints       = CA:FALSE
+    nsCertType             = server
+    keyUsage               = keyAgreement, digitalSignature
+    extendedKeyUsage       = serverAuth
+    nsComment              = "Certificate Generated by Demo CA"
+    subjectKeyIdentifier   = hash
+    authorityKeyIdentifier = keyid,issuer
+
+    [vpn_cert]
+    basicConstraints       = CA:FALSE
+    nsCertType             = client, email
+    keyUsage               = keyAgreement, digitalSignature
+    extendedKeyUsage       = clientAuth, emailProtection
+    nsComment              = "Certificate Generated by Demo CA"
+    subjectKeyIdentifier   = hash
+    authorityKeyIdentifier = keyid,issuer
+
+    [www_cert]
+    basicConstraints       = CA:FALSE
+    nsCertType             = server
+    extendedKeyUsage       = serverAuth, emailProtection
+    nsComment              = "Certificate Generated by Demo CA"
+    subjectKeyIdentifier   = hash
+    authorityKeyIdentifier = keyid,issuer
+
+    [crl_ext]
+    authorityKeyIdentifier = keyid:always,issuer:always

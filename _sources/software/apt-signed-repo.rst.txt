@@ -1,0 +1,207 @@
+建立本地的（可信）APT 源
+========================
+
+.. versionadded:: @2013-09-11
+   创建
+
+除非出于测试或开发的目的，在线上系统上安装软件时最好通过发行版自带的包管理
+机制来执行。这里的软件包括自己开发的（尤其是需要编译成可执行文件的），官方源
+里没有提供的第三方软件，以及官方源里有但版本或某些配置不符合实际需要的第三方
+软件。
+
+本文仅覆盖 debian 系的发行版本。
+
+假设 deb 包已经存在（自己构建或其他渠道下载），安装该软件时可以直接通过 dpkg
+来安装。但在需要维护的机器数目比较多时这么做就会比较麻烦。因此，维护一个自己
+的源是很自然的想法。
+
+下面是一个已经构建完成的源的目录结构。（./ 对应 WEB 服务器的根目录） ::
+
+  # tree ./
+  .
+  └── local
+      ├── dists
+      │   └── codename
+      │       └── main
+      │           ├── binary-amd64
+      │           │   └── Packages.bz2
+      │           ├── binary-i386
+      │           │   └── Packages.bz2
+      │           └── i18n
+      ├── local-scan.sh
+      └── pool
+          └── main
+              └── elasticsearch-0.90.2.deb
+
+所有的 deb 文件都放在 local/pool/main/ 目录下。
+local/dists/codename/main/binary-[amd64|i386]/Packages.bz2 文件由脚本
+local-scan.sh 生成：
+
+.. code-block:: shell
+
+   #!/bin/bash
+
+   PROGPATH=$(realpath ${BASH_SOURCE})
+
+   pushd $(dirname $PROGPATH)
+
+   dpkg-scanpackages  . | bzip2 > dists/codename/main/binary-i386/Packages.bz2
+   dpkg-scanpackages  . | bzip2 > dists/codename/main/binary-amd64/Packages.bz2
+
+   popd
+
+在需要通过 apt-get 执行软件安装的机器上修改 `/etc/apt/sources.list` 文件
+增加一行： ::
+
+  deb [arch=amd64] http://source.address/local/ codename main
+
+在运行 `apt-get update` 后即可以直接 `apt-get install xxx` 来安装相应的软件包。
+
+但是，在通过 apt-get 从自建源（官方源也有可能）里安装软件时会出现下面这个问题：
+
+::
+
+  # apt-get install xxxx
+  ......
+  WARNING: The following packages cannot be authenticated!
+    xxxx
+  Install these packages without verification [y/N]?
+
+这个问题的原因为：
+
+#. 由于缺少相应的公钥，从而无法执行相关包的校验检查。这时需要通过命令
+   `apt-key` 添加相应的公钥。
+#. 通过之前描述的方式构建的自建源没有签名配置，接下来就说明如何配置。
+
+apt 源的签名是通过 gpg 实现的，因此，我们需要先生成公私钥对，执行命令
+`gpg --gen-key`\，密钥选择 RSA (sign only) ，密钥大小建议不小于 2048，其他
+内容根据提示输入。在生成公私钥对时 gpg 会通过 /dev/random 获取真实的随机数，
+如果系统的熵不够时，可能会出现如下提示： ::
+
+  Not enough random bytes available.  Please do some other work to give
+  the OS a chance to collect more entropy! (Need 196 more bytes)
+
+一个技巧是通过 `ping -f ip` 来增加熵，ip 为执行 gpg 时所在机器的 IP 地址。
+gpg 命令成功执行后可以通过 `gpg --list-keys` 来查看生成的密钥对信息： ::
+
+  # gpg --list-keys
+  /root/.gnupg/pubring.gpg
+  ------------------------
+  pub   4096R/4C96262C 2013-09-10
+  uid                  Local Package Archive <info@test.only>
+
+通过 `gpg --armor --export info@example.com` 导出公钥。 ::
+
+  gpg --armor --export info@test.only > info@test.only.gpg.key
+
+通过命令 `apt-key add` 将该公钥添加到信任列表之中去。一般把这个文件放到
+自建源所在的 WEB 目录下，然后通过如下命令导入：
+
+`wget -O - http://source.address/info@test.only.gpg.key  | apt-key add -`
+
+接下来需要做的是对自建源里的 deb 包进行签名即发布的操作，执行完成之后的源目录
+结构如下（注意这时的源目录和本文最初提到的方式创建的目录没有任何关系，建议重新
+创建目录）： ::
+
+  # tree -F .
+  .
+  ├── info@example.com.gpg.key
+  └── local/
+      ├── conf/
+      │   └── distributions
+      ├── db/
+      │   ├── checksums.db
+      │   ├── contents.cache.db
+      │   ├── packages.db
+      │   ├── references.db
+      │   ├── release.caches.db
+      │   └── version
+      ├── dists/
+      │   └── codename/
+      │       ├── InRelease
+      │       ├── main/
+      │       │   ├── binary-amd64/
+      │       │   │   ├── Packages
+      │       │   │   ├── Packages.gz
+      │       │   │   └── Release
+      │       │   └── source/
+      │       │       ├── Release
+      │       │       └── Sources.gz
+      │       ├── Release
+      │       └── Release.gpg
+      ├── local-deb.sh
+      └── pool/
+          └── main/
+              └── e/
+                  └── elasticsearch/
+                      └── elasticsearch_0.90.2_all.deb
+
+同样的， ./ 对应于 WEB 服务的根目录。在上面的这个目录结构中，只有
+conf/distributions 和 local-deb.sh 这两个文件是手工创建的，其他的目录和文件都
+由相关命令来创建和维护。
+
+conf/distributions 文件的内容如下： ::
+
+  Origin: source.address
+  Label: apt repository
+  Codename: codename
+  Architectures: amd64 source
+  Components: main
+  Description: local debian package repo
+  SignWith: yes
+
+其中 codename 对应于 dists/ 下的目录名。
+
+local-deb.sh 文件的内容如下：
+
+.. code-block:: shell
+
+   #!/bin/bash
+
+   PROGPATH=$(realpath ${BASH_SOURCE})
+
+   pushd $(dirname $PROGPATH)
+
+   while [ $# -gt 0 ] ; do
+       [ -s ${1} ] && {
+           reprepro -Vb . includedeb codename $1
+       }
+       shift
+   done
+
+   popd
+
+以需要添加到自建源里的 deb 文件作为参数执行 local-deb.sh 即可生成上面的目录结构。
+deb 文件不需要预先拷贝到 pool 目录下去。注意，执行 local-deb.sh 的用户最好和
+执行 gpg --gen-key 的用户一致，如果不是，则需要将相应的密钥对导入到该用户的
+环境中。
+
+在正确完成这些配置和操作后，再次执行 `apt-get install` 时就不会出现之前碰到
+的警告了。
+
+从源里删除某个包使用如下命令：
+`reprepro -v --keepunreferencedfiles -Vb . remove codename pkgname`\。需要注意
+的是，如果同样版本的 deb 包之前已经加入，则在更新后重新加入时会失败（及时删除
+以前的版本）并报如下类似的信息： ::
+
+  Already existing files can only be included again, if they are the same, but:
+  ...
+
+这种情况下只能更新版本好后再操作。这里隐含的思想是同样版本的包一旦被发布出去，
+就不能再被修改，只能被更新。
+
+新增源后运行 `apt-get update` 有时会出现如下错误， ::
+
+  W: GPG error: http://... precise Release: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY FA04D393774BAC4D
+
+其原因是相关的 GPG公钥没有导入，执行如下命令即可：
+
+`apt-key adv --recv-keys --keyserver keyserver.ubuntu.com FA04D393774BAC4D`
+
+P.S. 本文仅在 amd64 下进行过测试，如果需要增加 i386 等的支持，请自行修改相关
+配置。
+
+参考：
+
+`Setting Up Signed Apt Repository With Reprepro
+<https://wiki.debian.org/SettingUpSignedAptRepositoryWithReprepro>`_

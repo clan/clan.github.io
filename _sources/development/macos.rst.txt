@@ -1,0 +1,27 @@
+macOS / OS X 环境构建
+=====================
+
+Download Software for Apple Development
+---------------------------------------
+
+.. versionadded:: @2016-04-28
+   创建
+
+You can find the DMGs for Xcode and other development tools on
+`here <https://developer.apple.com/downloads/>`_\.
+Login with Apple ID is required before download.
+
+命令行开发工具
+--------------
+
+.. versionadded:: @2019-02-11
+   创建
+
+10.14 之前的 macOS 通过 `xcode-select --install` 即可安装相应的命令行开发工具，
+10.14 则需要额外的步骤（检查是否存在 `/usr/include` 目录）：
+
+    #. 访问 https://developer.apple.com/download/more/，使用 Apple ID 登录
+    #. 搜索 `command line` 然后选择正确版本的 *Command Line Tools ...* 下载安装
+    #. 使用如下命令行安装对应的包后，`/usr/include` 目录会出现。
+
+       `open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg`

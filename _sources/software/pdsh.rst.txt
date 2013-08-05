@@ -1,0 +1,41 @@
+PDSH
+====
+
+.. versionadded:: @2019-01-19
+   创建
+
+环境变量 PDSH_SSH_ARGS_APPEND 配置附加到 `ssh` 命令后的命令行参数，例如：
+`PDSH_SSH_ARGS_APPEND='-o StrictHostKeyChecking=no'` 。
+
+`pdsh -l root -g group 'id'` 表示以 root 身份登录 group 里定义的所有主机并执行
+id 命令。*/etc/dsh/group/* 或 *~/.dsh/group/* 目录下应有名名为 group 的文件，
+其文件内容为每个主机一行。
+
+`pdsh -l root -g group -x host1 'id'` 和上一条命令作用相同，但排除 host1。
+host1 必须和 group 里定义的主机完全一致。
+
+支持的模块查看，可以查看手册页（`man pdsh`）了解支持模块文档，挖掘新的用法。 ::
+
+    $ pdsh -L
+    5 modules loaded:
+
+    Module: rcmd/ssh
+    Author: Jim Garlick <garlick@llnl.gov>
+    Descr:  ssh based rcmd connect method
+
+    Module: rcmd/exec
+    Author: Mark Grondona <mgrondona@llnl.gov>
+    Descr:  arbitrary command rcmd connect method
+
+    Module: misc/machines
+    Author: Jim Garlick <garlick@llnl.gov>
+    Descr:  Read list of all nodes from a machines file
+    Options:
+    -a                target all nodes
+
+    Module: misc/dshgroup
+    Author: Mark Grondona <mgrondona@llnl.gov>
+    Descr:  Read list of targets from dsh-style "group" files
+    Options:
+    -g groupname      target hosts in dsh group "groupname"
+    -X groupname      exclude hosts in dsh group "groupname"

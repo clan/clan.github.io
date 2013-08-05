@@ -1,0 +1,25 @@
+Linux 问题解决汇总
+==================
+
+#. mount
+
+   * mount Windows 共享出错： `mount error(12): Cannot allocate memory`
+
+     .. versionadded:: 2012-07-18
+        创建
+
+     Windows 系统为 Win7。解决办法如下，修改注册表：
+
+     修改 `HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\LargeSystemCache` 为 `1`.
+
+     修改 `HKLM\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters\\Size` 为 `3`.
+
+     然后重启服务 “server”。
+
+#. ping
+   ::
+
+    WARNING: kernel is not very fresh, upgrade is recommended.
+
+   这是 iputils 的 bug，已经 `修复 <https://github.com/iputils/iputils/commit/5bb0f0a8b0ed6f111a329c0d6911dfa516ab1d42>`_ ，
+   Gentoo Bug 见 `这里 <https://bugs.gentoo.org/show_bug.cgi?id=622884>`_ 。

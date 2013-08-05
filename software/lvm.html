@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>LVM &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="初始化" href="init.html"/>
+        <link rel="next" title="建立本地的（可信）APT 源" href="apt-signed-repo.html"/>
+        <link rel="prev" title="存储分区" href="partition.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="init.html">初始化</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pxe.html">PXE 安装系统配置 Howto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="partition.html">存储分区</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">LVM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">命令</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">lvm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmetad">lvmetad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pv">PV</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vg">VG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lv">LV</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">示例</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apt-signed-repo.html">建立本地的（可信）APT 源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iscsi.html">Linux 下的 iSCSI initiator 部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offline.html">各种软件的离线版下载地址</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="init.html">初始化</a> &raquo;</li>
+        
+      <li>LVM</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/lvm.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lvm">
+<h1>LVM<a class="headerlink" href="#lvm" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-12-09 新版功能: </span>新建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-15 版更改: </span>增加命令汇总以及 stripes</p>
+</div>
+<p>参考 <a class="reference external" href="http://tldp.org/HOWTO/LVM-HOWTO/index.html">LVM Howto</a></p>
+<p>PV，VG，LV 以及文件系统的关系如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#    hda1   hdc1      (PV:s on partitions or whole disks)</span>
+<span class="c1">#       \   /</span>
+<span class="c1">#        \ /</span>
+<span class="c1">#       diskvg        (VG)</span>
+<span class="c1">#       /  |  \</span>
+<span class="c1">#      /   |   \</span>
+<span class="c1">#  usrlv rootlv varlv (LV:s)</span>
+<span class="c1">#    |      |     |</span>
+<span class="c1"># ext4  reiserfs  xfs (filesystems)</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>命令<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>命令汇总：查看/创建/删除/改名/扩容/扫描/报告信息</p>
+<ul class="simple">
+<li>(pv|vg|lv)(display|create|remove|change|scan|s)</li>
+<li>(pv|lv)resize</li>
+<li>(vg|lv)(rename|extend|reduce|convert)</li>
+<li>pv(ck|move)</li>
+<li>vg(ck|export|import|merge|mknodes|split)</li>
+<li>vgcfg(backup|restore)</li>
+</ul>
+<div class="section" id="id2">
+<h3>lvm<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+</div>
+<div class="section" id="lvmetad">
+<h3>lvmetad<a class="headerlink" href="#lvmetad" title="永久链接至标题">¶</a></h3>
+</div>
+<div class="section" id="pv">
+<h3>PV<a class="headerlink" href="#pv" title="永久链接至标题">¶</a></h3>
+<ol class="arabic simple">
+<li>pvcreate</li>
+</ol>
+</div>
+<div class="section" id="vg">
+<h3>VG<a class="headerlink" href="#vg" title="永久链接至标题">¶</a></h3>
+<ol class="arabic simple">
+<li>vgcreate</li>
+</ol>
+</div>
+<div class="section" id="lv">
+<h3>LV<a class="headerlink" href="#lv" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">lvcreate</p>
+<ul>
+<li><p class="first">--stripes 条带化，将读写操作分散到多个底层存储上。</p>
+</li>
+<li><p class="first">snapshot/快照</p>
+<ul>
+<li><p class="first">建立快照</p>
+<p><cite>lvcreate -s -n lv-20190215 -L5T /dev/mapper/vg-lv</cite></p>
+</li>
+<li><p class="first">取消快照</p>
+<p><cite>lvconvert --merge foo/snap</cite></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>示例<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>最好不要将整个物理硬盘创建为 PV，而是先建立一个单独的分区（MSDOS 方式设置分区
+格式为 8e， GPT 方式设置标记为 lvm），然后将该分区创建为 PV。</p>
+<p>假设存储设备为 /dev/sdd1 和 /dev/sde1。</p>
+<p>创建 PV：<cite>pvcreate /dev/sdd1 /dev/sde1</cite></p>
+<p>扫描 PV：<cite>pvscan</cite></p>
+<p>创建 VG：<cite>vgcreate vg_test /dev/sdd1</cite></p>
+<p>激活 VG：<cite>vgchange -a y vg_test</cite></p>
+<p>退激活 VG：<cite>vgchange -a n vg_test</cite></p>
+<p>删除 VG：<cite>vgremove vg_test</cite></p>
+<p>扩展 PV 到 VG：<cite>vgextend vg_test /dev/sde1</cite></p>
+<p>移除 PV 从 VG：<cite>vgreduce vg_test /dev/sde1</cite>，操作前先使用 <cite>pvmove</cite> 将数据从
+要删除的 PV 移出。</p>
+<p>显示 VG 信息：<cite>vgdisplay -v vg_test</cite></p>
+<p>扫描 VG：<cite>vgscan</cite></p>
+<p>创建 LV：<cite>lvcreate -L1500 -nlv_test vg_test</cite> 创建大小为 1500MB 的 LV。
+<cite>lvcreate -l 100%VG -nlv_test vg_test</cite> 创建占用所有 VG 的 LV。</p>
+<p>扩展 LV： <cite>lvextend -L+1G /dev/vg_test/lv_test</cite> 增加 1G 空间。调用文件系统
+相关的命令让文件系统匹配新的空间。其他用法：
+<cite>lvextend -l +100%FREE /dev/mapper/vg_data-lv_home</cite> 将卷组里的未使用空间按
+百分数分配给 LV。</p>
+<p>缩小 LV： <cite>lvreduce -L-1G /dev/vg_test/lv_test</cite> 减小 1G 空间。注意操作之前
+需要先调用文件系统相关的命令调整文件系统大小，否则会导致数据丢失。
+参考 <a class="reference internal" href="partition.html#resize"><span class="std std-ref">怎样调整文件系统大小</span></a>。</p>
+<p>删除 LV： <cite>lvremove /dev/vg_test/lv_test</cite> 注意数据备份。</p>
+<p>扫描 LV：<cite>lvscan</cite></p>
+<p>创建快照 LV：<cite>lvcreate -L500M -s -n lv_test-backup /dev/vg_test/lv_test</cite>，创建
+lv_test 的快照，大小为 500M。通过 /dev/vg_test/lv_test-backup 即可挂载该快照。
+需要注意的是，如果快照空间被使用完，该快照会立即失效，所以需要确保快照卷的空间
+能满足备份的需要。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="apt-signed-repo.html" class="btn btn-neutral float-right" title="建立本地的（可信）APT 源" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="partition.html" class="btn btn-neutral" title="存储分区" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+通过 WEB 实现 kerberos 密码修改
+===============================
+
+.. TODO:: 增加 Python 实现
+
+.. versionadded:: @2013-11-06
+   创建
+.. deprecated:: @2019-02-19
+   使用 Python 能更方便的实现
+
+在 :doc:`ldap-kerberos` 里我们采用 Kerberos
+来实现认证系统。接下来的一个需求是如何让用户方便的进行密码的修改。
+
+在 Linux 系统上如果配置了 PAM 使用 pam_krb5 来进行认证（示例配置文件如下），
+在用户成功登录到该系统可以通过命令 kpasswd （如果合适的配置了
+/etc/pam.d/passwd 文件，通过命令 passwd 也可以）来进行密码修改。 ::
+
+  # more /etc/pam.d/system-auth
+  auth            required        pam_env.so
+  auth            sufficient      pam_krb5.so
+  auth            required        pam_unix.so try_first_pass likeauth nullok
+  auth            optional        pam_permit.so
+
+  account         sufficient      pam_krb5.so
+  account         required        pam_unix.so
+  account         optional        pam_permit.so
+
+  password        required        pam_cracklib.so difok=2 minlen=8 dcredit=2 ocredit=2 retry=3
+  password        sufficient      pam_krb5.so
+  password        required        pam_unix.so try_first_pass use_authtok nullok sha512 shadow
+  password        optional        pam_permit.so
+
+  session         required        pam_limits.so
+  session         required        pam_env.so
+  session         sufficient      pam_krb5.so
+  session         required        pam_unix.so
+  session         optional        pam_permit.so
+
+但在某些情况下用户可能无法通过 kpasswd 命令行来执行操作。此外，对于非技术人员
+来说，让用户通过命令行来操作也可能会遇到很多支持上的问题，因此能让用户通过 WEB
+界面来修改密码是比较方便的。乍一看，这个问题很简单。但如果在 Kerberos 里配置了
+密码策略，新的密码也可能要满足策略要求，如密码的最小长度，需要包含的字符类别数
+目限制，密码重复的次数等。在密码修改界面里重复实现这一套逻辑会费时费力。更严重
+的是，用户修改密码时其密码可能已经过期从而无法通过认证（kpasswd 命令在密码过期
+时会要求用户重新设置新密码），因此基于 WEB 的密码修改程序也得遵循 Kerberos
+协议。幸运的是，已经有一个软件提供了基于 WEB 的解决方案，即
+`WebAuth <{http://webauth.stanford.edu/>`_\。下面描述其安装过程。
+
+#. 在 WebAuth 官网下载源代码后编译。`./configure --enable-perl && make`
+#. 拷贝编译后的目录里的动态库代码到系统目录下。`cp -ar lib/.libs/libwebauth.so* /usr/lib64/ && ./perl/Build install`
+#. 拷贝 weblogin 目录下的 pwchange.fcgi 和其他模板文件到某个目录，如
+   /home/web/pwchange
+#. 执行 pwchange.fcgi 并根据出错信息安装相应的 perl 扩展库(`cpan -i ...`)，
+   确保 pwchange.fcgi 能正常运行，其输出结果为 HTTP 响应数据，
+   包含响应头和 HTTP 正文文本。
+#. 安装 spawnfcgi 和 fcgiwrap 程序 `emerge -avgk fcgiwrap spawnfcgi`
+#. 新增服务 `ln -s /etc/init.d/spawnfcgi /etc/init.d/spawnfcgi.fcgiwrap`\，并
+   配置 /etc/conf.d/spawn-fcgi.fcgiwrap 如下： ::
+
+     FCGI_SOCKET=/var/run/fcgiwrap.sock
+     FCGI_PORT=
+     FCGI_PROGRAM=/usr/sbin/fcgiwrap
+     FCGI_CHILDREN=1
+     FCGI_USER=nginx
+     FCGI_GROUP=nginx
+     ALLOWED_ENV="PATH"
+#. 配置 nginx 如下： ::
+
+     location ~ ^/auth/pwchange* {
+           alias /home/web/pwchange;
+           rewrite ^/auth/pwchange /pwchange.fcgi break;
+           include fastcgi.conf;
+           fastcgi_param DOCUMENT_ROOT /home/web/pwchange;
+           fastcgi_param SCRIPT_NAME   pwchange.fcgi;
+           fastcgi_pass unix:///var/run/fcgiwrap.sock-1;
+     }
+#. 配置文件 /etc/webkdc/webkdc.conf ::
+
+     $KEYRING_PATH = "/etc/webkdc/webkdc.keyring";
+#. 使用 WebAuth 软件源代码里的 wa_keyring 程序生成 webkdc.conf 里指定的文件。
+   `./tools/wa_keyring -f /etc/webkdc/webkdc.keyring add 0d`\。调整
+   webkdc.keyring 文件权限，让 fcgiwrap 程序执行时有权限访问该文件。
+#. 启动 spawnfcgi.fcgiwrap 和 nginx 服务。测试 pwchange 服务是否能正常工作。
+#. 如果有问题则通过 strace 以及其他相关服务的日志文件分析排查。
+#. 调整相关的 web 表单模板。

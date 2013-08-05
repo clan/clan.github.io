@@ -1,0 +1,151 @@
+部署最佳实践
+============
+
+.. versionadded:: @2019-02-01
+   创建
+
+参考 `SSL and TLS Deployment Best Practices <https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices>`_ 。
+
+证书
+----
+
+#. 私钥
+
+   至少选择 RSA 2048 位私钥（2030 年前），参考
+   :wiki:`密钥长度<Key_size>`\。
+
+   ========= ========
+   Algorithm Key Size
+   ========= ========
+   RSA 1024  80bits
+   RSA 2048  112bits
+   RSA 3072  128bits
+   ECDSA 256 128bits
+   ========= ========
+
+#. 保护好私钥
+
+   在拥有足够墒的可信的计算机上生成私钥。保护好私钥，控制扩散范围；
+   及时吊销旧的证书和私钥；降低证书更新的周期；如无必要，每次都使
+   用新的私钥生成证书。
+
+#. 证书覆盖范围
+
+   足够多的主机/域；但尽可能控制证书扩散范围；
+
+#. 从可靠的 CA 申请证书
+
+   考察 CA 的安全记录，业务覆盖范围，CRL/OCSP 服务；尽可能提前（一周）
+   更新证书。
+
+#. 使用强签名算法
+
+   不要再使用 SHA1。
+
+配置
+----
+
+#. 使用完整的证书链
+#. 使用安全的协议
+
+   SSL v2，SSL v3，TLS v1.0，TLS v1.1，TLS v1.2，TLS v1.3
+
+     .. TODO::
+        补全各种攻击细节
+
+    #. SSL v2 不要再使用。DROWN 攻击
+
+       .. versionadded:: @2010-07-13
+          创建
+
+       SSLv2 在协商密钥过程中所带的加密算法列表由于没有签名，因此可以被中间人替换
+       为较弱的加密算法，从而很容易被解密出明文。因此对SSL相关的应用最好都禁用 SSLv2。
+
+       Apache 的配置如下： ::
+
+           SSLProtocol all -SSLv2 # 禁用 SSLv2
+           SSLCipherSuite HIGH:MEDIUM:!aNULL:!eNULL:!SSLv2 # 禁用弱密钥算法
+
+       用如下命令测试是否生效（应该连接失败）：
+
+       `openssl s_client -ssl2 -connect host:port`
+
+    #. SSL v3 不建议使用。HTTP 协议时不安全，POODLE 攻击
+    #. TLS v1.0 BEAST 攻击
+    #. TLV v1.1/v1.2 目前无已知漏洞，但 v1.2 才提供现代加密算法。
+    #. 尽可能使用 v1.2/v1.3
+
+#. 使用安全的密钥算法
+
+   使用 :wiki:`AEAD<Authenticated_encryption#Authenticated_encryption_with_associated_data_(AEAD)>`
+   算法。下列算法不应被使用：
+
+      * ADH（Anonymous Diffie-Hellman） 无认证
+      * NULL 无加密
+      * Export 算法族 （FREAK 攻击）
+      * 弱算法（密钥长度为 40 或 56 位）
+      * RC4 不安全
+      * 3DES 慢和弱
+
+   如下是可用的一个算法配置： ::
+
+       ssl_ciphers 'HIGH:-AECDH:-CAMELLIA:-DHE:!kECDHr:!kECDHe:!kPSK:!kRSA:!kSRP:!ADH:!kDH:!IDEA:!KRB5:!RC4:!SEED:!SSLv2'
+
+   其包含的算法列表如下： ::
+
+        # openssl ciphers -v -V 'HIGH:-AECDH:-CAMELLIA:-DHE:!kECDHr:!kECDHe:!kPSK:!kRSA:!kSRP:!ADH:!kDH:!IDEA:!KRB5:!RC4:!SEED:!SSLv2'
+        0xC0,0x30 - ECDHE-RSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AESGCM(256) Mac=AEAD
+        0xC0,0x2C - ECDHE-ECDSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AESGCM(256) Mac=AEAD
+        0xC0,0x28 - ECDHE-RSA-AES256-SHA384 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AES(256)  Mac=SHA384
+        0xC0,0x24 - ECDHE-ECDSA-AES256-SHA384 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AES(256)  Mac=SHA384
+        0xC0,0x14 - ECDHE-RSA-AES256-SHA    SSLv3 Kx=ECDH     Au=RSA  Enc=AES(256)  Mac=SHA1
+        0xC0,0x0A - ECDHE-ECDSA-AES256-SHA  SSLv3 Kx=ECDH     Au=ECDSA Enc=AES(256)  Mac=SHA1
+        0xC0,0x2F - ECDHE-RSA-AES128-GCM-SHA256 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AESGCM(128) Mac=AEAD
+        0xC0,0x2B - ECDHE-ECDSA-AES128-GCM-SHA256 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AESGCM(128) Mac=AEAD
+        0xC0,0x27 - ECDHE-RSA-AES128-SHA256 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AES(128)  Mac=SHA256
+        0xC0,0x23 - ECDHE-ECDSA-AES128-SHA256 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AES(128)  Mac=SHA256
+        0xC0,0x13 - ECDHE-RSA-AES128-SHA    SSLv3 Kx=ECDH     Au=RSA  Enc=AES(128)  Mac=SHA1
+        0xC0,0x09 - ECDHE-ECDSA-AES128-SHA  SSLv3 Kx=ECDH     Au=ECDSA Enc=AES(128)  Mac=SHA1
+
+#. 选择最好的算法族：SSL 协议中，算法是客户端和服务端协商的，最好配置
+   由服务端来选择最好的算法。
+#. 使用前向保密（Perfect Forward Secrecy），保证会话不依赖服务的私钥。
+#. 使用更强的密钥交换方法，尽可能使用 ECDHE/DHE，
+   不要使用 RSA 作为密钥交换算法。 Logjam attack
+#. 缓解已知问题，跟踪安全披露信息，更新软件。
+
+性能
+----
+
+#. 避免过度的安全，大部分情况下密钥长度 128 位足够安全。
+#. 会话重用（Session Resumption）
+#. 使用 WAN 优化（CDN等），HTTP/2 。
+#. 缓存公开内容，避免无谓的加密。
+#. 使用 OCSP 装订（Stapling）。
+#. 使用快速加密方法，例如硬件加速。
+
+HTTP 以及应用安全
+-----------------
+
+#. 加密所有
+#. 避免混合加密/非加密内容，防范中间人攻击（MITM）
+#. 理解并确认第三方信任（例如 Google Analytics）
+#. 使用安全 Cookie
+#. 安全的 HTTP 压缩（CRIME/TIME/BREACH 攻击）
+#. 部署 HSTS（HTTP Strict Transport Security） ::
+
+    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+#. 部署 Content Security Policy（CSP） ::
+
+    Content-Security-Policy: default-src https: 'unsafe-inline' 'unsafe-eval';
+                             connect-src https: wss:
+
+#. 不要缓存敏感内容
+
+高级配置
+--------
+
+#. 公钥固定，参考 :rfc:`7649` ，DNS CAA
+#. DNSSEC，DNAME
+#. HSTS

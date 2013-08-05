@@ -1,0 +1,119 @@
+Oracle
+######
+
+.. versionadded:: @2019-02-13
+   创建
+
+.. index:: Oracle
+
+连接数据库
+**********
+
+::
+
+    $ su - oracle
+    $ rlwrap sqlplus / as sysdba  # rlwrap 启用 readline 支持
+    SQL> connect dbname
+    输入密码：xxxxxxxx
+
+关闭数据库
+**********
+
+::
+
+    $ su - oracle
+    $ lsnrctl stop   # 关闭服务器端监听。
+    $ sqlplus / as sysdba
+    SQL> shutdown immediate;  #立即强制关闭
+    SQL> quit
+
+全量导出与导入命令
+******************
+
+::
+
+    expdp \' / as sysdba\' dumpfile=full.dmp full=y directory=BACKUP # 导出
+    impdp \' / as sysdba\' dumpfile=full.dmp full=y directory=BACKUP # 导入
+
+导入命令参数：
+
+  TABLE_EXISTS_ACTION=[SKIP|APPEND|TRUNCATE|REPLACE]
+
+  * SKIP leaves the table as is and moves on to the next object. This is not a valid option if the CONTENT parameter is set to DATA_ONLY.
+  * APPEND loads rows from the source and leaves existing rows unchanged.
+  * TRUNCATE deletes existing rows and then loads rows from the source.
+  * REPLACE drops the existing table and then creates and loads it from the source. This is not a valid option if the CONTENT parameter is set to DATA_ONLY.
+
+其他常用语句
+************
+
+* 查看数据库的用户
+
+    - `select username from dba_users;`
+
+* 修改用户密码
+
+    - `alter user system identified by 123456;`
+
+* 查看数据库名
+
+    - `select name from v$database;`
+
+* 查看实例名
+
+    - `select instance_name from v$instance;`
+
+* 查看 Oracle 中创建的目录
+
+    - `select * from dba_directories;`
+
+* 查询数据库当前进程的连接数
+
+    - `select count(*) from v$process;`
+
+* 查看数据库当前会话的连接数
+
+    - `select count(*) from v$session;`
+
+* 查看数据库的并发连接数
+
+    - `select count(*) from v$session where status='ACTIVE';`
+
+* 查看当前数据库建立的会话情况
+
+    - `select sid,serial#,username,program,machine,status from v$session;`
+
+* 查询数据库允许的最大连接数
+
+    - `select value from v$parameter where name = 'processes';`
+    - `show parameter processes;`
+    - `show parameter sessions;`
+
+* 修改数据库允许的最大连接数
+
+    - `alter system set processes = 300 scope = spfile;`
+    - `create pfile from spfile;`
+      # 需要重启数据库才能实现连接数的修改
+
+* 修复 spfile 问题
+
+    - 参数不匹配时数据库启动会报错，例如：
+
+        - ORA-00821: Specified value of sga_target 500M is too small, needs to be at least 760M
+
+    - 解决办法： ::
+
+        SQL> create pfile='/home/oracle/init.ora' from spfile;
+
+        File created.
+
+        SQL> host vi /home/oracle/init.ora
+        # 修正导致问题的参数
+        SQL> create spfile from pfile='/home/oracle/init.ora';
+
+        File created.
+
+        SQL> startup
+
+其他参考：
+`Oracle init params 说明 <https://docs.oracle.com/cd/B28359_01/server.111/b28320/initparams004.htm#i1124571>`_

@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>VMWARE &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="虚拟化" href="virtualization.html"/>
+        <link rel="next" title="Shell 及常用命令" href="shell.html"/>
+        <link rel="prev" title="虚拟化" href="virtualization.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="virtualization.html">虚拟化</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">VMWARE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vcenter">vCenter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#esxi">ESXi</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#esxcfg"># esxcfg-*</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#esxcli"># esxcli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tcpdump-uw"># tcpdump-uw</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vim-cmd"># vim-cmd</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsish"># vsish</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">问题解决汇总</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="virtualization.html">虚拟化</a> &raquo;</li>
+        
+      <li>VMWARE</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/vmware.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vmware">
+<h1>VMWARE<a class="headerlink" href="#vmware" title="永久链接至标题">¶</a></h1>
+<div class="section" id="vcenter">
+<h2>vCenter<a class="headerlink" href="#vcenter" title="永久链接至标题">¶</a></h2>
+<ul>
+<li><p class="first">vCenter Server Appliance 5.0 GA with embedded DB2 database fails</p>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2012-07-17 新版功能: </span>创建</p>
+</div>
+<p>参考： <a class="reference external" href="http://kb.vmware.com/kb/2006812">VMware vCenter Server Appliance 5.0 GA with embedded DB2 database fails</a></p>
+</li>
+<li><p class="first">vCenter Server 恢复</p>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-05-04 新版功能: </span>创建</p>
+</div>
+<p>由于停电或其他原因导致的 vCenter Server 非正常关机后，使用 vSphere Client
+连接时总是会出错。一个快速解决办法如下：</p>
+<ol class="arabic simple">
+<li>登录 <a class="reference external" href="https://vcenter.xxxxx.xxxxxxxx.xxx:5480/">https://vcenter.xxxxx.xxxxxxxx.xxx:5480/</a> ，确认 Server 的运行状态
+应该是 Stopped。</li>
+<li>选择 Utilities 处的 “Setup wizard”，单击 Launch，如果之前没有特殊配置则全部
+按缺省配置完成该过程。该过程的最后阶段会重新启动 Server 成功。</li>
+<li>通过 vSphere Client 连接，应该可以成功。vCenter Server 的许可证可能需要重新
+关联。</li>
+</ol>
+</li>
+</ul>
+</div>
+<div class="section" id="esxi">
+<h2>ESXi<a class="headerlink" href="#esxi" title="永久链接至标题">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-05-15 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-13 版更改: </span>增加更多命令及示例</p>
+</div>
+<p>通过 ssh 登录到 ESXi 系统后, 可以通过 <cite>passwd root</cite> 来修改密码</p>
+<p>配置 SSH 公钥登录，可能需要修改 SSHD 配置文件并重启 SSHD 服务以允许 root 登录：</p>
+<ul class="simple">
+<li>ESXi 5.0, 修改文件 <cite>/etc/ssh/keys-&lt;username&gt;/authorized_keys</cite></li>
+</ul>
+<p>很多命令的 <cite>-h</cite> 都包含了详细的例子。</p>
+<div class="section" id="esxcfg">
+<h3># esxcfg-*<a class="headerlink" href="#esxcfg" title="永久链接至标题">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><cite>esxcfg-advcfg</cite></li>
+<li><cite>esxcfg-dumppart</cite></li>
+<li><cite>esxcfg-fcoe</cite></li>
+<li><cite>esxcfg-hwiscsi</cite></li>
+<li><cite>esxcfg-info</cite></li>
+<li><cite>esxcfg-init</cite></li>
+<li><cite>esxcfg-ipsec</cite></li>
+<li><cite>esxcfg-module</cite></li>
+<li><cite>esxcfg-mpath</cite></li>
+<li><cite>esxcfg-nas</cite></li>
+<li><cite>esxcfg-nics</cite> ：网卡配置</li>
+<li><cite>esxcfg-rescan</cite></li>
+<li><cite>esxcfg-resgrp</cite></li>
+<li><cite>esxcfg-route</cite> ：路由配置</li>
+<li><cite>esxcfg-scsidevs</cite></li>
+<li><cite>esxcfg-swiscsi</cite></li>
+<li><cite>esxcfg-vmknic</cite></li>
+<li><cite>esxcfg-volume</cite></li>
+<li><cite>esxcfg-vswitch</cite></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="esxcli">
+<h3># esxcli<a class="headerlink" href="#esxcli" title="永久链接至标题">¶</a></h3>
+<p>Usage: esxcli [options] {namespace}+ {cmd} [cmd options]</p>
+<p>Options:</p>
+<blockquote>
+<div><ul class="simple">
+<li>--formatter=FORMATTER<ul>
+<li>Override the formatter to use for a given command.
+Available formatter: xml, csv, keyvalue</li>
+</ul>
+</li>
+<li>--debug<ul>
+<li>Enable debug or internal use options</li>
+</ul>
+</li>
+<li>--version<ul>
+<li>Display version information for the script</li>
+</ul>
+</li>
+<li>-?, --help<ul>
+<li>Display usage information for the script</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<p>Available Namespaces:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">esxcli</p>
+<p>Commands that operate on the esxcli system itself allowing users to get additional information.</p>
+<ul class="simple">
+<li><cite>esxcli esxcli command list</cite> 列出所有可用的命令</li>
+</ul>
+</li>
+<li><p class="first">fcoe</p>
+<p>VMware FCOE commands.</p>
+</li>
+<li><p class="first">hardware</p>
+<p>VMKernel hardware properties and commands for configuring hardware.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># esxcli esxcli command list|grep hardware</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">bootdevice</span>                                     <span class="nb">list</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">clock</span>                                          <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">clock</span>                                          <span class="nb">set</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span>                                      <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="k">global</span>                                     <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="k">global</span>                                     <span class="nb">set</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">cpu</span>                                            <span class="nb">list</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">ipmi</span><span class="o">.</span><span class="n">fru</span>                                       <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">ipmi</span><span class="o">.</span><span class="n">fru</span>                                       <span class="nb">list</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">ipmi</span><span class="o">.</span><span class="n">sdr</span>                                       <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">ipmi</span><span class="o">.</span><span class="n">sdr</span>                                       <span class="nb">list</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">ipmi</span><span class="o">.</span><span class="n">sel</span>                                       <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">ipmi</span><span class="o">.</span><span class="n">sel</span>                                       <span class="nb">list</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">memory</span>                                         <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">pci</span>                                            <span class="nb">list</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">platform</span>                                       <span class="n">get</span>
+<span class="n">hardware</span><span class="o">.</span><span class="n">trustedboot</span>                                    <span class="n">get</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">iscsi</p>
+<p>VMware iSCSI commands.</p>
+</li>
+<li><p class="first">network</p>
+<p>Operations that pertain to the maintenance of networking on an ESX host. This includes a wide variety of
+commands to manipulate virtual networking components (vswitch, portgroup, etc) as well as local host IP, DNS
+and general host networking settings.</p>
+<ul class="simple">
+<li><cite>esxcli network nic list</cite> 查看网卡信息</li>
+<li><cite>esxcli network ip route ipv4 list</cite> 查看路由（ipv4）</li>
+<li><cite>esxcli network ip dns server list</cite> 查看 dns</li>
+<li><cite>esxcli network ip interface ipv4 get</cite> 查看 ip 配置（ipv4）</li>
+</ul>
+</li>
+<li><p class="first">sched</p>
+<p>VMKernel system properties and commands for configuring scheduling related functionality.</p>
+</li>
+<li><p class="first">software</p>
+<p>Manage the ESXi software image and packages</p>
+</li>
+<li><p class="first">storage</p>
+<p>VMware storage commands.</p>
+</li>
+<li><p class="first">system</p>
+<p>VMKernel system properties and commands for configuring properties of the kernel core system.</p>
+</li>
+<li><p class="first">vm</p>
+<p>A small number of operations that allow a user to Control Virtual Machine operations.</p>
+<ul class="simple">
+<li><cite>esxcli vm process list</cite> 显示开机的虚拟机列表</li>
+<li><cite>esxcli vm process kill --type=[soft,hard,force] --world-id=WorldNumber</cite>
+关机，wordld-id 对应上一条命令的输出。
+参考： <a class="reference external" href="http://kb.vmware.com/kb/1014165">KB1014165</a></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="tcpdump-uw">
+<h3># tcpdump-uw<a class="headerlink" href="#tcpdump-uw" title="永久链接至标题">¶</a></h3>
+<p>ESXi 的抓包工具</p>
+</div>
+<div class="section" id="vim-cmd">
+<h3># vim-cmd<a class="headerlink" href="#vim-cmd" title="永久链接至标题">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># vim-cmd</span>
+<span class="n">Commands</span> <span class="n">available</span> <span class="n">under</span> <span class="o">/</span><span class="p">:</span>
+<span class="n">hbrsvc</span><span class="o">/</span>       <span class="n">internalsvc</span><span class="o">/</span>  <span class="n">solo</span><span class="o">/</span>         <span class="n">vmsvc</span><span class="o">/</span>
+<span class="n">hostsvc</span><span class="o">/</span>      <span class="n">proxysvc</span><span class="o">/</span>     <span class="n">vimsvc</span><span class="o">/</span>       <span class="n">help</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">vmsvc/</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>vim-cmd vmsvc/getallvms</cite> 第一列显示 vmid</li>
+<li><cite>vim-cmd vmsvc/power.getstate &lt;vmid&gt;</cite> 查看虚拟机的电源状态</li>
+<li><cite>vim-cmd vmsvc/power.on &lt;vmid&gt;</cite> 开机</li>
+<li><cite>vim-cmd vmsvc/power.off &lt;vmid&gt;</cite> 关机</li>
+</ul>
+<p>参考 <a class="reference external" href="http://kb.vmware.com/kb/1038043">KB1038043</a></p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="vsish">
+<h3># vsish<a class="headerlink" href="#vsish" title="永久链接至标题">¶</a></h3>
+<p>VMkernel Sys Info Shell</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/&gt;</span> <span class="n">help</span>
+        <span class="n">cd</span>       <span class="o">-</span> <span class="n">change</span> <span class="n">working</span> <span class="n">directory</span>
+        <span class="n">ls</span>       <span class="o">-</span> <span class="nb">list</span> <span class="n">nodes</span>
+        <span class="nb">dir</span>      <span class="o">-</span> <span class="nb">list</span> <span class="n">nodes</span>
+        <span class="n">pwd</span>      <span class="o">-</span> <span class="nb">print</span> <span class="n">working</span> <span class="n">directory</span>
+        <span class="n">get</span>      <span class="o">-</span> <span class="n">perform</span> <span class="n">GET</span> <span class="n">operation</span>
+        <span class="n">cat</span>      <span class="o">-</span> <span class="n">synonym</span> <span class="k">for</span> <span class="n">GET</span>
+        <span class="nb">set</span>      <span class="o">-</span> <span class="n">perform</span> <span class="n">SET</span> <span class="n">operation</span>
+        <span class="n">typeget</span>  <span class="o">-</span> <span class="n">get</span> <span class="nb">type</span> <span class="n">information</span>
+        <span class="n">typels</span>   <span class="o">-</span> <span class="nb">list</span> <span class="nb">type</span><span class="o">-</span><span class="n">level</span> <span class="n">nodes</span>
+        <span class="n">loglevel</span>         <span class="o">-</span> <span class="nb">set</span> <span class="n">debugging</span> <span class="n">log</span> <span class="n">level</span>
+        <span class="n">exit</span>     <span class="o">-</span> <span class="n">quit</span> <span class="n">shell</span>
+        <span class="n">quit</span>     <span class="o">-</span> <span class="n">quit</span> <span class="n">shell</span>
+        <span class="n">q</span>        <span class="o">-</span> <span class="n">quit</span> <span class="n">shell</span>
+        <span class="n">help</span>     <span class="o">-</span> <span class="nb">print</span> <span class="n">help</span>
+<span class="o">/&gt;</span> <span class="n">ls</span>
+<span class="n">tpm</span><span class="o">/</span>
+<span class="n">statsRegistry</span><span class="o">/</span>
+<span class="n">killswitches</span><span class="o">/</span>
+<span class="n">vmkAccess</span><span class="o">/</span>
+<span class="n">worldlets</span><span class="o">/</span>
+<span class="n">power</span><span class="o">/</span>
+<span class="n">perf</span><span class="o">/</span>
+<span class="n">timer</span><span class="o">/</span>
+<span class="n">storage</span><span class="o">/</span>
+<span class="n">vmkModules</span><span class="o">/</span>
+<span class="n">system</span><span class="o">/</span>
+<span class="n">userworld</span><span class="o">/</span>
+<span class="n">sched</span><span class="o">/</span>
+<span class="n">hardware</span><span class="o">/</span>
+<span class="n">reliability</span><span class="o">/</span>
+<span class="n">config</span><span class="o">/</span>
+<span class="n">worldGroups</span><span class="o">/</span>
+<span class="n">world</span><span class="o">/</span>
+<span class="n">vm</span><span class="o">/</span>
+<span class="n">rpcStats</span><span class="o">/</span>
+<span class="n">memory</span><span class="o">/</span>
+<span class="n">net</span><span class="o">/</span>
+<span class="n">sysInfoNodeHashes</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last"><cite>set /reliability/crashMe/Panic</cite> 让 ESXi 崩溃。</p>
+</div>
+<p>完整的配置项请参考 <a class="reference external" href="https://s3.amazonaws.com/virtuallyghetto-download/complete_vsish_config.html">这里</a></p>
+</div>
+<div class="section" id="id2">
+<h3>问题解决汇总<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id3">
+<h4>孤立的虚拟机<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h4>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2015-06-05 新版功能: </span>创建</p>
+</div>
+<p>ESXi 非正常重启后有时会出现虚拟机为 <code class="docutils literal notranslate"><span class="pre">孤立的</span></code> 的情况，修复方案如下：</p>
+<ul class="simple">
+<li>可能是 <cite>/etc/vmware/hostd/vmInventory.xml</cite> 文件损坏，例如该文件内显示为
+<code class="docutils literal notranslate"><span class="pre">孤立的</span></code> 几个虚拟机的路径有错。修复该文件后重启 ESXi。</li>
+<li>使用原虚拟机的虚拟磁盘重建虚拟机。</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="shell.html" class="btn btn-neutral float-right" title="Shell 及常用命令" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="virtualization.html" class="btn btn-neutral" title="虚拟化" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

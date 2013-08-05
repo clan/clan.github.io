@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linux 下的 iSCSI initiator 部署 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="初始化" href="init.html"/>
+        <link rel="next" title="各种软件的离线版下载地址" href="offline.html"/>
+        <link rel="prev" title="建立本地的（可信）APT 源" href="apt-signed-repo.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="init.html">初始化</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pxe.html">PXE 安装系统配置 Howto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="partition.html">存储分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvm.html">LVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apt-signed-repo.html">建立本地的（可信）APT 源</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux 下的 iSCSI initiator 部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offline.html">各种软件的离线版下载地址</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="init.html">初始化</a> &raquo;</li>
+        
+      <li>Linux 下的 iSCSI initiator 部署</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/iscsi.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux-iscsi-initiator">
+<h1>Linux 下的 iSCSI initiator 部署<a class="headerlink" href="#linux-iscsi-initiator" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-04-11 新版功能: </span>创建</p>
+</div>
+<p>以 Ubuntu 系统上部署 <a class="reference external" href="https://en.wikipedia.org/wiki/ISCSI">iSCSI</a>
+initiator 为例，首先执行 <cite>apt-get install open-iscsi multipath-tools</cite>
+安装必要的软件。前者为 iSCSI initiator 软件，后者提供
+<a class="reference external" href="https://en.wikipedia.org/wiki/Linux_DM_Multipath">multipath</a> 支持。</p>
+<p>iSCSI initiator 的部署过程非常简单，依次如下操作即可：</p>
+<ol class="arabic">
+<li><p class="first">发现 target</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># iscsiadm -m discovery -t sendtargets -p 192.168.2.200:3260</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">2.201</span><span class="p">:</span><span class="mi">3260</span><span class="p">,</span><span class="mi">0</span> <span class="n">iqn</span><span class="o">.</span><span class="mi">1997</span><span class="o">-</span><span class="mf">05.</span><span class="n">xxxxxx</span><span class="p">:</span><span class="n">default</span><span class="o">-</span><span class="n">target</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">2.200</span><span class="p">:</span><span class="mi">3260</span><span class="p">,</span><span class="mi">0</span> <span class="n">iqn</span><span class="o">.</span><span class="mi">1997</span><span class="o">-</span><span class="mf">05.</span><span class="n">xxxxxx</span><span class="p">:</span><span class="n">default</span><span class="o">-</span><span class="n">target</span>
+</pre></div>
+</div>
+<p>这里可以看到该 target 有两个 ip 地址，可以配置 multipath 支持。</p>
+</li>
+<li><p class="first">依次登录上一步输出的 target 和 ip 地址，并设置自动登录：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># iscsiadm -m node --targetname iqn.1997-05.xxxxxx:default-target -p 192.168.2.201 --login</span>
+<span class="n">Logging</span> <span class="ow">in</span> <span class="n">to</span> <span class="p">[</span><span class="n">iface</span><span class="p">:</span> <span class="n">default</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">iqn</span><span class="o">.</span><span class="mi">1997</span><span class="o">-</span><span class="mf">05.</span><span class="n">xxxxxx</span><span class="p">:</span><span class="n">default</span><span class="o">-</span><span class="n">target</span><span class="p">,</span> <span class="n">portal</span><span class="p">:</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.201</span><span class="p">,</span><span class="mi">3260</span><span class="p">]</span>
+<span class="n">Login</span> <span class="n">to</span> <span class="p">[</span><span class="n">iface</span><span class="p">:</span> <span class="n">default</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">iqn</span><span class="o">.</span><span class="mi">1997</span><span class="o">-</span><span class="mf">05.</span><span class="n">xxxxxx</span><span class="p">:</span><span class="n">default</span><span class="o">-</span><span class="n">target</span><span class="p">,</span> <span class="n">portal</span><span class="p">:</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">2.201</span><span class="p">,</span><span class="mi">3260</span><span class="p">]:</span> <span class="n">successful</span>
+<span class="c1"># iscsiadm -m node --targetname iqn.1997-05.xxxxxx:default-target --op update -n node.startup -v automatic</span>
+</pre></div>
+</div>
+<p>此时 dmesg 能看到内核的输出信息如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scsi1</span> <span class="p">:</span> <span class="n">iSCSI</span> <span class="n">Initiator</span> <span class="n">over</span> <span class="n">TCP</span><span class="o">/</span><span class="n">IP</span>
+<span class="n">scsi</span> <span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">Direct</span><span class="o">-</span><span class="n">Access</span>     <span class="n">Proware</span>  <span class="n">proIPS</span>           <span class="mi">120</span>  <span class="n">PQ</span><span class="p">:</span> <span class="mi">0</span> <span class="n">ANSI</span><span class="p">:</span> <span class="mi">4</span>
+<span class="n">sd</span> <span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdb</span><span class="p">]</span> <span class="mi">2306867200</span> <span class="mi">512</span><span class="o">-</span><span class="n">byte</span> <span class="n">logical</span> <span class="n">blocks</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.18</span> <span class="n">TB</span><span class="o">/</span><span class="mf">1.07</span> <span class="n">TiB</span><span class="p">)</span>
+<span class="n">sd</span> <span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdb</span><span class="p">]</span> <span class="n">Write</span> <span class="n">Protect</span> <span class="ow">is</span> <span class="n">off</span>
+<span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdb</span><span class="p">]</span> <span class="n">Mode</span> <span class="n">Sense</span><span class="p">:</span> <span class="n">bb</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span>
+<span class="n">sd</span> <span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdb</span><span class="p">]</span> <span class="n">Write</span> <span class="n">cache</span><span class="p">:</span> <span class="n">enabled</span><span class="p">,</span> <span class="n">read</span> <span class="n">cache</span><span class="p">:</span> <span class="n">enabled</span><span class="p">,</span> <span class="n">doesn</span><span class="s1">&#39;t support DPO or FUA</span>
+ <span class="n">sdb</span><span class="p">:</span> <span class="n">sdb1</span>
+<span class="n">sd</span> <span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdb</span><span class="p">]</span> <span class="n">Attached</span> <span class="n">SCSI</span> <span class="n">disk</span>
+</pre></div>
+</div>
+<p>如果在发现 target 时没有多个 ip，则 iSCSI 的配置到此结束。后续可以直接对 sdb
+进行相关操作即可。</p>
+</li>
+<li><p class="first">多路径支持
+如果有多个 ip，则可以继续配置多路径的支持。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># multipath -ll
+32017001378a8a9ff dm-0 Proware,proIPS
+size=1.1T features=&#39;0&#39; hwhandler=&#39;0&#39; wp=rw
+\`-+- policy=&#39;round-robin 0&#39; prio=1 status=active
+     |- 1:0:0:0 sdb 8:16 active ready  running
+     \`- 2:0:0:0 sdc 8:32 active ready  running
+</pre></div>
+</div>
+<p>此时在 /dev/mapper 下能发现名为 32017001378a8a9ff 的存储设备（该名字定义为
+World Wide Identifier，即 WWID ）。
+使用命令 <cite>iptables -I OUTPUT -o eth0 -d 192.168.2.201 -j DROP</cite> drop 本机和
+iSCSI target 其中一个 ip 之间的通信，这时可以发现状态变化：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># multipath -ll
+32017001378a8a9ff dm-0 Proware,proIPS
+size=1.1T features=&#39;0&#39; hwhandler=&#39;0&#39; wp=rw
+\`-+- policy=&#39;round-robin 0&#39; prio=1 status=active
+     |- 2:0:0:0 sdc 8:32 active faulty running
+     \`- 1:0:0:0 sdb 8:16 active ready  running
+# multipath -ll
+32017001378a8a9ff dm-0 Proware,proIPS
+size=1.1T features=&#39;0&#39; hwhandler=&#39;0&#39; wp=rw
+\`-+- policy=&#39;round-robin 0&#39; prio=1 status=active
+     |- 2:0:0:0 sdc 8:32 failed faulty running
+     \`- 1:0:0:0 sdb 8:16 active ready  running
+</pre></div>
+</div>
+<p>dmesg 亦能看到相信的信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="mf">5260.772369</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">rejecting</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">to</span> <span class="n">offline</span> <span class="n">device</span>
+<span class="p">[</span> <span class="mf">5260.772727</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">killing</span> <span class="n">request</span>
+<span class="p">[</span> <span class="mf">5260.772732</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">rejecting</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">to</span> <span class="n">offline</span> <span class="n">device</span>
+<span class="p">[</span> <span class="mf">5260.773082</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">killing</span> <span class="n">request</span>
+<span class="p">[</span> <span class="mf">5260.773084</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">rejecting</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">to</span> <span class="n">offline</span> <span class="n">device</span>
+<span class="p">[</span> <span class="mf">5260.773434</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">killing</span> <span class="n">request</span>
+<span class="p">[</span> <span class="mf">5260.773448</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">Unhandled</span> <span class="n">error</span> <span class="n">code</span>
+<span class="p">[</span> <span class="mf">5260.773449</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span>
+<span class="p">[</span> <span class="mf">5260.773451</span><span class="p">]</span> <span class="n">Result</span><span class="p">:</span> <span class="n">hostbyte</span><span class="o">=</span><span class="mh">0x01</span> <span class="n">driverbyte</span><span class="o">=</span><span class="mh">0x00</span>
+<span class="p">[</span> <span class="mf">5260.773453</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">CDB</span><span class="p">:</span>
+<span class="p">[</span> <span class="mf">5260.773455</span><span class="p">]</span> <span class="n">cdb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mh">0x28</span><span class="p">:</span> <span class="mi">28</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">08</span> <span class="mi">00</span>
+<span class="p">[</span> <span class="mf">5260.773463</span><span class="p">]</span> <span class="n">end_request</span><span class="p">:</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">error</span><span class="p">,</span> <span class="n">dev</span> <span class="n">sdc</span><span class="p">,</span> <span class="n">sector</span> <span class="mi">0</span>
+<span class="p">[</span> <span class="mf">5260.773819</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">Unhandled</span> <span class="n">error</span> <span class="n">code</span>
+<span class="p">[</span> <span class="mf">5260.773821</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span>
+<span class="p">[</span> <span class="mf">5260.773822</span><span class="p">]</span> <span class="n">Result</span><span class="p">:</span> <span class="n">hostbyte</span><span class="o">=</span><span class="mh">0x01</span> <span class="n">driverbyte</span><span class="o">=</span><span class="mh">0x00</span>
+<span class="p">[</span> <span class="mf">5260.773824</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">CDB</span><span class="p">:</span>
+<span class="p">[</span> <span class="mf">5260.773825</span><span class="p">]</span> <span class="n">cdb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mh">0x28</span><span class="p">:</span> <span class="mi">28</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">08</span> <span class="mi">00</span>
+<span class="p">[</span> <span class="mf">5260.773831</span><span class="p">]</span> <span class="n">end_request</span><span class="p">:</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">error</span><span class="p">,</span> <span class="n">dev</span> <span class="n">sdc</span><span class="p">,</span> <span class="n">sector</span> <span class="mi">0</span>
+<span class="p">[</span> <span class="mf">5260.774186</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">Unhandled</span> <span class="n">error</span> <span class="n">code</span>
+<span class="p">[</span> <span class="mf">5260.774187</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span>
+<span class="p">[</span> <span class="mf">5260.774188</span><span class="p">]</span> <span class="n">Result</span><span class="p">:</span> <span class="n">hostbyte</span><span class="o">=</span><span class="mh">0x01</span> <span class="n">driverbyte</span><span class="o">=</span><span class="mh">0x00</span>
+<span class="p">[</span> <span class="mf">5260.774190</span><span class="p">]</span> <span class="n">sd</span> <span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">sdc</span><span class="p">]</span> <span class="n">CDB</span><span class="p">:</span>
+<span class="p">[</span> <span class="mf">5260.774191</span><span class="p">]</span> <span class="n">cdb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mh">0x2a</span><span class="p">:</span> <span class="mi">2</span><span class="n">a</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">01</span> <span class="mi">2</span><span class="n">a</span> <span class="n">e0</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">08</span> <span class="mi">00</span>
+<span class="p">[</span> <span class="mf">5260.774197</span><span class="p">]</span> <span class="n">end_request</span><span class="p">:</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">error</span><span class="p">,</span> <span class="n">dev</span> <span class="n">sdc</span><span class="p">,</span> <span class="n">sector</span> <span class="mi">76512</span>
+<span class="p">[</span> <span class="mf">5260.774562</span><span class="p">]</span> <span class="n">device</span><span class="o">-</span><span class="n">mapper</span><span class="p">:</span> <span class="n">multipath</span><span class="p">:</span> <span class="n">Failing</span> <span class="n">path</span> <span class="mi">8</span><span class="p">:</span><span class="mf">32.</span>
+</pre></div>
+</div>
+<p>syslog 的信息（后面两条信息为恢复通信后的输出）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multipathd</span><span class="p">:</span> <span class="n">iscsi_data</span><span class="p">:</span> <span class="n">sdc</span> <span class="o">-</span> <span class="n">directio</span> <span class="n">checker</span> <span class="n">reports</span> <span class="n">path</span> <span class="ow">is</span> <span class="n">up</span>
+<span class="n">multipathd</span><span class="p">:</span> <span class="mi">8</span><span class="p">:</span><span class="mi">32</span><span class="p">:</span> <span class="n">reinstated</span>
+<span class="n">multipathd</span><span class="p">:</span> <span class="n">iscsi_data</span><span class="p">:</span> <span class="n">remaining</span> <span class="n">active</span> <span class="n">paths</span><span class="p">:</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>编辑 multipath 配置文件 /etc/multipath.conf，内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">defaults</span> <span class="p">{</span>
+    <span class="n">udev_dir</span>                <span class="o">/</span><span class="n">dev</span>
+    <span class="n">polling_interval</span>        <span class="mi">5</span>
+    <span class="n">selector</span>                <span class="s2">&quot;round-robin 0&quot;</span>
+    <span class="n">path_grouping_policy</span>    <span class="n">multibus</span>
+    <span class="n">getuid_callout</span>          <span class="s2">&quot;/lib/udev/scsi_id --whitelisted --device=/dev/%n&quot;</span>
+    <span class="n">prio_callout</span>            <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">true</span>
+    <span class="n">path_checker</span>            <span class="n">directio</span>
+    <span class="n">prio</span>                    <span class="n">const</span>
+    <span class="n">rr_min_io</span>               <span class="mi">100</span>
+    <span class="n">rr_weight</span>               <span class="n">priorities</span>
+    <span class="n">failback</span>                <span class="n">immediate</span>
+    <span class="n">no_path_retry</span>           <span class="n">fail</span>
+    <span class="n">user_friendly_name</span>      <span class="n">yes</span>
+<span class="p">}</span>
+<span class="n">blacklist</span> <span class="p">{</span>
+    <span class="n">devnode</span> <span class="s2">&quot;^(ram|sda|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*&quot;</span>
+    <span class="n">devnode</span> <span class="s2">&quot;^hd[a-z][[0-9]*]&quot;</span>
+    <span class="n">devnode</span> <span class="s2">&quot;^vd[a-z]&quot;</span>
+    <span class="n">devnode</span> <span class="s2">&quot;^cciss!c[0-9]d[0-9]*[p[0-9]*]&quot;</span>
+<span class="p">}</span>
+<span class="n">multipaths</span> <span class="p">{</span>
+    <span class="n">multipath</span> <span class="p">{</span>
+        <span class="n">wwid</span> <span class="mi">32017001378</span><span class="n">a8a9ff</span>
+        <span class="n">alias</span> <span class="n">iscsi_data</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>注意 blacklist 部分，其目的是把本地存储设备排除在 multipath 外。在
+multipaths 部分，wwid 在 multipath 命令的输出中能看到，alias 为别名。
+重启 multipath 服务后，能看到 /dev/mapper 下出现名为 iscsi_data 的存储设备。
+之后的操作使用 /dev/mapper/iscsi_data （而不是 /dev/sdb 或 /dev/sdc）
+即可利用到 multipath 功能。</p>
+</li>
+</ol>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="offline.html" class="btn btn-neutral float-right" title="各种软件的离线版下载地址" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="apt-signed-repo.html" class="btn btn-neutral" title="建立本地的（可信）APT 源" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

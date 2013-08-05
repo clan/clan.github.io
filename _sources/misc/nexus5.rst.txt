@@ -1,0 +1,36 @@
+Nexus 5
+=======
+
+.. versionadded:: @2014-02-20
+   创建
+
+#. 注册 [Tenso](http://www.tenso.com/) 帐号，完成实名认证，获取转运地址。
+#. 通过日本 VPN，登录 Google Play 下单 ::
+
+    在线购买 1月20日 下午6:31
+    1月21日 » 交易金额 JP¥ 39,800 已过账。
+    1月21日 » 您所购买的商品已发货。
+              YAMATO 跟踪编号：xxxxxxxxxxxx
+
+#. 跟踪包裹 ::
+
+    貨物状況     日付    　　　　　営業所名　　　　　 営業所コード
+    荷受　　  2014/01/21 ヤマト国際物流香港（東日２） 086530
+    出荷　　  2014/01/22 ヤマト国際物流香港（東日２） 086530
+    到着　　  2014/01/22 羽田小口通関支店　　　　　　 541720
+    輸入通関  2014/01/22 羽田小口通関支店　　　　　　 541720
+    国内発送  2014/01/22 国際宅急便サービスセンター   029970
+    配達完了  2014/01/23 千住曙センター　　　　　　　 020354
+
+#. Tenso 查货物信息，收到之后支付转运费用（1,780日元，服务手续费490日元 +
+   EMS 运费 1,240日元 + EMS保险 50 日元 + 集中包装手续费 0 日元），等待发货。
+#. 跟踪 EMS 订单 ::
+
+     01/24/2014 18:00  Posting/Collection                        TOKYO INT(138-8799)
+     01/24/2014 21:04  Arrival at outward office of exchange     TOKYO INT(138-8799)
+     01/24/2014 22:29  Dispatch from outward office of exchange  TOKYO INT(138-8799)
+     01/25/2014 20:27  Arrival at inward office of exchange      BEIJING ZONE 1 M
+     01/26/2014 13:57  Departure from inward office of exchange  BEIJING ZONE 1 M
+     01/27/2014 18:12  Final delivery                            100016
+
+#. 收货，可能需要支付关税（不超过 ￥200）。

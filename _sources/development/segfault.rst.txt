@@ -1,0 +1,82 @@
+由段错误信息定位错误代码
+========================
+
+.. versionadded:: @2014-04-17
+   创建
+
+段错误的定义请参考\ :wiki:`维基<Segmentation_fault>`\。
+对应用层代码而言，一般来说，当进程试图访问未被操作系统允许访问（或映射）的地址
+或者尝试更新只读内存区时，操作系统会执行相应的保护，发送信号（SIGSEGV）
+给该进程。如果进程未安装处理该信号的句柄，则缺省动作是程序非正常退出。对 x86
+下的Linux系统，如果设置了 sysctl 变量 debug.exception-trace 为 1，则内核同时会
+输出如下的类似信息： ::
+
+  slapd[6293]: segfault at 0 ip 00007ff6877cb1ed sp 00007ff6477fd4d0 error 4 in libldap_r-2.4.so.2.9.1[7ff687789000+56000]
+
+该信息的各字段解释如下：
+
+* slapd[6293]：进程程序名及 pid
+* address：进程尝试访问的内存地址
+* ip：指令指针地址
+* sp：栈指针
+* error：错误码，参考 "arch/x86/mm/fault.c" 中的枚举变量 'x86_pf_error_code' ::
+
+    Page fault error code bits:
+    bit 0  0: no page found      1: protection fault
+    bit 1  0: read access        1: write access
+    bit 2  0: kernel-mode access 1: user-mode access
+    bit 3  1: use of reserved bit detected
+    bit 4  1: fault was an instruction fetch
+
+  * [7ff687789000+56000]：产生段错误的代码所属目标（共享库等）被映射到虚存的
+    起始地址和大小。ip 的值应该在该范围之内。
+
+因此，上面的信息解释可以解释为：pid 为 6293 的 slapd 进程在尝试访问地址 0
+时出错，出错代码为 libldap_r-2.4.so.2.9.1 内的函数，其起始地址为
+0x00007ff6877cb1ed - 0x7ff687789000 = 0x421ed。该地址对应的函数可以通过
+`objdump -d /usr/lib/libldap_r-2.4.so.2.9.1 | less` 搜索 421ed 定位到： ::
+
+  0000000000040a70 <ldap_pvt_tls_get_peer_dn>:
+     .............
+     421e7:     75 71                   jne    4225a <ldap_pvt_tls_get_peer_dn+0x17ea>
+     421e9:     48 8b 6f 18             mov    0x18(%rdi),%rbp
+     421ed:     48 8b 7d 00             mov    0x0(%rbp),%rdi
+     421f1:     e8 3a fb fc ff          callq  11d30 <SSL_write@plt>
+
+对于有 coredump 文件生成的代码通过 gdb 能很快定位到相应的代码。
+然而有时程序崩溃时会没有 coredump 文件生成，如果在 gdb 环境中，可以使用
+gdb 命令 generate-core-file 来生成该文件供事后进一步的分析。 ::
+
+  (gdb) help generate-core-file
+  Save a core file with the current state of the debugged process.
+  Argument is optional filename.  Default filename is 'core.<process_id>'.
+  (gdb) break main
+  Breakpoint 1 at 0x400570
+  (gdb) r
+  Starting program: /home/users/liuzx/./a.out
+
+  Breakpoint 1, 0x0000000000400570 in main ()
+  (gdb) generate-core-file
+  Saved corefile core.9420
+
+另外，glibc中也提供了一个脚本 catchsegv 来辅助捕获发生段错误时的信息。
+其原理是利用 LD_PRELOAD 预加载 /lib64/libSegFault.so 来实现的。 ::
+
+  # catchsegv ./a.out
+  *** Segmentation fault
+  Register dump:
+
+   RAX: 00007fe07e50a9c4   RBX: 0000000000000000   RCX: 00007fe07e50a8d0
+  ...............
+
+  Backtrace:
+  ./a.out(main+0x26)[0x7fe07e50a8f6]
+  /lib64/libc.so.6(__libc_start_main+0xf5)[0x7fe07dd5ab95]
+  ./a.out(+0x7e9)[0x7fe07e50a7e9]
+
+  Memory map:
+
+  7fe07db1f000-7fe07db34000 r-xp 00000000 08:02 1576197 /usr/lib64/gcc/x86_64-pc-linux-gnu/4.7.3/libgcc_s.so.1
+  ......
+  7fe07e0e1000-7fe07e0e5000 r-xp 00000000 08:02 1592614 /lib64/libSegFault.so
+  .......

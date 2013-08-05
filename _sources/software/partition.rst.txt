@@ -1,0 +1,97 @@
+存储分区
+========
+
+.. versionadded:: @2013-11-13
+   新建，resize
+.. versionchanged:: @2019-02-23
+   增加分区以及更新命令
+.. versionchanged:: @2019-02-26
+   增加分区调整流程
+
+命令
+----
+
+parted
+^^^^^^
+
+:command:`parted --script /dev/xxx mklabel gpt`
+
+In order to align partition with parted you can use --align option.
+Valid alignment types are:
+
+* none - Use the minimum alignment allowed by the disk type.
+* cylinder - Align partitions to cylinders.
+* minimal - Use minimum alignment as given by the disk topology information.
+  This and the opt value will use layout information provided by the disk to
+  align the logical partition table addresses to actual physical blocks on
+  the disks. The min value is the minimum alignment needed to align the
+  partition properly to physical blocks, which avoids performance degradation.
+* optimal - Use optimum alignment as given by the disk topology information.
+  This aligns to a multiple of the physical block size in a way that
+  guarantees optimal performance.
+
+sfdisk
+^^^^^^
+
+  * sfdisk --dump /dev/sdc > sdc.dump
+
+      remove label-id, uuid, before used by import
+
+  * sfdisk --force /dev/sdl < sdc.dump
+
+通知内核更新分区表
+------------------
+
+* blockdev --rereadpt /dev/diskname
+* partprobe /dev/diskname
+
+.. _resize:
+
+怎样调整文件系统大小
+--------------------
+
+增加文件系统大小的方法为调整底层设备（分区或LVM逻辑卷）的大小，然后调用文件
+系统的相关命令调整其数据结构适合实际大小。如果是减少文件系统的大小，则反过来
+执行相应的过程。
+
+文件系统调整命令随文件系统类型而异，对 ext2/3/4 系列文件系统其命令为
+resize2fs，其他文件系统则参考相应的文档。
+
+底层设备的大小调整随设备类型而异。对 LVM 逻辑卷，执行 lvextend/lvreduce 命令。
+对 MSDOS 或 GPT 格式的分区表，执行 fdisk/parted 命令，删除原有分区后再
+重建即可。注意重建的分区表起始位置不要改变，即仅调整分区的结束位置。
+
+需要说明的是parted 程序在 2.4 和之前版本自带有 resize 命令，但之后的版本该命令
+被取消了。另外，resize 命令本身也缺乏对一些文件系统的支持，如下对 ext4 文件系
+统执行操作时的提示： ::
+
+    Error: File system has an incompatible feature enabled.  Compatible features
+    are has_journal, dir_index, filetype, sparse_super and large_file.
+    Use tune2fs or debugfs to remove features.
+
+因此还是建议使用删除后再重建分区的方法。注意，在操作之前首先调整其大小显示单位
+格式为可绝对定位的单位，如 s (sectors) 或 cyl (cylinders) 或 B (Bytes)。
+
+最后需要强调的是，对重要数据，尽可能的做好备份，防止误操作导致的数据丢失。
+
+增加流程：
+
+#. 停止所有使用到待调整分区的程序
+#. umount 待调整的分区
+#. fdisk
+#. cryptsetup
+#. pvresize
+#. lvresize
+#. resize2fs
+#. mount
+
+缩小流程：
+
+#. 停止所有使用到待调整分区的程序
+#. umount 待调整的分区
+#. resize2fs
+#. lvreduce
+#. pvresize
+#. cryptsetup
+#. fdisk
+#. mount

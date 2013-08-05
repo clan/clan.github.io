@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linux Capabilities &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="API" href="api.html"/>
+        <link rel="next" title="自然语言处理" href="nlp.html"/>
+        <link rel="prev" title="异步事件的 IO 复用处理机制" href="iomultiplex.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="listen-backlog.html">listen() 的 backlog 及 TCP 相关参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recvmmsg.html">新的 socket 读函数：recvmmsg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iomultiplex.html">异步事件的 IO 复用处理机制</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux Capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api.html">API</a> &raquo;</li>
+        
+      <li>Linux Capabilities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/development/linux-capabilities.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux-capabilities">
+<h1>Linux Capabilities<a class="headerlink" href="#linux-capabilities" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-11-29 新版功能: </span>创建</p>
+</div>
+<p>*nix 系统上某些程序（如 passwd，ping等）在正常运行时的某些操作需要有 root 权限
+才可以正常进行。如 passwd 需要能修改 /etc/shadow 文件，ping 需要能操作 RAW
+Socket。传统的应对方法是通过 <cite>chmod +s file</cite> 给这些程序添加
+<a class="reference external" href="https://en.wikipedia.org/wiki/Setuid">SUID</a>位，
+这样程序执行时会以其属主的身份来执行，即该程序运行时的 euid 为文件属主。
+如果文件属主为 root，那么程序就能正常执行需要 root 身份才能操作的任务。</p>
+<p>但这种方式会有相应的安全隐患，尤其是对那些对安全性考虑不周的程序。其原因是
+SUID 对权限的控制是 &quot;all or nothing&quot;，即要么没有权限，要么全都有。
+针对这个问题，Linux 提供了一种新的方式即 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/capabilities(7)">capabilities(7)</a></em>
+来（部分）解决这个问题。通过赋给可执行程序一些系统预定义好的细粒度的权限，
+程序正常执行时就不再需要具有完全的 root 权限。如
+<cite>setcap cap_net_raw+ep /bin/ping</cite> 给 ping 赋予仅能操作 RAW Socket 的权限。
+可用的权限请参考 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/capabilities(7)">capabilities(7)</a></em>。</p>
+<p>通过 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/setcap(8)">setcap(8)</a></em> 使用 capabilities 需要内核和文件系统（支持扩展属性）
+的支持。还有一种办法是直接在代码里调用相关的 api。例如，基于安全考虑，
+web 服务器一般在以 root 身份完成 bind 操作后（因为 &lt;1024 的端口需要 root
+权限才能 bind）通常都会以另一个非 root 身份来运行。但如果这时我们修改了配置
+文件要求其在另外一个端口（&lt;1024）也监听，除了完全重启该程序外没有别的办法。
+如果我们正确的保留了相应的 capabilities，则可以简单的监听新的端口即可，
+用不着重启程序。其大致流程如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prctl</span><span class="p">(</span><span class="n">PR_SET_KEEPCAPS</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="n">caps</span> <span class="o">=</span> <span class="n">cap_init</span><span class="p">();</span>
+<span class="n">curcaps</span> <span class="o">=</span> <span class="n">cap_get_proc</span><span class="p">();</span>
+<span class="n">capval</span> <span class="o">=</span> <span class="n">CAP_NET_BIND_SERVICE</span><span class="p">;</span>
+<span class="n">cap_flag_value_t</span> <span class="n">curval</span><span class="p">;</span>
+<span class="n">err</span> <span class="o">=</span> <span class="n">cap_get_flag</span><span class="p">(</span><span class="n">curcaps</span><span class="p">,</span> <span class="n">capval</span><span class="p">,</span> <span class="n">CAP_PERMITTED</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">curval</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">curval</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cap_set_flag</span><span class="p">(</span><span class="n">caps</span><span class="p">,</span> <span class="n">CAP_EFFECTIVE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">capval</span><span class="p">,</span> <span class="n">CAP_SET</span><span class="p">);</span>
+    <span class="n">cap_set_flag</span><span class="p">(</span><span class="n">caps</span><span class="p">,</span> <span class="n">CAP_PERMITTED</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">capval</span><span class="p">,</span> <span class="n">CAP_SET</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">cap_set_proc</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+<span class="o">...</span>
+
+<span class="n">setuid</span>
+<span class="n">fork</span> <span class="ow">or</span> <span class="n">pthread_create</span>
+
+<span class="o">...</span>
+<span class="n">cap_free</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+<span class="n">cap_free</span><span class="p">(</span><span class="n">curcaps</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>需要说明的是 capabilities 也并不能用来完全解决 SUID 所面临的问题，使用不当也会
+有相应的安全问题。可以参考
+<a class="reference external" href="http://forums.grsecurity.net/viewtopic.php?f=7&amp;t=2522&amp;sid=c6fbcf62fd5d3472562540a7e608ce4e">False Boundaries and Arbitrary Code Execution</a></p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nlp.html" class="btn btn-neutral float-right" title="自然语言处理" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="iomultiplex.html" class="btn btn-neutral" title="异步事件的 IO 复用处理机制" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

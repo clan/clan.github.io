@@ -1,0 +1,70 @@
+clocksource 解释
+================
+
+.. versionchanged:: @2018-01-14
+   创建
+
+.. index :: Linux
+   single: Linux; clocksource
+
+内核日志： ::
+
+    clocksource: timekeeping watchdog on CPU7: Marking clocksource 'tsc' as unstable because the skew is too large:
+    clocksource:                       'hpet' wd_now: ec7fd07a wd_last: f6240e67 mask: ffffffff
+    clocksource:                       'tsc' cs_now: db522085db96 cs_last: 9d30c4ea512c mask: ffffffffffffffff
+    clocksource: Switched to clocksource hpet
+
+If system clcok source is hpet, then gettimeofday will do syscall gettimeofday,
+not for clocksource tsc. So we should add gettimeofday to seccomp too,
+otherwise: ::
+
+    [WARN/seccomp] invalid syscall attempted: gettimeofday(96)
+    [CRIT/seccomp] invalid syscall not allowed: stop here
+
+如下测试代码演示差异：
+
+.. code-block:: c
+    :linenos:
+
+    #include <stdio.h>
+    #include <sys/time.h>
+
+    int main(int argc, char **argv)
+    {
+            struct timeval tv;
+
+            gettimeofday(&tv, NULL);
+            printf("%ld\n", tv.tv_sec);
+            return 0;
+    }
+
+下面是不同 clocksource 时 strace 的差异： ::
+
+    $ cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+    hpet
+    $ strace -f ./a.out
+    execve("./a.out", ["./a.out"], [/* 39 vars */]) = 0
+    brk(NULL)                               = 0x559844c55000
+    …
+    gettimeofday({tv_sec=1512111369, tv_usec=671919}, NULL) = 0
+    fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 0), ...}) = 0
+    brk(NULL)                               = 0x559844c55000
+    brk(0x559844c76000)                     = 0x559844c76000
+    write(1, "1512111369\n", 111512111369
+    )            = 11
+    exit_group(0)                           = ?
+    +++ exited with 0 +++
+
+    $ cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+    tsc
+    $ strace -f ./a.out
+    execve("./a.out", ["./a.out"], [/* 47 vars */]) = 0
+    brk(NULL)                               = 0x7f5b0b28e000
+    …
+    fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 96), ...}) = 0
+    brk(NULL)                               = 0x7f5b0b28e000
+    brk(0x7f5b0b2af000)                     = 0x7f5b0b2af000
+    write(1, "1512111377\n", 111512111377
+    )            = 11
+    exit_group(0)                           = ?
+    +++ exited with 0 +++

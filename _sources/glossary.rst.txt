@@ -1,0 +1,12 @@
+.. _glossary:
+
+术语表
+======
+
+.. glossary:: :sorted:
+
+    PKI
+       Public-key infrastructure, certificate/key management
+
+    RAS
+        Reliability, Availability, and Serviceability

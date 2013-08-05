@@ -1,0 +1,110 @@
+Linux 内核 firmware 加载过程
+============================
+
+.. versionadded:: @2013-11-26
+   创建
+
+Broadcom 的一些网卡需要加载一些 firmware 才能正常工作，相应的内核信息如下： ::
+
+  bnx2: Can't load firmware file "bnx2/bnx2-mips-09-6.2.1b.fw"
+
+借这个机会对 Linux 内核加载所需的 firmware 的过程做了个了解。
+
+首先参考内核文档 :kernel:`firmware_class/README` 里的说明： ::
+
+  1), kernel(driver):
+         - calls request_firmware(&fw_entry, $FIRMWARE, device)
+         - kernel searchs the fimware image with name $FIRMWARE directly
+         in the below search path of root filesystem:
+                 User customized search path by module parameter 'path'[1]
+                 "/lib/firmware/updates/" UTS_RELEASE,
+                 "/lib/firmware/updates",
+                 "/lib/firmware/" UTS_RELEASE,
+                 "/lib/firmware"
+         - If found, goto 7), else goto 2)
+
+         [1], the 'path' is a string parameter which length should be less
+         than 256, user should pass 'firmware_class.path=$CUSTOMIZED_PATH'
+         if firmware_class is built in kernel(the general situation)
+
+  2), userspace:
+         - /sys/class/firmware/xxx/{loading,data} appear.
+         - hotplug gets called with a firmware identifier in $FIRMWARE
+           and the usual hotplug environment.
+                 - hotplug: echo 1 > /sys/class/firmware/xxx/loading
+
+  3), kernel: Discard any previous partial load.
+
+  4), userspace:
+                 - hotplug: cat appropriate_firmware_image > \
+                                         /sys/class/firmware/xxx/data
+
+  5), kernel: grows a buffer in PAGE_SIZE increments to hold the image as it
+          comes in.
+
+  6), userspace:
+                 - hotplug: echo 0 > /sys/class/firmware/xxx/loading
+
+  7), kernel: request_firmware() returns and the driver has the firmware
+          image in fw_entry->{data,size}. If something went wrong
+          request_firmware() returns non-zero and fw_entry is set to
+          NULL.
+
+  8), kernel(driver): Driver code calls release_firmware(fw_entry) releasing
+                  the firmware image and any related resource.
+
+从这里描述的过程我们能看到，内核本身并不加载任何 firmware，而只是发一个通知
+“我需要名字为 xxx 的 firmware” 给用户空间，然后等待用户空间的程序将该
+firmware 的镜像文件推送给内核。这里用户空间的进程一般对应于 udev
+或其他类似功能的程序。
+
+以 udev 为例，在 Ubuntu 12.04 上， ::
+
+  $ grep firmware /lib/udev/rules.d/*
+  /lib/udev/rules.d/50-firmware.rules:# firmware-class requests, copies files into the kernel
+  /lib/udev/rules.d/50-firmware.rules:SUBSYSTEM=="firmware", ACTION=="add", RUN+="firmware --firmware=$env{FIRMWARE} --devpath=$env{DEVPATH}"
+
+可以看到当内核请求 firmware， udev 会调用 firmware 程序处理。接下来我们查看
+firmware 的源代码（使用 `apt-get source udev` 安装）： ::
+
+  $ vi udev-175/extras/firmware/firmware.c
+  ...
+   82     static const char *searchpath[] = { FIRMWARE_PATH };
+  ...
+  131     /* lookup firmware file */
+  132     uname(&kernel);
+  133     for (i = 0; i < ARRAY_SIZE(searchpath); i++) {
+  134         util_strscpyl(fwpath, sizeof(fwpath), searchpath[i], kernel.release, "/", firmware, NULL);
+  135         dbg(udev, "trying %s\n", fwpath);
+  136         fwfile = fopen(fwpath, "r");
+  137         if (fwfile != NULL)
+  138             break;-
+  139
+  140         util_strscpyl(fwpath, sizeof(fwpath), searchpath[i], firmware, NULL);
+  141         dbg(udev, "trying %s\n", fwpath);
+  142         fwfile = fopen(fwpath, "r");
+  143         if (fwfile != NULL)
+  144             break;
+  145     }
+  ...
+
+其中 searchpath 会在 configure 时被设置为 /lib/firmware/updates/ 和
+/lib/firmware/ 这两个路径。程序会分别在这两个目录下搜索 $(uname -r)/$FIRMWARE
+和 $FIRMWARE 文件。假设内核版本（`uname -r`\ 的输出）为 3.10.20，请求的
+firmware 为 bnx2/bnx2-mips-09-6.2.1b.fw，则 firmware 程序会搜索如下 4 个文件，
+找到即退出搜索循环，并将该文件的内容传递到内核。
+如果都没有找到就会遇到本文最开始的错误。 ::
+
+  /lib/firmware/updates/3.10.20/bnx2/bnx2-mips-09-6.2.1b.fw
+  /lib/firmware/updates/bnx2/bnx2-mips-09-6.2.1b.fw
+  /lib/firmware/3.10.20/bnx2/bnx2-mips-09-6.2.1b.fw
+  /lib/firmware/bnx2/bnx2-mips-09-6.2.1b.fw
+
+其他发行版本的处理过程都是类似的，找到 udev 对应的规则文件，该文件里会指定由
+哪个程序来处理。例如，对 Gentoo： ::
+
+  $ grep firmware /lib/udev/rules.d/*
+  /lib/udev/rules.d/50-firmware.rules:SUBSYSTEM=="firmware", ACTION=="add", RUN{builtin}="firmware"
+
+Gentoo 里 firmware 的加载时由 udev 内置的 firmware 命令来处理。分析其源代码后
+确认其处理逻辑和 Ubuntu 的处理是类似的。

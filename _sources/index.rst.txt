@@ -1,0 +1,91 @@
+Notes on Nothing and/or Everything
+##################################
+
+.. toctree::
+   :maxdepth: 5
+   :caption: 硬件猎奇
+   :name: sec-hardware
+
+   hardware/intro
+   hardware/ipmi
+   hardware/memory
+   hardware/smart
+   hardware/raid
+   hardware/interface
+
+.. toctree::
+   :maxdepth: 5
+   :caption: 软件探秘
+   :name: sec-software
+
+   software/init
+   software/svc
+   software/ops
+   software/virtualization
+   software/shell
+   software/ssl
+   software/nss
+   software/db
+   software/web
+   software/analysis
+
+.. toctree::
+   :maxdepth: 5
+   :caption: 网络漫游
+   :name: sec-network
+
+   network/ip-neigh
+   network/arp
+   network/address
+   network/ipv6-dad
+   network/ip-config
+   network/rp_filter
+   network/route
+   network/openvpn
+   network/netfilter-recent
+
+.. toctree::
+   :maxdepth: 5
+   :caption: 开发构建
+   :name: sec-development
+
+   development/scms
+   development/lang
+   development/debug
+   development/kernel
+   development/api
+   development/nlp
+
+.. toctree::
+   :maxdepth: 5
+   :caption: 天南海北
+   :name: sec-misc
+
+   misc/cards
+   misc/rubiks_cube
+   misc/restructuredtext
+   misc/debit
+   misc/nexus5
+   misc/sites
+   misc/illusion
+
+.. toctree::
+   :maxdepth: 5
+   :caption: 读书笔记
+   :name: sec-books
+
+   books/evolution
+
+.. toctree::
+   :maxdepth: 5
+   :caption: 索引/表
+   :name: sec-index
+
+   glossary
+
+   genindex
+
+TODO
+****
+
+.. todolist::

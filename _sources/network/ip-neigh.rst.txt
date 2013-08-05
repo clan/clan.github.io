@@ -1,0 +1,80 @@
+链路层地址（ARP/Neighbor）相关信息
+==================================
+
+.. versionadded:: @2014-03-13
+   创建
+
+Linux 下查看 ARP 相关信息的命令为： ::
+
+  # arp -an
+  ? (10.0.0.2) at 00:05:b7:09:4f:29 [ether] on eth0
+  ? (10.0.0.8) at <incomplete> on eth0
+
+如果希望查看更详细的数据或者查看 IPv6 相关的信息则需要使用 `ip` 命令： ::
+
+  # ip -s neighbor show
+  fe80::3a22:d6ff:feb5:30c7 dev eth0 lladdr 38:22:d6:b5:30:c7 router used 1127/1127/1110 probes 1 STALE
+  10.0.0.203 dev eth0 lladdr 00:1e:4f:ea:f2:2e ref 1 used 15/14/15 probes 4 REACHABLE
+
+该命令的输出形式如下： ::
+
+  [ipv4/ipv6] [dev eth0] [lladdr xx:xx:xx:xx:xx:xx] [router] [proxy] [ref x] [used USED/CONFIRMED/UPDATED] [probes x] [INCOMPLETE | REACHABLE | STALE | DELAY | PROBE | FAILED | NOARP | PERMANENT]
+
+各字段分别解释如下：
+
+* [ipv4/ipv6] 相应的 IP 地址
+* [dev eth0] 该地址对应的网络接口
+* [lladdr xx:xx:xx:xx:xx:xx] 链路层地址
+* [router]
+* [proxy]
+* [ref x] 引用计数
+* [used USED/CONFIRMED/UPDATED] 该地址的（使用/确认/更新，即当前状态维持）的时间
+* [probes x] 探测次数
+* [INCOMPLETE | REACHABLE | STALE | DELAY | PROBE | FAILED | NOARP | PERMANENT] 当前状态
+
+各个状态的意义如下：
+
+* INCOMPLETE 链路地址探测之中，但还未完成
+* REACHABLE 链路地址可达，该状态的维持时间参考 base_reachable_time， base_reachable_time_ms
+* STALE 链路地址缓存失效，但并不意味不可达
+* DELAY 探测开始之间的延迟，参考 delay_first_probe_time
+* PROBE 链路地址探测之中
+* FAILED 链路地址不可用（被删除）
+* NOARP
+* PERMANENT
+
+Linux 下 ARP 相关的可控参数请参考 :manpage:`arp(7)`\，如
+gc （garbage collector）的相关配置。
+
+ARP 的一些状态变化的过程如下：
+
+#. 主机发送 ARP 查询 ::
+
+     17:33:36.758857 ARP, Request who-has 10.2.0.3 tell 10.2.11.2, length 28
+
+#. 收到目标机器回应后 ARP 状态变为 REACHABLE ::
+
+     17:33:36.759059 ARP, Reply 10.2.0.3 is-at 00:1d:09:2b:07:dd, length 46
+
+   ::
+
+     # ip -s neigh show 10.2.0.3
+     10.2.0.3 dev eth0 lladdr 00:1d:09:2b:07:dd used 1/0/1 probes 4 REACHABLE
+
+#. 在和目标机器没有数据通讯的状态持续时间在 base_reachable_time/2 和
+   3*base_reachable_time/2 之间（参考 neigh_rand_reach_time of net/core/neighbour.c），
+   状态会由 REACHABLE 转变为 STALE，即缓存超时。如果和目标机器持续有数据传输，
+   ARP 状态可能维持在 REACHABLE。
+
+#. 在收到该目标机器的 unsolicited (gratutious) ARP 回应时，ARP
+   的状态也会有所更新，如由 FAILED 变为 STALE。使用如下命令发送
+   unsolicited ARP 回应包。 ::
+
+     # arping -c 4 -A -I eth0 10.2.0.3
+     ARPING 10.2.0.3 from 10.2.0.3 eth0
+     Sent 4 probes (4 broadcast(s))
+     Received 0 response(s)
+
+#. 在 ARP 表项过多时，内核会根据
+   gc_interval/gc_stale_time/gc_thresh1/gc_thresh2/gc_thresh3 的值来决定
+   何时以及以何种策略来执行 gc 动作。

@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>多个外网接入时的路由配置 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="路由" href="route.html"/>
+        <link rel="next" title="策略路由" href="policy-route.html"/>
+        <link rel="prev" title="路由" href="route.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="route.html">路由</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">多个外网接入时的路由配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="policy-route.html">策略路由</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="route.html">路由</a> &raquo;</li>
+        
+      <li>多个外网接入时的路由配置</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/network/route-multipath.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>多个外网接入时的路由配置<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-09-30 新版功能: </span>创建</p>
+</div>
+<p>办公室网络有多个外网接入，拓扑如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="n">__</span>                                              <span class="n">_______</span>
+    <span class="n">___</span><span class="o">/</span>  \<span class="n">_</span>         <span class="o">+-------------+</span>   <span class="o">+-------+</span>       <span class="o">/</span>
+  <span class="n">_</span><span class="o">/</span>        \<span class="n">__</span>      <span class="o">|</span>        <span class="n">eth1</span> <span class="o">+---+</span> <span class="n">WAN</span> <span class="mi">1</span> <span class="o">+-----</span> <span class="o">/</span>
+ <span class="o">/</span>             \     <span class="o">|</span>      <span class="n">Linux</span>  <span class="o">|</span>   <span class="o">+-------+</span>     <span class="o">|</span>
+<span class="o">|</span> <span class="n">Local</span> <span class="n">network</span> <span class="o">-----+</span> <span class="n">eth0</span>        <span class="o">|</span>                <span class="o">|</span>    <span class="n">Internet</span>
+ \<span class="n">_</span>           <span class="n">__</span><span class="o">/</span>    <span class="o">|</span>       <span class="n">Box</span>   <span class="o">|</span>   <span class="o">+-------+</span>     <span class="o">|</span>
+   \<span class="n">__</span>     <span class="n">__</span><span class="o">/</span>       <span class="o">|</span>        <span class="n">eth2</span> <span class="o">+---+</span> <span class="n">WAN</span> <span class="mi">2</span> <span class="o">+----</span>  \
+      \<span class="n">___</span><span class="o">/</span>          <span class="o">+-------------+</span>   <span class="o">+-------+</span>       \<span class="n">________</span>
+</pre></div>
+</div>
+<p>eth0 为内网接口，eth1， eth2 为外网接入口（eth1 和 eth2 也可能是同一块网卡，
+通过交换机互联）。</p>
+<p>内网地址网段为 172.16.0.0/12。Linux 上配置了 SNAT。</p>
+<p>如何充分的利用这两个带宽呢？</p>
+<p>首先想到的方案是直接使用 multipath route，前提是内核选项
+&quot;CONFIG_IP_ROUTE_MULTIPATH=y&quot; 已经正确设置。执行命令
+<cite>ip route add default nexthop via x.x.x.x dev eth1 weight 1 nexthop via y.y.y.y dev eth2 weight 1</cite>
+配置缺省路由为 multipath route，内核会在这两个地址之间做负载均衡。但在有 NAT 的
+情况下该方案不一定有效。由内网发出的包在发送到 Internet 时其源地址会被 SNAT
+修改为两个 WAN 接口中的其中一个地址，因此这个包只有在通过这个地址对应的缺省
+网关时才能正常转发。因此，需要配置如下 SNAT 规则：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>iptables -t nat -A POSTROUTING -o eth1 -j SNAT –to $eth1_WAN_IP
+iptables -t nat -A POSTROUTING -o eth2 -j SNAT –to $eth2_WAN_IP
+</pre></div>
+</div>
+<p>但如果两个接入是通过交换机接入到同一个网卡时，上面的方法则无效。只有在能正确的
+进行 SNAT 操作时数据包才能被转发到互联网，这个问题暂时留存。</p>
+<p>另一种思路是通过策略路由。对数据包按一定的规则加上相应的标签并设置 SNAT 规则，
+然后根据这些标签设置路由策略指向正确的路由表。如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>echo &quot;201 wan-eth1&quot; &gt;&gt; /etc/iproute2/rt_tables
+echo &quot;202 wan-eth2&quot; &gt;&gt; /etc/iproute2/rt_tables
+iptables -t mangle -A PREROUTING -i eth0 -s 172.16.1.0/24 \! -d 172.16.0.0/12 -j MARK --set-mark 7
+iptables -t mangle -A PREROUTING -i eth0 -s 172.16.2.0/24 \! -d 172.16.0.0/12 -j MARK --set-mark 8
+iptables -t nat -A POSTROUTING -o eth1 -s 172.16.1.0/24 -j SNAT --to-source x.x.x.a
+iptables -t nat -A POSTROUTING -o eth2 -s 172.16.2.0/24 -j SNAT --to-source y.y.y.a
+ip route add table wan-eth1 default via x.x.x.x
+ip route add table wan-eth2 default via y.y.y.y
+ip rule add from all fwmark 7 lookup wan-eth1
+ip rule add from all fwmark 8 lookup wan-eth2
+</pre></div>
+</div>
+<p>在上面的一系列命令中，首先对从内网接口进来的数据包按源 IP 所在的网段打上不同
+的标签和应用不同的 SNAT 规则，然后设置路由策略根据这些标签值指向相应的路由表。
+路由表的选择和 SNAT 规则对应上即可。实际的规则需要结合具体的场景和策略来进行
+相应的调整。</p>
+<p>例如，下面的例子</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>iptables -t mangle -A PREROUTING -m conntrack --ctstate NEW -j MARK --set-mark 7
+iptables -t mangle -A PREROUTING -m conntrack --ctstate NEW -m statistic --mode random --probability 0.5 -j MARK –set-mark 8
+</pre></div>
+</div>
+<p>设置所有的新建连接标签为 7，然后根据一定的几率修改标签为 8。再结合路由策略
+设置正确的 SNAT 规则后可以按一定的几率来分配使用两个接入带宽。</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="policy-route.html" class="btn btn-neutral float-right" title="策略路由" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="route.html" class="btn btn-neutral" title="路由" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

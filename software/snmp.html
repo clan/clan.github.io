@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>通过 snmp 获取数据的几个方式 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="服务维护/管理" href="svc.html"/>
+        <link rel="next" title="日常维护" href="ops.html"/>
+        <link rel="prev" title="cronie 和 pam_loginuuid 的问题解决" href="cronie.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="svc.html">服务维护/管理</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="svc_list.html">服务控制软件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daemontools.html">daemontools 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supervisor.html">supervisor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog.html">rsyslog 配置简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsyslog-queue.html">rsyslog 队列配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glusterfs.html">Gluster FS 部署备忘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvs.html">LVS 的三种部署模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cronie.html">cronie 和 pam_loginuuid 的问题解决</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">通过 snmp 获取数据的几个方式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="svc.html">服务维护/管理</a> &raquo;</li>
+        
+      <li>通过 snmp 获取数据的几个方式</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/snmp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="snmp">
+<h1>通过 snmp 获取数据的几个方式<a class="headerlink" href="#snmp" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2013-08-29 新版功能: </span>创建</p>
+</div>
+<p>通过 snmp 获取数据时的常用的方法有：</p>
+<ul>
+<li><p class="first">snmpget</p>
+<p>snmpget [COMMON OPTIONS] [-Cf] AGENT OID [OID]...</p>
+<p>要请求的一个或多个 OID 不能是不完全的。在知道所有的 OID 的情况下，
+snmpget 是最有效的方式。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ snmpget -v 2c -c public 10.0.0.2 sysDescr.0
+SNMPv2-MIB::sysDescr.0 = STRING: Linux gw-beijing 3.8.13-gentoo-ks #3 SMP Mon May 27 10:30:52 CST 2013 x86_64
+
+# tcpdump -nn -p -i eth0 port snmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+13:30:15.533031 IP 10.2.11.2.44058 &gt; 10.0.0.2.161:  C=public GetRequest(28)  .1.3.6.1.2.1.1.1.0
+13:30:15.533269 IP 10.0.0.2.161 &gt; 10.2.11.2.44058:  C=public GetResponse(104)  .1.3.6.1.2.1.1.1.0=&quot;Linux gw-beijing 3.8.13-gentoo-ks #3 SMP Mon May 27 10:30:52 CST 2013 x86_64&quot;
+</pre></div>
+</div>
+</li>
+<li><p class="first">snmpwalk</p>
+<p>snmpwalk [APPLICATION OPTIONS] [COMMON OPTIONS] AGENT [OID]</p>
+<p>需要获取的 OID 可以是不完整的，甚至可以为空。但从 tcpdump 的结果可以看到，
+snmpwalk 时数据的请求和回应每次都只针对唯一一个OID，因此，在请求的 OID 比较
+多时，其效率会很低。其优势时可以对不能预先确定的 OID 进行遍历获取。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ snmpwalk  -v 2c -c public 10.0.0.2 ifName
+IF-MIB::ifName.1 = STRING: lo
+IF-MIB::ifName.2 = STRING: eno1
+IF-MIB::ifName.3 = STRING: eno2
+
+# tcpdump -nn -p -i eth0 port snmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+13:42:17.690844 IP 10.2.11.2.36949 &gt; 10.0.0.2.161:  C=public GetNextRequest(30)  .1.3.6.1.2.1.31.1.1.1.1
+13:42:17.691076 IP 10.0.0.2.161 &gt; 10.2.11.2.36949:  C=public GetResponse(33)  .1.3.6.1.2.1.31.1.1.1.1.1=&quot;lo&quot;
+13:42:17.691316 IP 10.2.11.2.36949 &gt; 10.0.0.2.161:  C=public GetNextRequest(31)  .1.3.6.1.2.1.31.1.1.1.1.1
+13:42:17.691442 IP 10.0.0.2.161 &gt; 10.2.11.2.36949:  C=public GetResponse(35)  .1.3.6.1.2.1.31.1.1.1.1.2=&quot;eno1&quot;
+13:42:17.691570 IP 10.2.11.2.36949 &gt; 10.0.0.2.161:  C=public GetNextRequest(31)  .1.3.6.1.2.1.31.1.1.1.1.2
+13:42:17.691691 IP 10.0.0.2.161 &gt; 10.2.11.2.36949:  C=public GetResponse(35)  .1.3.6.1.2.1.31.1.1.1.1.3=&quot;eno2&quot;
+13:42:17.691809 IP 10.2.11.2.36949 &gt; 10.0.0.2.161:  C=public GetNextRequest(31)  .1.3.6.1.2.1.31.1.1.1.1.3
+13:42:17.692628 IP 10.0.0.2.161 &gt; 10.2.11.2.36949:  C=public GetResponse(32)  .1.3.6.1.2.1.31.1.1.1.2.1=0
+</pre></div>
+</div>
+</li>
+<li><p class="first">snmpbulkget</p>
+<p>snmpbulkget [COMMON OPTIONS] [-Cn &lt;num&gt;] [-Cr &lt;NUM&gt;] AGENT OID [OID]...</p>
+<p>对那些不能预先确定的 OID 相关的数据获取可以用到 snmpbulkget。&quot;-Cn &lt;num&gt;&quot;
+参数指定在 GETBULK 请求的 OID 中的前 n 个不会被做迭代查询（默认值为0）。
+&quot;-Cr &lt;NUM&gt;&quot; 参数指定 GETBULK 请求的 OID（不包含已经由 -Cn 指定的前 n 个 OID）
+被迭代查询的次数（默认值10）。如果一次 BULK 请求拿不到完整的数据，则需要根据
+结果调整请求 OID 后再次执行。退出的判断依据是如果结果中没有出现和请求的 OID
+同类别的结果，则可认为该 OID 的所有值都已经获取到。详细的说明可以参考
+<span class="target" id="index-0"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc3416.html"><strong>RFC 3416</strong></a>。从 tcpdump 的结果可以看到，snmpbulkget 比 snmpwalk
+在网络数据传输层面的效率更高。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ snmpbulkget  -v 2c -c public -Cn1 -Cr4 10.0.0.2 sysUpTime ifName
+DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (452288128) 52 days, 8:21:21.28
+IF-MIB::ifName.1 = STRING: lo
+IF-MIB::ifName.2 = STRING: eno1
+IF-MIB::ifName.3 = STRING: eno2
+IF-MIB::ifInMulticastPkts.1 = Counter32: 0
+
+# tcpdump -nn -p -i eth0 port snmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+13:57:52.683078 IP 10.2.11.2.57705 &gt; 10.0.0.2.161:  C=public GetBulk(43)  N=1 M=4 .1.3.6.1.2.1.1.3 .1.3.6.1.2.1.31.1.1.1.1
+13:57:52.683413 IP 10.0.0.2.161 &gt; 10.2.11.2.57705:  C=public GetResponse(176)  .1.3.6.1.2.1.1.3.0=452319608 .1.3.6.1.2.1.31.1.1.1.1.1=&quot;lo&quot; .1.3.6.1.2.1.31.1.1.1.1.2=&quot;eno1&quot; .1.3.6.1.2.1.31.1.1.1.1.3=&quot;eno2&quot; .1.3.6.1.2.1.31.1.1.1.2.1=0
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ops.html" class="btn btn-neutral float-right" title="日常维护" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cronie.html" class="btn btn-neutral" title="cronie 和 pam_loginuuid 的问题解决" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

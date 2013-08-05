@@ -1,0 +1,17 @@
+新的 socket 读函数：recvmmsg
+----------------------------
+
+.. versionadded:: @2010-07-30
+   创建
+
+今天看内核源代码(2.6.34)，发现 socket API 多了一个函数 recvmmsg，
+和 recvmsg 的差别是新的函数能在一次系统调用中读到多条消息。对比
+较繁忙的网络应用（尤其对非面向连接的应用）能降低系统调用的次数。
+不过现在 glibc（2.11）还没有相应的封装，现在要用只能直接通过系统调用。
+
+.. code-block:: c
+
+    int recvmmsg(int fd, struct mmsghdr *mmsg, unsigned vlen, unsigned flags)
+    {
+        return syscall(__NR_recvmmsg, fd, mmsg, vlen, flags);
+    }

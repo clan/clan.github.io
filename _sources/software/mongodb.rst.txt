@@ -1,0 +1,38 @@
+MongoDB
+=======
+
+replset 改名操作
+----------------
+
+.. versionadded:: @2014-03-14
+   创建
+
+操作过程如下：
+
+#. 修改 MongoDB 服务启动配置，取消 --replSet 选项后重新启动 MongoDB 服务
+
+#. 更新各服务器上的 local.system.replset，其中 replSet 的名字对应 ‘_id’ 字段。 ::
+
+     # mongo
+     > use local
+     switched to db local
+     > db.system.replset.find()
+     ....
+     > db.system.replset.update()
+
+#. 修改 MongoDB 服务启动配置，用新的名字恢复 --replSet
+   选项后重新启动 MongoDB 服务；
+   或使用另一种方法，在其中一个节点恢复数据后强制重新配置 replset： ::
+
+     # mongo
+     > cfg = {_id:'shard1', members:[
+     ... {_id:0, host:'10.0.0.1:27017'},
+     ... {_id:1, host:'10.0.0.2:27017'}]
+     ... }
+     > rs.reconfig(cfg, {force: true})
+
+replset 的常用命令如下：
+
+- rs.status() # 查看状态
+- rs.initiate(cfg)
+- rs.conf() # 显示当前配置

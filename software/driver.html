@@ -1,0 +1,659 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linux 设备驱动 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="up" title="日常维护" href="ops.html"/>
+        <link rel="next" title="Linux 下的 CPU 和 内存热插拔" href="linux-hotplug.html"/>
+        <link rel="prev" title="Linux 系统日常维护命令" href="linux-ops.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="svc.html">服务维护/管理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ops.html">日常维护</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="rsync.html">使用 rsync 进行文件备份</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-ops.html">Linux 系统日常维护命令</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux 设备驱动</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">如何判断设备驱动存在？</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pci">PCI 设备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usb">USB 设备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dmi">DMI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="linux-hotplug.html">Linux 下的 CPU 和 内存热插拔</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-faq.html">Linux 问题解决汇总</a></li>
+<li class="toctree-l2"><a class="reference internal" href="macos.html">macOS / OS X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gentoo-prefix.html">OSX 上部署 Gentoo Prefix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">SSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdsh.html">PDSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="socks.html">SOCKS 代理配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsmmc.html">Windows 远程桌面连接工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="ops.html">日常维护</a> &raquo;</li>
+        
+      <li>Linux 设备驱动</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/software/driver.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux">
+<h1>Linux 设备驱动<a class="headerlink" href="#linux" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-01-19 新版功能: </span>创建</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-01-21 新版功能: </span>增加更多模块信息解释</p>
+</div>
+<p><cite>find /sys -name modalias -print0 | xargs -0 more</cite> 可以查看所有的设备对应的
+modalias 信息。</p>
+<div class="section" id="id1">
+<h2>如何判断设备驱动存在？<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p><strong>下面的内容仅对内核没有内置该驱动时才有效。</strong></p>
+<p><em>/lib/modules/$(uname -r)/modules.alias</em> 包含所有 <strong>非内置</strong> 驱动程序支持的
+设备详情（<em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/glob(7)">glob(7)</a></em> 匹配）。对 PCI 设备，示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alias</span> <span class="n">pci</span><span class="p">:</span><span class="n">v00001000d00000014sv</span><span class="o">*</span><span class="n">sd</span><span class="o">*</span><span class="n">bc</span><span class="o">*</span><span class="n">sc</span><span class="o">*</span><span class="n">i</span><span class="o">*</span> <span class="n">megaraid_sas</span>
+</pre></div>
+</div>
+<p>其中 <em>v00001000</em> 和 <em>d00000014</em> 分别对应 PCI 设备的厂商 ID 和设备 ID。
+因此，如果在 modules.alias 文件中未找到该 PCI 设备对应的内容，则表示该内核
+不支持该设备（或着驱动程序内置在内核中）。
+此时需要从第三方获取该设备的驱动或在该内核下编译驱动或更新到
+支持该设备的内核。</p>
+<p>同理，其他类型的设备通过该设备对应的 modalias 内容是否能匹配上某一个驱动的
+alias 规则来判断是否有该设备的驱动。</p>
+<p>如下命令输出当前系统所有的设备类型：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># for id in $(find /sys -name modalias -print0 | xargs -0 awk -F: &#39;{print $1}&#39; | sort -u); do echo $id; done</span>
+<span class="n">acpi</span>
+<span class="n">cpu</span>
+<span class="n">dmi</span>
+<span class="nb">input</span>
+<span class="n">pci</span>
+<span class="n">platform</span>
+<span class="n">scsi</span>
+<span class="n">usb</span>
+<span class="n">wmi</span>
+</pre></div>
+</div>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">待处理</p>
+<p class="last">补全更多常见设备的 modalias 细节</p>
+</div>
+<p>如下的命令可查看哪个模块提供了对该 modalias 的支持：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for id in $(find /sys -name modalias -print0 | xargs -0 cat | sort -u); do
+    echo &quot;${id}&quot;
+    modprobe --show-depends &quot;$id&quot;|sed &#39;s/^/  /&#39;
+done
+</pre></div>
+</div>
+<p>其输出示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">acpi</span><span class="p">:</span><span class="n">ACPI0004</span><span class="p">:</span>
+<span class="n">acpi</span><span class="p">:</span><span class="n">ACPI000C</span><span class="p">:</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">acpi</span><span class="o">/</span><span class="n">acpi_pad</span><span class="o">.</span><span class="n">ko</span>
+<span class="n">acpi</span><span class="p">:</span><span class="n">ACPI000D</span><span class="p">:</span><span class="n">PNP0C01</span><span class="p">:</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">hwmon</span><span class="o">/</span><span class="n">hwmon</span><span class="o">.</span><span class="n">ko</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">hwmon</span><span class="o">/</span><span class="n">acpi_power_meter</span><span class="o">.</span><span class="n">ko</span>
+<span class="o">...</span>
+<span class="n">pci</span><span class="p">:</span><span class="n">v00001000d0000005Dsv00001028sd00001F47bc01sc04i00</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">scsi</span><span class="o">/</span><span class="n">scsi_mod</span><span class="o">.</span><span class="n">ko</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">scsi</span><span class="o">/</span><span class="n">megaraid</span><span class="o">/</span><span class="n">megaraid_sas</span><span class="o">.</span><span class="n">ko</span>
+<span class="o">...</span>
+<span class="n">usb</span><span class="p">:</span><span class="n">v152Dp0567d0323dc00dsc00dp00ic08isc06ip62in00</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">scsi</span><span class="o">/</span><span class="n">scsi_mod</span><span class="o">.</span><span class="n">ko</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">usb</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">usb</span><span class="o">-</span><span class="n">common</span><span class="o">.</span><span class="n">ko</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">usb</span><span class="o">/</span><span class="n">core</span><span class="o">/</span><span class="n">usbcore</span><span class="o">.</span><span class="n">ko</span>
+  <span class="n">insmod</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="mf">4.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">usb</span><span class="o">/</span><span class="n">storage</span><span class="o">/</span><span class="n">usb</span><span class="o">-</span><span class="n">storage</span><span class="o">.</span><span class="n">ko</span>
+</pre></div>
+</div>
+<p>从第三方获取的内核一般放置在对应内核的相应目录下，然后通过 <cite>depmod -a</cite>
+更新相应的模块信息。</p>
+<p><cite>modinfo</cite> 可以查看已有驱动所支持设备的信息。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ modinfo /lib/modules/$(uname -r)/kernel/drivers/scsi/megaraid/megaraid_sas.ko | grep alias
+alias:          pci:v00001000d00000053sv*sd*bc*sc*i*
+alias:          pci:v00001000d00000052sv*sd*bc*sc*i*
+alias:          pci:v00001000d000000CFsv*sd*bc*sc*i*
+alias:          pci:v00001000d000000CEsv*sd*bc*sc*i*
+alias:          pci:v00001000d0000005Fsv*sd*bc*sc*i*
+alias:          pci:v00001000d0000005Dsv*sd*bc*sc*i*
+alias:          pci:v00001000d0000002Fsv*sd*bc*sc*i*
+alias:          pci:v00001000d0000005Bsv*sd*bc*sc*i*
+alias:          pci:v00001028d00000015sv*sd*bc*sc*i*
+alias:          pci:v00001000d00000413sv*sd*bc*sc*i*
+alias:          pci:v00001000d00000071sv*sd*bc*sc*i*
+alias:          pci:v00001000d00000073sv*sd*bc*sc*i*
+alias:          pci:v00001000d00000079sv*sd*bc*sc*i*
+alias:          pci:v00001000d00000078sv*sd*bc*sc*i*
+alias:          pci:v00001000d0000007Csv*sd*bc*sc*i*
+alias:          pci:v00001000d00000060sv*sd*bc*sc*i*
+alias:          pci:v00001000d00000411sv*sd*bc*sc*i*
+</pre></div>
+</div>
+<p>通过在指定版本的内核源代码里相应设备驱动的源代码里搜索该设备的 PCI ID
+（搜索不一定是严格匹配，需要在读懂该部分代码的前提下判断），如果无
+结果则意味着该版本内核暂未提供对该设备的支持。</p>
+</div>
+<div class="section" id="pci">
+<h2>PCI 设备<a class="headerlink" href="#pci" title="永久链接至标题">¶</a></h2>
+<p id="index-1"><cite>lspci</cite> 查看所有的 PCI 设备。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># lspci</span>
+<span class="o">...</span>
+<span class="mi">04</span><span class="p">:</span><span class="mf">00.0</span> <span class="n">RAID</span> <span class="n">bus</span> <span class="n">controller</span><span class="p">:</span> <span class="n">LSI</span> <span class="n">Logic</span> <span class="o">/</span> <span class="n">Symbios</span> <span class="n">Logic</span> <span class="n">MegaRAID</span> <span class="n">SAS</span><span class="o">-</span><span class="mi">3</span> <span class="mi">3008</span> <span class="p">[</span><span class="n">Fury</span><span class="p">]</span> <span class="p">(</span><span class="n">rev</span> <span class="mi">02</span><span class="p">)</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p><cite>lspci -k</cite> 查看所有的 PCI 设备，同时显示对应设备的驱动模块名。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># lspci</span>
+<span class="o">...</span>
+<span class="mi">04</span><span class="p">:</span><span class="mf">00.0</span> <span class="n">RAID</span> <span class="n">bus</span> <span class="n">controller</span><span class="p">:</span> <span class="n">LSI</span> <span class="n">Logic</span> <span class="o">/</span> <span class="n">Symbios</span> <span class="n">Logic</span> <span class="n">MegaRAID</span> <span class="n">SAS</span><span class="o">-</span><span class="mi">3</span> <span class="mi">3008</span> <span class="p">[</span><span class="n">Fury</span><span class="p">]</span> <span class="p">(</span><span class="n">rev</span> <span class="mi">02</span><span class="p">)</span>
+        <span class="n">Subsystem</span><span class="p">:</span> <span class="n">Dell</span> <span class="n">PERC</span> <span class="n">H330</span> <span class="n">Adapter</span>
+        <span class="n">Kernel</span> <span class="n">driver</span> <span class="ow">in</span> <span class="n">use</span><span class="p">:</span> <span class="n">megaraid_sas</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p><cite>lspci -nn -k</cite> 显示 PCI 设备的厂商和设备 ID。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># lspci -nn -k</span>
+<span class="o">...</span>
+<span class="mi">04</span><span class="p">:</span><span class="mf">00.0</span> <span class="n">RAID</span> <span class="n">bus</span> <span class="n">controller</span> <span class="p">[</span><span class="mi">0104</span><span class="p">]:</span> <span class="n">LSI</span> <span class="n">Logic</span> <span class="o">/</span> <span class="n">Symbios</span> <span class="n">Logic</span> <span class="n">MegaRAID</span> <span class="n">SAS</span><span class="o">-</span><span class="mi">3</span> <span class="mi">3008</span> <span class="p">[</span><span class="n">Fury</span><span class="p">]</span> <span class="p">[</span><span class="mi">1000</span><span class="p">:</span><span class="mi">005</span><span class="n">f</span><span class="p">]</span> <span class="p">(</span><span class="n">rev</span> <span class="mi">02</span><span class="p">)</span>
+        <span class="n">Subsystem</span><span class="p">:</span> <span class="n">Dell</span> <span class="n">PERC</span> <span class="n">H330</span> <span class="n">Adapter</span> <span class="p">[</span><span class="mi">1028</span><span class="p">:</span><span class="mi">1</span><span class="n">f44</span><span class="p">]</span>
+        <span class="n">Kernel</span> <span class="n">driver</span> <span class="ow">in</span> <span class="n">use</span><span class="p">:</span> <span class="n">megaraid_sas</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p><cite>lspci -t -nn -v</cite> 以树形列表显示 PCI 设备之间的连接关系。</p>
+<p><cite>less /proc/bus/pci/devices</cite> 也可以看到所有 PCI 设备的原始信息，第二列对应 PCI
+设备的厂商 ID 和设备 ID（每 ID 4 位 16 进制数），最后一列对应内核模块名（
+如果为空，则表示该设备未加载任何驱动程序）。</p>
+<p>PCI 设备 ID 的文字描述一般在 <em>/usr/share/misc/pci.ids</em> 文件中。该文件的官方路径
+为 <a class="reference external" href="http://pci-ids.ucw.cz/">The PCI ID Repository</a>  /
+<a class="reference external" href="https://github.com/pciutils/pciids">GitHub</a> 。</p>
+<p><em>/sys/devices/pci.../modalias</em> 文件（pci 后省略号对应相应的 PCI 位置）
+可以看到相应 PCI 设备对应的驱动查找信息。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /sys/devices/pci0000:00/0000:00:03.0/0000:04:00.0/modalias</span>
+<span class="n">pci</span><span class="p">:</span><span class="n">v00001000d0000005Fsv00001028sd00001F44bc01sc04i00</span>
+</pre></div>
+</div>
+<p>分别解释如下：</p>
+<ul>
+<li><p class="first">pci0000:00 对应 PCI 总线 ID。</p>
+</li>
+<li><p class="first">0000:00:03.0/0000:04:00.0  对应设备索引。</p>
+</li>
+<li><p class="first">v... 对应 PCI 设备厂商 ID。</p>
+</li>
+<li><p class="first">d... 对应 PCI 设备设备 ID。</p>
+</li>
+<li><p class="first">sv... 对应子系统厂商 ID。</p>
+</li>
+<li><p class="first">sd... 对应子系统设备 ID。</p>
+</li>
+<li><p class="first">bc... 对应 <a class="reference external" href="https://pci-ids.ucw.cz/read/PD/">bus class</a> 。</p>
+<blockquote>
+<div><ul class="simple">
+<li>00  Unclassified device</li>
+<li>01  Mass storage controller</li>
+<li>02  Network controller</li>
+<li>03  Display controller</li>
+<li>04  Multimedia controller</li>
+<li>05  Memory controller</li>
+<li>06  Bridge</li>
+<li>07  Communication controller</li>
+<li>08  Generic system peripheral</li>
+<li>09  Input device controller</li>
+<li>0a  Docking station</li>
+<li>0b  Processor</li>
+<li>0c  Serial bus controller</li>
+<li>0d  Wireless controller</li>
+<li>0e  Intelligent controller</li>
+<li>0f  Satellite communications controller</li>
+<li>10  Encryption controller</li>
+<li>11  Signal processing controller</li>
+<li>12  Processing accelerators</li>
+<li>13  Non-Essential Instrumentation</li>
+<li>40  Coprocessor</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">sc... 对应 bus subclass。</p>
+</li>
+<li><p class="first">i... 对应 Programming interface。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="usb">
+<h2>USB 设备<a class="headerlink" href="#usb" title="永久链接至标题">¶</a></h2>
+<p id="index-2"><cite>lsusb</cite> 查看所有的 USB 设备。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># lsusb</span>
+<span class="n">Bus</span> <span class="mi">004</span> <span class="n">Device</span> <span class="mi">007</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">152</span><span class="n">d</span><span class="p">:</span><span class="mi">0567</span> <span class="n">JMicron</span> <span class="n">Technology</span> <span class="n">Corp</span><span class="o">.</span> <span class="o">/</span> <span class="n">JMicron</span> <span class="n">USA</span> <span class="n">Technology</span> <span class="n">Corp</span><span class="o">.</span> <span class="n">JMS567</span> <span class="n">SATA</span> <span class="mi">6</span><span class="n">Gb</span><span class="o">/</span><span class="n">s</span> <span class="n">bridge</span>
+<span class="n">Bus</span> <span class="mi">003</span> <span class="n">Device</span> <span class="mi">004</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">413</span><span class="n">c</span><span class="p">:</span><span class="n">a001</span> <span class="n">Dell</span> <span class="n">Computer</span> <span class="n">Corp</span><span class="o">.</span> <span class="n">Hub</span>
+<span class="n">Bus</span> <span class="mi">001</span> <span class="n">Device</span> <span class="mi">002</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">8087</span><span class="p">:</span><span class="mi">800</span><span class="n">a</span> <span class="n">Intel</span> <span class="n">Corp</span><span class="o">.</span>
+<span class="n">Bus</span> <span class="mi">006</span> <span class="n">Device</span> <span class="mi">001</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">1</span><span class="n">d6b</span><span class="p">:</span><span class="mi">0003</span> <span class="n">Linux</span> <span class="n">Foundation</span> <span class="mf">3.0</span> <span class="n">root</span> <span class="n">hub</span>
+<span class="n">Bus</span> <span class="mi">004</span> <span class="n">Device</span> <span class="mi">008</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">152</span><span class="n">d</span><span class="p">:</span><span class="mi">0567</span> <span class="n">JMicron</span> <span class="n">Technology</span> <span class="n">Corp</span><span class="o">.</span> <span class="o">/</span> <span class="n">JMicron</span> <span class="n">USA</span> <span class="n">Technology</span> <span class="n">Corp</span><span class="o">.</span> <span class="n">JMS567</span> <span class="n">SATA</span> <span class="mi">6</span><span class="n">Gb</span><span class="o">/</span><span class="n">s</span> <span class="n">bridge</span>
+<span class="n">Bus</span> <span class="mi">004</span> <span class="n">Device</span> <span class="mi">001</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">1</span><span class="n">d6b</span><span class="p">:</span><span class="mi">0003</span> <span class="n">Linux</span> <span class="n">Foundation</span> <span class="mf">3.0</span> <span class="n">root</span> <span class="n">hub</span>
+<span class="n">Bus</span> <span class="mi">001</span> <span class="n">Device</span> <span class="mi">001</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">1</span><span class="n">d6b</span><span class="p">:</span><span class="mi">0002</span> <span class="n">Linux</span> <span class="n">Foundation</span> <span class="mf">2.0</span> <span class="n">root</span> <span class="n">hub</span>
+<span class="n">Bus</span> <span class="mi">002</span> <span class="n">Device</span> <span class="mi">002</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">8087</span><span class="p">:</span><span class="mi">8002</span> <span class="n">Intel</span> <span class="n">Corp</span><span class="o">.</span>
+<span class="n">Bus</span> <span class="mi">002</span> <span class="n">Device</span> <span class="mi">001</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">1</span><span class="n">d6b</span><span class="p">:</span><span class="mi">0002</span> <span class="n">Linux</span> <span class="n">Foundation</span> <span class="mf">2.0</span> <span class="n">root</span> <span class="n">hub</span>
+<span class="n">Bus</span> <span class="mi">003</span> <span class="n">Device</span> <span class="mi">001</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">1</span><span class="n">d6b</span><span class="p">:</span><span class="mi">0002</span> <span class="n">Linux</span> <span class="n">Foundation</span> <span class="mf">2.0</span> <span class="n">root</span> <span class="n">hub</span>
+<span class="n">Bus</span> <span class="mi">005</span> <span class="n">Device</span> <span class="mi">001</span><span class="p">:</span> <span class="n">ID</span> <span class="mi">1</span><span class="n">d6b</span><span class="p">:</span><span class="mi">0002</span> <span class="n">Linux</span> <span class="n">Foundation</span> <span class="mf">2.0</span> <span class="n">root</span> <span class="n">hub</span>
+</pre></div>
+</div>
+<p>更多参数参考帮助文档即可。</p>
+<p>驱动搜索信息</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /sys/devices/pci0000:00/0000:00:14.0/usb4/4-5/4-5:1.0/modalias</span>
+<span class="n">usb</span><span class="p">:</span><span class="n">v152Dp0567d0323dc00dsc00dp00ic08isc06ip62in00</span>
+</pre></div>
+</div>
+<p>各字段解释如下：</p>
+<ul>
+<li><p class="first">v... 设备厂商 ID</p>
+</li>
+<li><p class="first">p... 设备型号 ID</p>
+</li>
+<li><p class="first">d... bcddevice</p>
+</li>
+<li><p class="first">dc... <a class="reference external" href="https://usb-ids.gowdy.us/read/UC/">device class</a>  或
+<a class="reference external" href="https://www.usb.org/defined-class-codes">Defined Class Codes</a> ：</p>
+<blockquote>
+<div><ul class="simple">
+<li>00    (Defined at Interface level)</li>
+<li>01    Audio</li>
+<li>02    Communications and CDC</li>
+<li>03    Human Interface Device</li>
+<li>05    Physical Interface Device</li>
+<li>06    Imaging</li>
+<li>07    Printer</li>
+<li>08    Mass Storage</li>
+<li>09    Hub</li>
+<li>0a    CDC Data</li>
+<li>0b    Chip/SmartCard</li>
+<li>0d    Content Security</li>
+<li>0e    Video</li>
+<li>0f    Personal Healthcare</li>
+<li>10    Audio/Video Devices</li>
+<li>11    Billboard Device Class</li>
+<li>12    USB Type-C Bridge Class</li>
+<li>58    Xbox</li>
+<li>dc    Diagnostic</li>
+<li>e0    Wireless</li>
+<li>ef    Miscellaneous Device</li>
+<li>fe    Application Specific Interface</li>
+<li>ff    Vendor Specific Class</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">dsc... device subclass，参考 <a class="reference external" href="https://www.usb.org/defined-class-codes">Defined Class Codes</a> 。</p>
+</li>
+<li><p class="first">dp...  device protocol</p>
+</li>
+<li><p class="first">ic...  interface class，意义参考 dc。</p>
+</li>
+<li><p class="first">isc... interface subclass，参考 dsc。</p>
+</li>
+<li><p class="first">ip...  interface protocol</p>
+</li>
+</ul>
+<p>有时，设备类/子类在接口类/子类处定义。例如，对 USB Camera，</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usb</span><span class="p">:</span><span class="n">v046Dp0826d0010dcEFdsc02dp01ic01isc01ip00in00</span>
+<span class="n">usb</span><span class="p">:</span><span class="n">v046Dp0826d0010dcEFdsc02dp01ic01isc02ip00in01</span>
+<span class="n">usb</span><span class="p">:</span><span class="n">v046Dp0826d0010dcEFdsc02dp01ic0Eisc01ip00in02</span>
+<span class="n">usb</span><span class="p">:</span><span class="n">v046Dp0826d0010dcEFdsc02dp01ic0Eisc02ip00in03</span>
+</pre></div>
+</div>
+<p>v046D: Logitech, Inc.
+p0826: HD Webcam C525</p>
+<p>Interface class 0E01 is video control, 0E02 is video streaming (aka camera),
+0101 is audio control device and 0102 is audio streaming (aka microphone).
+Thus this is a camera with microphone included.</p>
+<p>USB 设备 ID 的文字描述一般在 <em>/usr/share/misc/usb.ids</em> 文件中。该文件的官方路径
+为 <a class="reference external" href="http://www.linux-usb.org/usb-ids.html">The USB ID Repository</a> 。</p>
+</div>
+<div class="section" id="dmi">
+<h2>DMI<a class="headerlink" href="#dmi" title="永久链接至标题">¶</a></h2>
+<p>参考 <a class="reference external" href="https://www.dmtf.org/standards/smbios">System Management BIOS</a> 。</p>
+<p id="index-3">对某台 Dell PowerEdge R730xd，信息如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /sys/devices/virtual/dmi/id/modalias</span>
+<span class="n">dmi</span><span class="p">:</span><span class="n">bvnDellInc</span><span class="o">.</span><span class="p">:</span><span class="n">bvr2</span><span class="o">.</span><span class="mf">4.3</span><span class="p">:</span><span class="n">bd01</span><span class="o">/</span><span class="mi">17</span><span class="o">/</span><span class="mi">2017</span><span class="p">:</span><span class="n">svnDellInc</span><span class="o">.</span><span class="p">:</span><span class="n">pnPowerEdgeR730xd</span><span class="p">:</span><span class="n">pvr</span><span class="p">:</span><span class="n">rvnDellInc</span><span class="o">.</span><span class="p">:</span><span class="n">rn0WCJNT</span><span class="p">:</span><span class="n">rvrA06</span><span class="p">:</span><span class="n">cvnDellInc</span><span class="o">.</span><span class="p">:</span><span class="n">ct23</span><span class="p">:</span><span class="n">cvr</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>各字段解释如下：</p>
+<p>dmi:bvnIBM:bvr1UETB6WW(1.66):bd06/15/2005:svnIBM:pn2371H4G:pvrThinkPadX40:rvnIBM:rn2371H4G:rvrNotAvailable:cvnIBM:ct10:cvrNotAvailable:</p>
+<ul>
+<li><p class="first">bvn  DellInc.  BIOS 厂商</p>
+</li>
+<li><p class="first">bvr  2.4.3 BIOS 版本</p>
+</li>
+<li><p class="first">bd   01/17/2017 BIOS 日期</p>
+</li>
+<li><p class="first">svn  DellInc. 系统厂商</p>
+</li>
+<li><p class="first">pn   PowerEdgeR730xd 产品名</p>
+</li>
+<li><p class="first">pvr  产品版本</p>
+</li>
+<li><p class="first">rvn  DellInc. 主板厂商</p>
+</li>
+<li><p class="first">rn   0WCJNT 主板名</p>
+</li>
+<li><p class="first">rvr  A06 主板版本</p>
+</li>
+<li><p class="first">cvn  DellInc. 机壳厂商</p>
+</li>
+<li><p class="first">ct   23 机壳类型（十进制表示）</p>
+<blockquote>
+<div><ul class="simple">
+<li>3 Desktop</li>
+<li>4 Low Profile Desktop</li>
+<li>5 Pizza Box</li>
+<li>6 Mini Tower</li>
+<li>7 Tower</li>
+<li>8 Portable</li>
+<li>9 Laptop</li>
+<li>10 Notebook</li>
+<li>11 Hand Held</li>
+<li>12 Docking Station</li>
+<li>13 All In One</li>
+<li>14 Sub Notebook</li>
+<li>15 Space-saving</li>
+<li>16 Lunch Box</li>
+<li>17 Main Server Chassis</li>
+<li>18 Expansion Chassis</li>
+<li>19 Sub Chassis</li>
+<li>20 Bus Expansion Chassis</li>
+<li>21 Peripheral Chassis</li>
+<li>22 RAID Chassis</li>
+<li>23 Rack Mount Chassis</li>
+<li>24 Sealed-case PC</li>
+<li>25 Multi-system</li>
+<li>26 CompactPCI</li>
+<li>27 AdvancedTCA</li>
+<li>28 Blade</li>
+<li>29 Blade Enclosing</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">cvr  机壳版本</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="linux-hotplug.html" class="btn btn-neutral float-right" title="Linux 下的 CPU 和 内存热插拔" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="linux-ops.html" class="btn btn-neutral" title="Linux 系统日常维护命令" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+LVM
+===
+
+.. versionadded:: @2013-12-09
+   新建
+.. versionchanged:: @2019-02-15
+   增加命令汇总以及 stripes
+
+参考 `LVM Howto <http://tldp.org/HOWTO/LVM-HOWTO/index.html>`_
+
+PV，VG，LV 以及文件系统的关系如下： ::
+
+    #    hda1   hdc1      (PV:s on partitions or whole disks)
+    #       \   /
+    #        \ /
+    #       diskvg        (VG)
+    #       /  |  \
+    #      /   |   \
+    #  usrlv rootlv varlv (LV:s)
+    #    |      |     |
+    # ext4  reiserfs  xfs (filesystems)
+
+命令
+----
+
+命令汇总：查看/创建/删除/改名/扩容/扫描/报告信息
+
+* (pv|vg|lv)(display|create|remove|change|scan|s)
+* (pv|lv)resize
+* (vg|lv)(rename|extend|reduce|convert)
+* pv(ck|move)
+* vg(ck|export|import|merge|mknodes|split)
+* vgcfg(backup|restore)
+
+lvm
+^^^
+
+lvmetad
+^^^^^^^
+
+PV
+^^
+
+#. pvcreate
+
+VG
+^^
+
+#. vgcreate
+
+LV
+^^
+
+#. lvcreate
+
+   * --stripes 条带化，将读写操作分散到多个底层存储上。
+   * snapshot/快照
+
+     * 建立快照
+
+       `lvcreate -s -n lv-20190215 -L5T /dev/mapper/vg-lv`
+
+     * 取消快照
+
+       `lvconvert --merge foo/snap`
+
+示例
+----
+
+最好不要将整个物理硬盘创建为 PV，而是先建立一个单独的分区（MSDOS 方式设置分区
+格式为 8e， GPT 方式设置标记为 lvm），然后将该分区创建为 PV。
+
+假设存储设备为 /dev/sdd1 和 /dev/sde1。
+
+创建 PV：`pvcreate /dev/sdd1 /dev/sde1`
+
+扫描 PV：`pvscan`
+
+创建 VG：`vgcreate vg_test /dev/sdd1`
+
+激活 VG：`vgchange -a y vg_test`
+
+退激活 VG：`vgchange -a n vg_test`
+
+删除 VG：`vgremove vg_test`
+
+扩展 PV 到 VG：`vgextend vg_test /dev/sde1`
+
+移除 PV 从 VG：`vgreduce vg_test /dev/sde1`，操作前先使用 `pvmove` 将数据从
+要删除的 PV 移出。
+
+显示 VG 信息：`vgdisplay -v vg_test`
+
+扫描 VG：`vgscan`
+
+创建 LV：`lvcreate -L1500 -nlv_test vg_test` 创建大小为 1500MB 的 LV。
+`lvcreate -l 100%VG -nlv_test vg_test` 创建占用所有 VG 的 LV。
+
+扩展 LV： `lvextend -L+1G /dev/vg_test/lv_test` 增加 1G 空间。调用文件系统
+相关的命令让文件系统匹配新的空间。其他用法：
+`lvextend -l +100%FREE /dev/mapper/vg_data-lv_home` 将卷组里的未使用空间按
+百分数分配给 LV。
+
+缩小 LV： `lvreduce -L-1G /dev/vg_test/lv_test` 减小 1G 空间。注意操作之前
+需要先调用文件系统相关的命令调整文件系统大小，否则会导致数据丢失。
+参考 :ref:`resize`\ 。
+
+删除 LV： `lvremove /dev/vg_test/lv_test` 注意数据备份。
+
+扫描 LV：`lvscan`
+
+创建快照 LV：`lvcreate -L500M -s -n lv_test-backup /dev/vg_test/lv_test`，创建
+lv_test 的快照，大小为 500M。通过 /dev/vg_test/lv_test-backup 即可挂载该快照。
+需要注意的是，如果快照空间被使用完，该快照会立即失效，所以需要确保快照卷的空间
+能满足备份的需要。

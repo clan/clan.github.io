@@ -1,0 +1,20 @@
+grep
+====
+
+不让 grep 自身出现在 ps 结果中
+------------------------------
+
+.. versionadded:: @2019-01-31
+   创建
+
+::
+
+    $ ps -elf | grep dummy
+    0 S liuzx    30378 23068  0  80   0 - 33340 pipe_w 20:41 pts/46   00:00:00 grep --colour=auto dummy
+
+    $ ps -elf | grep '[d]ummy'
+
+第二个命令以正则表达式搜索，'d' 需要紧跟 'ummy'。但现在的 grep 命令自身是
+'d' 紧跟 '['，因此不会被匹配上。
+
+P.S. 另一个命令 `pgrep` 可以实现类似的功能并支持更多搜索条件。

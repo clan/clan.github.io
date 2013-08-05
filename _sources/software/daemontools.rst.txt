@@ -1,0 +1,64 @@
+daemontools 介绍
+================
+
+.. versionadded:: @2014-01-14
+   创建
+
+\*nix 系统下的服务一般以守护进程的方式运行，通过 sysvinit 或 upstart 或
+systemd 启动。对那些没有提供内置 daemon 方式的程序，可以通过
+start-stop-daemon 进行封装。或采用相对轻量级的程序来实现，
+例如本文要介绍的 daemontools 来启动。daemontools
+是一套 \*nix 上管理服务的工具集，其实现有两个版本，分别为
+`daemontools <http://cr.yp.to/daemontools.html>`_ 和
+`daemonntools-encore <http://untroubled.org/daemontools-encore/>`_\ 。
+本文仅介绍其中和服务启停有关的几个程序，其他的请参考官方文档。
+
+Gentoo 下执行 `emerge -avgk daemontools`\ ， Ubuntu 下执行
+`apt-get install daemontools-run` 安装软件，然后通过
+`service svscan start` 即可启动服务，其对应的主程序为 svscan，
+该程序会启动指定目录（Gentoo 下为 /service， Ubuntu 下为 /etc/service）
+下的服务，如果服务崩溃会自动重启。
+
+添加服务只需要在 service 目录下创建一个目录，在该目录下放置一个名为
+*run* 的可执行程序（shell/python 脚本，或二进制程序等）即可，svscan 会自动
+执行该程序（用 `supervise`\ ）。对 run 程序的要求是该程序不能主动退出，否则
+svscan 会检测到退出并再次执行该程序，这样即可保障服务一直运行。当然，svscan
+服务本身需要添加到开机自启动并有中断恢复机制，参考
+`How to start daemontools <http://cr.yp.to/daemontools/start.html>`_\ 。
+
+停止某个服务则先使用 `svc -d /service/aa` 停止 run 程序，然后删除文件夹
+aa（或改名为 .aa，svscan 会忽略以 . 开头的文件夹）。
+
+命令 svc 可以对 daemontools 管理下的服务进行控制：
+
+* `svc -h /service/aa` 发送 HUP 信号
+* `svc -t /service/aa` 发送 TERM 信号，daemon 退出后重启该程序。修改 run
+  程序或其他相关程序后可以使用该命令更新服务。
+* `svc -d /service/aa` 发送 TERM 信号，daemon 不会被重启
+* `svc -u /service/aa` 启动该 daemon
+* `svc -o /service/aa` 启动该 daemon，但不自动重启
+
+命令 svstat 输出服务运行信息： ::
+
+    # svstat /service/aa/
+    /service/aa/: up (pid 26209) 241781 seconds
+
+对 crontab 里一些需要频繁（如每分钟一次）运行的程序，也可以在 daemontools 的
+框架内实现，例如（其中 sleep 采用了 bash 扩展实现内置命令）：
+
+.. code-block: shell
+
+   #!/bin/sh
+
+   [ -x /usr/lib64/bash/sleep ] && {
+       enable -f /usr/lib64/bash/sleep sleep
+   }
+
+   while [ true ] ; do
+       # run jobs
+       sleep 60
+   done
+
+需要说明的是该例子和 crontab 并不等价，任务的执行间隔不是固定的，
+而是和程序执行所需时间有关，即每运行一次后等待 60s 再运行，
+而不是每 60s 运行一次。

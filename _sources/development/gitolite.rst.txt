@@ -1,0 +1,66 @@
+gitolite 的安装和配置
+=====================
+
+.. versionadded: @2013-11-04
+   创建
+
+服务端软件安装及配置
+--------------------
+
+以 Gentoo 系统为例，步骤如下：
+
+#. 安装软件 `emerge -avgk gitolite`
+
+#. 切换为 gitolite 用户 `sudo su - git`
+
+#. 导入管理员的 SSH 公钥。注意，这里的文件名为 “用户名.pub” 这种格式。关于 SSH
+   公钥认证的更多细节可以参考 :ref:`ssh-pubkey_auth`\。 ::
+
+     git@scms ~ $ gl-setup ./liuzx.pub
+     The default settings in the rc file (/home/data/git/.gitolite.rc) are fine for most
+     people but if you wish to make any changes, you can do so now.
+
+     hit enter...
+     creating gitolite-admin...
+     Initialized empty Git repository in /home/data/git/repositories/gitolite-admin.git/
+     creating testing...
+     Initialized empty Git repository in /home/data/git/repositories/testing.git/
+     [master (root-commit) c33027d] gl-setup ./liuzx.pub
+      2 files changed, 8 insertions(+)
+      create mode 100644 conf/gitolite.conf
+      create mode 100644 keydir/liuzx.pub
+
+在这个过程中会需要编辑 ~/.gitolite.rc 这个文件，先不做任何修改，以缺省文件保存
+即可。
+
+Gitolite 配置
+-------------
+
+Gitolite 的权限配置和帐号管理都是通过 Git 來管理的，因此需要在另外一台机器上
+检出其配置后来进行管理。假设上面配置的服务器名为 scms。
+
+#. git clone git@scms:gitolite-admin
+
+#. 放置每个帐号的公钥到 keydir 目录下，文件名规范为“用户名.pub”。
+
+#. 切换到 gitolite-admin 目录，编辑conf/gitolite.conf 文件，配置相关的权限。
+
+#. 提交所有的修改到 git，并 push 到服务端。
+
+::
+
+  $ git clone git@scms:gitolite-admin
+  正克隆到 'gitolite-admin'...
+  remote: Counting objects: 6, done.
+  remote: Compressing objects: 100% (4/4), done.
+  remote: Total 6 (delta 0), reused 0 (delta 0)
+  接收对象中: 100% (6/6), done.
+  $ git add keydir/test.pub
+  $ vi conf/gitolite.conf
+  $ git add conf/gitolite.conf
+  $ git commit -m 'add user test'
+  $ git push origin master
+
+gitolite.conf 的配置细节可以参考
+`官方文档 <https://github.com/sitaramc/gitolite>`_ 或
+`这里 <http://www.ossxp.com/doc/git/gitolite.html>`_\。

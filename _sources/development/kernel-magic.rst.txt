@@ -1,0 +1,23 @@
+Linux reboot 的魔数
+===================
+
+.. versionadded:: @2014-05-29
+   创建
+
+:manpage:`reboot(2)` 能看到 reboot 系统调用需要用到几个魔数，其定义在文件
+"include/linux/reboot.h" 或 "include/uapi/linux/reboot.h" 中： ::
+
+  #define LINUX_REBOOT_MAGIC1  0xfee1dead
+  #define LINUX_REBOOT_MAGIC2  672274793
+  #define LINUX_REBOOT_MAGIC2A 85072278
+  #define LINUX_REBOOT_MAGIC2B 369367448
+  #define LINUX_REBOOT_MAGIC2C 537993216
+
+第一个的意思很了然，是feel dead的hex表示。其他的四个分别为
+:wiki:`Linus<Linus_Torvalds>` 和他的三个女儿的生日。 ::
+
+  $ awk '/MAGIC2/ {printf "%20s %9s %X\n", $2, $3, $3}' include/uapi/linux/reboot.h
+   LINUX_REBOOT_MAGIC2 672274793 28121969
+  LINUX_REBOOT_MAGIC2A  85072278 5121996
+  LINUX_REBOOT_MAGIC2B 369367448 16041998
+  LINUX_REBOOT_MAGIC2C 537993216 20112000

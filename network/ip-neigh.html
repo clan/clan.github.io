@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>链路层地址（ARP/Neighbor）相关信息 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="ARP" href="arp.html"/>
+        <link rel="prev" title="HBase" href="../software/hbase.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>链路层地址（ARP/Neighbor）相关信息</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/network/ip-neigh.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="arp-neighbor">
+<h1>链路层地址（ARP/Neighbor）相关信息<a class="headerlink" href="#arp-neighbor" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-03-13 新版功能: </span>创建</p>
+</div>
+<p>Linux 下查看 ARP 相关信息的命令为：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># arp -an
+? (10.0.0.2) at 00:05:b7:09:4f:29 [ether] on eth0
+? (10.0.0.8) at &lt;incomplete&gt; on eth0
+</pre></div>
+</div>
+<p>如果希望查看更详细的数据或者查看 IPv6 相关的信息则需要使用 <cite>ip</cite> 命令：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ip -s neighbor show</span>
+<span class="n">fe80</span><span class="p">::</span><span class="mi">3</span><span class="n">a22</span><span class="p">:</span><span class="n">d6ff</span><span class="p">:</span><span class="n">feb5</span><span class="p">:</span><span class="mi">30</span><span class="n">c7</span> <span class="n">dev</span> <span class="n">eth0</span> <span class="n">lladdr</span> <span class="mi">38</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="n">d6</span><span class="p">:</span><span class="n">b5</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="n">c7</span> <span class="n">router</span> <span class="n">used</span> <span class="mi">1127</span><span class="o">/</span><span class="mi">1127</span><span class="o">/</span><span class="mi">1110</span> <span class="n">probes</span> <span class="mi">1</span> <span class="n">STALE</span>
+<span class="mf">10.0</span><span class="o">.</span><span class="mf">0.203</span> <span class="n">dev</span> <span class="n">eth0</span> <span class="n">lladdr</span> <span class="mi">00</span><span class="p">:</span><span class="mi">1</span><span class="n">e</span><span class="p">:</span><span class="mi">4</span><span class="n">f</span><span class="p">:</span><span class="n">ea</span><span class="p">:</span><span class="n">f2</span><span class="p">:</span><span class="mi">2</span><span class="n">e</span> <span class="n">ref</span> <span class="mi">1</span> <span class="n">used</span> <span class="mi">15</span><span class="o">/</span><span class="mi">14</span><span class="o">/</span><span class="mi">15</span> <span class="n">probes</span> <span class="mi">4</span> <span class="n">REACHABLE</span>
+</pre></div>
+</div>
+<p>该命令的输出形式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ipv4</span><span class="o">/</span><span class="n">ipv6</span><span class="p">]</span> <span class="p">[</span><span class="n">dev</span> <span class="n">eth0</span><span class="p">]</span> <span class="p">[</span><span class="n">lladdr</span> <span class="n">xx</span><span class="p">:</span><span class="n">xx</span><span class="p">:</span><span class="n">xx</span><span class="p">:</span><span class="n">xx</span><span class="p">:</span><span class="n">xx</span><span class="p">:</span><span class="n">xx</span><span class="p">]</span> <span class="p">[</span><span class="n">router</span><span class="p">]</span> <span class="p">[</span><span class="n">proxy</span><span class="p">]</span> <span class="p">[</span><span class="n">ref</span> <span class="n">x</span><span class="p">]</span> <span class="p">[</span><span class="n">used</span> <span class="n">USED</span><span class="o">/</span><span class="n">CONFIRMED</span><span class="o">/</span><span class="n">UPDATED</span><span class="p">]</span> <span class="p">[</span><span class="n">probes</span> <span class="n">x</span><span class="p">]</span> <span class="p">[</span><span class="n">INCOMPLETE</span> <span class="o">|</span> <span class="n">REACHABLE</span> <span class="o">|</span> <span class="n">STALE</span> <span class="o">|</span> <span class="n">DELAY</span> <span class="o">|</span> <span class="n">PROBE</span> <span class="o">|</span> <span class="n">FAILED</span> <span class="o">|</span> <span class="n">NOARP</span> <span class="o">|</span> <span class="n">PERMANENT</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>各字段分别解释如下：</p>
+<ul class="simple">
+<li>[ipv4/ipv6] 相应的 IP 地址</li>
+<li>[dev eth0] 该地址对应的网络接口</li>
+<li>[lladdr xx:xx:xx:xx:xx:xx] 链路层地址</li>
+<li>[router]</li>
+<li>[proxy]</li>
+<li>[ref x] 引用计数</li>
+<li>[used USED/CONFIRMED/UPDATED] 该地址的（使用/确认/更新，即当前状态维持）的时间</li>
+<li>[probes x] 探测次数</li>
+<li>[INCOMPLETE | REACHABLE | STALE | DELAY | PROBE | FAILED | NOARP | PERMANENT] 当前状态</li>
+</ul>
+<p>各个状态的意义如下：</p>
+<ul class="simple">
+<li>INCOMPLETE 链路地址探测之中，但还未完成</li>
+<li>REACHABLE 链路地址可达，该状态的维持时间参考 base_reachable_time， base_reachable_time_ms</li>
+<li>STALE 链路地址缓存失效，但并不意味不可达</li>
+<li>DELAY 探测开始之间的延迟，参考 delay_first_probe_time</li>
+<li>PROBE 链路地址探测之中</li>
+<li>FAILED 链路地址不可用（被删除）</li>
+<li>NOARP</li>
+<li>PERMANENT</li>
+</ul>
+<p>Linux 下 ARP 相关的可控参数请参考 <em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/arp(7)">arp(7)</a></em>，如
+gc （garbage collector）的相关配置。</p>
+<p>ARP 的一些状态变化的过程如下：</p>
+<ol class="arabic">
+<li><p class="first">主机发送 ARP 查询</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">17</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mf">36.758857</span> <span class="n">ARP</span><span class="p">,</span> <span class="n">Request</span> <span class="n">who</span><span class="o">-</span><span class="n">has</span> <span class="mf">10.2</span><span class="o">.</span><span class="mf">0.3</span> <span class="n">tell</span> <span class="mf">10.2</span><span class="o">.</span><span class="mf">11.2</span><span class="p">,</span> <span class="n">length</span> <span class="mi">28</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">收到目标机器回应后 ARP 状态变为 REACHABLE</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">17</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mf">36.759059</span> <span class="n">ARP</span><span class="p">,</span> <span class="n">Reply</span> <span class="mf">10.2</span><span class="o">.</span><span class="mf">0.3</span> <span class="ow">is</span><span class="o">-</span><span class="n">at</span> <span class="mi">00</span><span class="p">:</span><span class="mi">1</span><span class="n">d</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">2</span><span class="n">b</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="n">dd</span><span class="p">,</span> <span class="n">length</span> <span class="mi">46</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ip -s neigh show 10.2.0.3</span>
+<span class="mf">10.2</span><span class="o">.</span><span class="mf">0.3</span> <span class="n">dev</span> <span class="n">eth0</span> <span class="n">lladdr</span> <span class="mi">00</span><span class="p">:</span><span class="mi">1</span><span class="n">d</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">2</span><span class="n">b</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="n">dd</span> <span class="n">used</span> <span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="mi">1</span> <span class="n">probes</span> <span class="mi">4</span> <span class="n">REACHABLE</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">在和目标机器没有数据通讯的状态持续时间在 base_reachable_time/2 和
+3*base_reachable_time/2 之间（参考 neigh_rand_reach_time of net/core/neighbour.c），
+状态会由 REACHABLE 转变为 STALE，即缓存超时。如果和目标机器持续有数据传输，
+ARP 状态可能维持在 REACHABLE。</p>
+</li>
+<li><p class="first">在收到该目标机器的 unsolicited (gratutious) ARP 回应时，ARP
+的状态也会有所更新，如由 FAILED 变为 STALE。使用如下命令发送
+unsolicited ARP 回应包。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># arping -c 4 -A -I eth0 10.2.0.3</span>
+<span class="n">ARPING</span> <span class="mf">10.2</span><span class="o">.</span><span class="mf">0.3</span> <span class="kn">from</span> <span class="mf">10.2</span><span class="o">.</span><span class="mf">0.3</span> <span class="n">eth0</span>
+<span class="n">Sent</span> <span class="mi">4</span> <span class="n">probes</span> <span class="p">(</span><span class="mi">4</span> <span class="n">broadcast</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+<span class="n">Received</span> <span class="mi">0</span> <span class="n">response</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">在 ARP 表项过多时，内核会根据
+gc_interval/gc_stale_time/gc_thresh1/gc_thresh2/gc_thresh3 的值来决定
+何时以及以何种策略来执行 gc 动作。</p>
+</li>
+</ol>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="arp.html" class="btn btn-neutral float-right" title="ARP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../software/hbase.html" class="btn btn-neutral" title="HBase" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

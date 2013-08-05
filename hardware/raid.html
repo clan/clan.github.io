@@ -1,0 +1,871 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RAID 维护备忘 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="各种接口简述" href="interface.html"/>
+        <link rel="prev" title="通过 SMART 查看和跟踪硬盘健康状态" href="smart.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RAID 维护备忘</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">技术简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">RAID 卡维护备忘</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lsi">LSI 系列</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hp-smartarray">HP SmartArray</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">软 RAID 配置</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mdadm">mdadm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">其他方式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../misc/cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/restructuredtext.html">reStructuredText 备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>RAID 维护备忘</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hardware/raid.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="raid">
+<h1>RAID 维护备忘<a class="headerlink" href="#raid" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2014-12-22 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-01-29 版更改: </span>增加启动盘查看命令</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-14 版更改: </span>增加更多命令及解释</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-03-11 版更改: </span>增加软 RAID 维护示例</p>
+</div>
+<p><strong>RAID/独立（廉价）硬盘冗余阵列/Redundant Array of Independent/Inexpensive Disks</strong></p>
+<div class="section" id="id1">
+<h2>技术简介<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<table border="1" class="docutils" id="index-0">
+<colgroup>
+<col width="8%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="8%" />
+<col width="28%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>级别</td>
+<td>最少硬盘</td>
+<td>最大容错</td>
+<td>可用容量</td>
+<td>读取性能</td>
+<td>写入性能</td>
+<td>安全性</td>
+<td>特性</td>
+</tr>
+<tr class="row-even"><td>JBOD</td>
+<td>1</td>
+<td>0</td>
+<td>n</td>
+<td>1</td>
+<td>1</td>
+<td>无</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>2</td>
+<td>0</td>
+<td>n</td>
+<td>1</td>
+<td>1</td>
+<td>无</td>
+<td>追求容量，但无可靠性</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>2</td>
+<td>n-1</td>
+<td>1</td>
+<td>n</td>
+<td>n</td>
+<td>高</td>
+<td>最求安全性，
+一个硬盘正常即可</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>3</td>
+<td>1</td>
+<td>n-1</td>
+<td>n-1</td>
+<td>n-1</td>
+<td>高</td>
+<td>一块校验盘</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>4</td>
+<td>2</td>
+<td>n-2</td>
+<td>n-2</td>
+<td>n-2</td>
+<td>&gt;5</td>
+<td>两块校验盘</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id2">
+<h2>RAID 卡维护备忘<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>并非所有命令都有过实际测试，因此不排除个别操作选项有错误。实际操作时请自行确认
+并谨慎操作（有条件的都在测试环境下测试或确保数据有备份）。</p>
+<p>RAID 控制器的类型可以由命令 <cite>lspci</cite> 查看 PCI 设备的信息来获得。</p>
+<ul>
+<li><p class="first">刷新磁盘信息</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>echo &quot;- - -&quot; &gt; /sys/class/scsi_host/host0/scan</cite></li>
+<li><cite>echo &quot;1&quot; &gt; /sys/bus/scsi/devices/0:0:0:0/rescan</cite></li>
+<li><cite>echo &quot;1&quot; &gt; /sys/class/scsi_disk/0:0:0:0/device/rescan</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">缓存策略解释</p>
+<blockquote>
+<div><ul class="simple">
+<li>WT &nbsp; &nbsp;（Write through）</li>
+<li>WB &nbsp; &nbsp;（Write back）</li>
+<li>NORA &nbsp;（No read ahead）</li>
+<li>RA &nbsp; &nbsp;（Read ahead）</li>
+<li>ADRA &nbsp;（Adaptive read ahead）</li>
+<li>Cached</li>
+<li>Direct</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="section" id="lsi">
+<h3>LSI 系列<a class="headerlink" href="#lsi" title="永久链接至标题">¶</a></h3>
+<ol class="arabic" start="0">
+<li><p class="first">通用信息</p>
+<blockquote>
+<div><ul class="simple">
+<li>查看帮助 <cite>megacli -h -NoLog</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">查看 RAID 卡全部信息</p>
+<blockquote>
+<div><ul>
+<li><p class="first">显示适配器个数</p>
+<p><cite>megacli -adpCount -NoLog</cite></p>
+</li>
+<li><p class="first">显示 RAID 卡信息。</p>
+<p><cite>megacli -AdpAllInfo -aALL -NoLog</cite></p>
+</li>
+<li><p class="first">显示 RAID 卡型号，RAID 设置及物理磁盘的相关信息。</p>
+<p><cite>megacli -CfgDsply -aALL -NoLog</cite></p>
+</li>
+<li><p class="first">查看 RAID 卡日志。</p>
+<ul class="simple">
+<li><cite>megacli -AdpAlILog -aALL -NoLog</cite></li>
+<li><cite>megacli -FwTermLog -Dsply -aALL -NoLog</cite></li>
+</ul>
+</li>
+<li><p class="first">查看电池信息</p>
+<p><cite>megacli -AdpBbuCmd -aAll -NoLog</cite></p>
+</li>
+<li><p class="first">显示适配器时间</p>
+<p><cite>megacli -AdpGetTime –aALL -NoLog</cite></p>
+</li>
+<li><p class="first">查看启动盘设置</p>
+<p><cite>megacli -AdpBootDrive -Get -aALL -NoLog</cite></p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">物理硬盘</p>
+<blockquote>
+<div><ul>
+<li><p class="first">查看所有物理硬盘信息
+如果 &quot;Firmware state&quot; 显示为非 Online，则表示该磁盘有问题。</p>
+<p><cite>megacli -PDList -aALL -NoLog</cite></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># megacli -cfgdsply -aALL -NoLog
+
+==============================================================================
+Adapter: 0
+Product Name: PERC H710 Mini
+...
+==============================================================================
+Number of DISK GROUPS: 1
+
+SPANNED DISK GROUP: 0
+...
+Virtual Drive Information:
+Virtual Drive: 0 (Target Id: 0)
+Name                :Virtual Disk 0
+RAID Level          : Primary-1, Secondary-0, RAID Level Qualifier-0
+...
+<span class="hll">State               : Degraded
+</span>Strip Size          : 64 KB
+...
+Physical Disk Information:
+Physical Disk: 0
+...
+PD Type: SAS
+
+Raw Size: 279.396 GB [0x22ecb25c Sectors]
+...
+<span class="hll">Firmware state: Failed
+</span>...
+
+Physical Disk: 1
+Enclosure Device ID: 32
+...
+
+Raw Size: 279.396 GB [0x22ecb25c Sectors]
+...
+<span class="hll">Firmware state: Online, Spun Up
+</span>...
+
+Exit Code: 0x00
+</pre></div>
+</div>
+</li>
+<li><p class="first">查看指定硬盘的信息（32 和 0 分别对应上一条命令输出的
+Enclosure Device ID 和 Slot Number）：</p>
+<p><cite>megacli -pdInfo -PhysDrv[32:0] -aALL -NoLog</cite></p>
+</li>
+<li><p class="first"><cite>megacli -PdList -a0 -NoLog | grep -E &quot;^(Enclosure|Device|Firmware|Inquirt|Non Coerced|Coerced|Foreign|Media Type)&quot;</cite></p>
+</li>
+<li><p class="first">表示磁盘状态 <cite>megacli -PDMakeGood -PhysDrv[252:4] -a0</cite></p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">逻辑（虚拟）盘</p>
+<blockquote>
+<div><ul>
+<li><p class="first">查看信息 <cite>megacli -LDInfo -LAll -aAll -NoLog</cite></p>
+<p>显示所有逻辑磁盘组信息。搜索 State，
+正常情况为：<em>State : Optimal</em>，否则为异常，例如 <em>State : Degraded</em>。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># megacli -LDInfo -Lall -aALL -NoLog
+
+Adapter 0 -- Virtual Drive Information:
+Virtual Drive: 0 (Target Id: 0)
+Name                :Virtual Disk 0
+RAID Level          : Primary-1, Secondary-0, RAID Level Qualifier-0
+Size                : 836.625 GB
+Sector Size         : 512
+Mirror Data         : 836.625 GB
+<span class="hll">State               : Degraded
+</span>...
+
+Exit Code: 0x00
+</pre></div>
+</div>
+</li>
+<li><p class="first"><cite>megacli -LdPdInfo -aALL -NoLog</cite></p>
+</li>
+<li><p class="first">删除第一个控制器上的第一个VD</p>
+<p><cite>megacli -CfgLdDel -L0 -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">增加 RAID0 逻辑盘</p>
+<p><cite>megacli -CfgLdAdd -r0 [E0:S0,E1:S1] -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">初始化逻辑盘（默认创建后会自动执行快速初始化操作）</p>
+<p><cite>megacli -LDInit -Start -L2 -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">查看阵列初始化状态</p>
+<p><cite>megacli -LDInit ShowProg -Lall -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">查看阵列初始进度动态显示</p>
+<p><cite>megacli -LDInit -ProgDsply -LALL -aALL -NoLog</cite></p>
+</li>
+<li><p class="first">配置策略</p>
+<p><cite>megacli -LDSetProp ... -L0 -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">设定 RAID 阵列名字</p>
+<p><cite>megacli -LDSetProp Name Raid6_1h -L0 -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">查询 RAID 阵列名字</p>
+<p><cite>megacli -LDGetProp Name -LAll -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">查看算法</p>
+<p><cite>megacli -LDGetProp -Cache -L0 -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">设定算法</p>
+<p><cite>megacli -LDSetProp ADRA -LAll -aAll -NoLog</cite></p>
+</li>
+<li><p class="first">创建 RAID6 阵列</p>
+<p><cite>megacli -CfgLdAdd r6[16:1,16:2,16:3,16:4,16:5] WT Direct -HSP[16:6] -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">创建 RAID50 阵列</p>
+<p><cite>megacli -CfgSpanAdd r50 Array0[16:1,16:2,16:3] Array1[16:4,16:5,16:6] -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">给 RAID50 添加 Hot Spare</p>
+<p><cite>megacli -PDHSP Set PhysDrv[16:7] -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">删除 Hot Spare</p>
+<p><cite>megacli -PDHSP rmv PhysDrv[16:7] -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">给 Array1 添加私有的 Hot Spare</p>
+<p><cite>megacli -PDHSP Set Dedicated Array1 PhysDrv[16:7] -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">设定 RAID 阵列重建速度</p>
+<p><cite>megacli -AdpSetProp RebuildRate 70 -A0 -NoLog</cite></p>
+</li>
+<li><p class="first">设定 RAID 阵列后台初始化速度</p>
+<p><cite>megacli -AdpSetProp BgiRate 90 -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">增加 1 块磁盘转换 RAID0 到 RAID6</p>
+<p><cite>megacli -LDRecon Start r6[Add PhysDrv[16:9,16:10]] L0 -a0 -NoLog</cite></p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">JBOD 模式</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>megacli -AdpSetProp -EnableJBOD -1 -aALL -NoLog</cite></li>
+<li><cite>megacli -PDMakeJBOD -PhysDrv[252:5] -a0 -NoLog</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">定位（点亮）指定硬盘</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>megacli -PdLocate -start -physdrv[32:0] -a0 -NoLog</cite></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">BBU 状态信息</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><cite>megacli -AdpBbuCmd -aALL -NoLog</cite></p>
+</li>
+<li><p class="first">电池容量信息</p>
+<p><cite>megacli -AdpBbuCmd GetBbuCapacityInfo -aAll -NoLog</cite></p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">日志</p>
+<blockquote>
+<div><ul>
+<li><p class="first">显示最近 4 次日志报告</p>
+<p><cite>megacli -AdpEventLog -GetLatest 4 -f EventLog -a0 -NoLog</cite></p>
+</li>
+<li><p class="first">清除所有日志</p>
+<p><cite>megacli -AdpEventLog -Clear -aALL -NoLog</cite></p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">初始化</p>
+<blockquote>
+<div><ul>
+<li><p class="first">恢复出厂设置</p>
+<p><cite>megacli -AdpFacDefSet -aALL -NoLog</cite></p>
+</li>
+<li><p class="first">清除 RAID 全部信息</p>
+<p><cite>megacli -CfgClr -aALL -NoLog</cite></p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="hp-smartarray">
+<h3>HP SmartArray<a class="headerlink" href="#hp-smartarray" title="永久链接至标题">¶</a></h3>
+<p>HPACUCLI stands for HP Array Configuration Utility CLI。 软件下载地址在
+<a class="reference external" href="http://downloads.linux.hp.com/SDR/downloads/ManagementComponentPack/">这里</a> 。</p>
+<p>在使用该命令之前需要确认加载了 sg 内核模块。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># modprobe sg
+# hpacucli
+HP Array Configuration Utility CLI 9.40.12.0
+Detecting Controllers...Done.
+Type &quot;help&quot; for a list of supported commands.
+Type &quot;exit&quot; to close the console.
+
+=&gt; rescan
+=&gt; ctrl all show config # Display Controller and Disk Status
+
+Smart Array P420i in Slot 0 (Embedded)    (sn: 001438028159200)
+
+   array A (SAS, Unused Space: 0  MB)
+
+
+      logicaldrive 1 (838.1 GB, RAID 1+0, OK)
+
+      physicaldrive 1I:1:1 (port 1I:box 1:bay 1, SAS, 300 GB, OK)
+      physicaldrive 1I:1:2 (port 1I:box 1:bay 2, SAS, 300 GB, OK)
+      physicaldrive 1I:1:3 (port 1I:box 1:bay 3, SAS, 300 GB, OK)
+      physicaldrive 1I:1:4 (port 1I:box 1:bay 4, SAS, 300 GB, OK)
+      physicaldrive 2I:1:5 (port 2I:box 1:bay 5, SAS, 300 GB, OK)
+      physicaldrive 2I:1:6 (port 2I:box 1:bay 6, SAS, 300 GB, OK)
+
+   SEP (Vendor ID PMCSIERA, Model SRCv8x6G) 380 (WWID: 500143802815920F)
+
+=&gt; ctrl all show status # View Controller Status
+
+Smart Array P420i in Slot 0 (Embedded)
+   Controller Status: OK
+   Cache Status: OK
+   Battery/Capacitor Status: OK
+
+
+=&gt; ctrl slot=0 pd all show status # View Drive Status
+
+   physicaldrive 1I:1:1 (port 1I:box 1:bay 1, 300 GB): OK
+   physicaldrive 1I:1:2 (port 1I:box 1:bay 2, 300 GB): OK
+   physicaldrive 1I:1:3 (port 1I:box 1:bay 3, 300 GB): OK
+   physicaldrive 1I:1:4 (port 1I:box 1:bay 4, 300 GB): OK
+   physicaldrive 2I:1:5 (port 2I:box 1:bay 5, 300 GB): OK
+   physicaldrive 2I:1:6 (port 2I:box 1:bay 6, 300 GB): OK
+
+=&gt; ctrl slot=0 pd 1I:1:1 show detail # View Individual Drive Status
+
+Smart Array P420i in Slot 0 (Embedded)
+
+   array A
+
+      physicaldrive 1I:1:1
+         Port: 1I
+         Box: 1
+         Bay: 1
+         Status: OK
+         Drive Type: Data Drive
+         Interface Type: SAS
+         Size: 300 GB
+         Rotational Speed: 10500
+         Firmware Revision: HPD3
+         Serial Number: S0K12Z250000B411CB2H
+         Model: HP      EG0300FCVBF
+         Current Temperature (C): 30
+         Maximum Temperature (C): 37
+         PHY Count: 2
+         PHY Transfer Rate: 6.0Gbps, Unknown
+         Drive Authentication Status: OK
+         Carrier Application Version: 11
+         Carrier Bootloader Version: 6
+
+
+=&gt; ctrl slot=0 ld all show # View All Logical Drives
+
+Smart Array P420i in Slot 0 (Embedded)
+
+   array A
+
+      logicaldrive 1 (838.1 GB, RAID 1+0, OK)
+
+=&gt; ctrl slot=0 ld 1 show # View Detailed Logical Drive Status
+
+Smart Array P420i in Slot 0 (Embedded)
+
+   array A
+
+      Logical Drive: 1
+         Size: 838.1 GB
+         Fault Tolerance: 1+0
+         Heads: 255
+         Sectors Per Track: 32
+         Cylinders: 65535
+         Strip Size: 256 KB
+         Full Stripe Size: 768 KB
+         Status: OK
+         Caching:  Enabled
+         Unique Identifier: 600508B1001C77F824A96079D74D01AD
+         Disk Name: /dev/sda
+         Mount Points: / 16.0 GB
+         OS Status: LOCKED
+         Logical Drive Label: A3251B080014380281592008F9E
+         Mirror Group 0:
+            physicaldrive 1I:1:1 (port 1I:box 1:bay 1, SAS, 300 GB, OK)
+            physicaldrive 1I:1:2 (port 1I:box 1:bay 2, SAS, 300 GB, OK)
+            physicaldrive 1I:1:3 (port 1I:box 1:bay 3, SAS, 300 GB, OK)
+         Mirror Group 1:
+            physicaldrive 1I:1:4 (port 1I:box 1:bay 4, SAS, 300 GB, OK)
+            physicaldrive 2I:1:5 (port 2I:box 1:bay 5, SAS, 300 GB, OK)
+            physicaldrive 2I:1:6 (port 2I:box 1:bay 6, SAS, 300 GB, OK)
+         Drive Type: Data
+
+
+=&gt; ctrl slot=0 modify dwc=enable # Enable or Disable Cache
+
+Warning: Without the proper safety precautions, use of write cache on physical
+         drives could cause data loss in the event of power failure.  To ensure
+         data is properly protected, use redundant power supplies and
+         Uninterruptible Power Supplies. Also, if you have multiple storage
+         enclosures, all data should be mirrored across them. Use of this
+         feature is not recommended unless these precautions are followed.
+         Continue? (y/n) n
+
+=&gt; ctrl slot=0 ld 1 modify led=on # Blink Physical Disk LED
+
+=&gt; quit
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>软 RAID 配置<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<div class="section" id="mdadm">
+<h3>mdadm<a class="headerlink" href="#mdadm" title="永久链接至标题">¶</a></h3>
+<p>查看 RAID 状态（该 RAID 处于降级模式）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># mdadm -D /dev/md0</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">md0</span><span class="p">:</span>
+           <span class="n">Version</span> <span class="p">:</span> <span class="mf">1.2</span>
+     <span class="n">Creation</span> <span class="n">Time</span> <span class="p">:</span> <span class="n">Tue</span> <span class="n">Feb</span> <span class="mi">14</span> <span class="mi">10</span><span class="p">:</span><span class="mi">25</span><span class="p">:</span><span class="mi">30</span> <span class="mi">2017</span>
+        <span class="n">Raid</span> <span class="n">Level</span> <span class="p">:</span> <span class="n">raid1</span>
+        <span class="n">Array</span> <span class="n">Size</span> <span class="p">:</span> <span class="mi">5829140480</span> <span class="p">(</span><span class="mf">5559.10</span> <span class="n">GiB</span> <span class="mf">5969.04</span> <span class="n">GB</span><span class="p">)</span>
+     <span class="n">Used</span> <span class="n">Dev</span> <span class="n">Size</span> <span class="p">:</span> <span class="mi">5829140480</span> <span class="p">(</span><span class="mf">5559.10</span> <span class="n">GiB</span> <span class="mf">5969.04</span> <span class="n">GB</span><span class="p">)</span>
+      <span class="n">Raid</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">2</span>
+     <span class="n">Total</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">1</span>
+       <span class="n">Persistence</span> <span class="p">:</span> <span class="n">Superblock</span> <span class="ow">is</span> <span class="n">persistent</span>
+
+     <span class="n">Intent</span> <span class="n">Bitmap</span> <span class="p">:</span> <span class="n">Internal</span>
+
+       <span class="n">Update</span> <span class="n">Time</span> <span class="p">:</span> <span class="n">Tue</span> <span class="n">Mar</span>  <span class="mi">5</span> <span class="mi">09</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mi">50</span> <span class="mi">2019</span>
+             <span class="n">State</span> <span class="p">:</span> <span class="n">clean</span><span class="p">,</span> <span class="n">degraded</span>
+    <span class="n">Active</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">1</span>
+   <span class="n">Working</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">1</span>
+    <span class="n">Failed</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">0</span>
+     <span class="n">Spare</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">0</span>
+
+<span class="n">Consistency</span> <span class="n">Policy</span> <span class="p">:</span> <span class="n">bitmap</span>
+
+              <span class="n">Name</span> <span class="p">:</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">0</span>  <span class="p">(</span><span class="n">local</span> <span class="n">to</span> <span class="n">host</span> <span class="n">localhost</span><span class="p">)</span>
+              <span class="n">UUID</span> <span class="p">:</span> <span class="mf">0e82</span><span class="n">f8b2</span><span class="p">:</span><span class="n">b626a667</span><span class="p">:</span><span class="mf">09e9</span><span class="n">d9bc</span><span class="p">:</span><span class="n">e609bf90</span>
+            <span class="n">Events</span> <span class="p">:</span> <span class="mi">13187</span>
+
+    <span class="n">Number</span>   <span class="n">Major</span>   <span class="n">Minor</span>   <span class="n">RaidDevice</span> <span class="n">State</span>
+       <span class="o">-</span>       <span class="mi">0</span>        <span class="mi">0</span>        <span class="mi">0</span>      <span class="n">removed</span>
+       <span class="mi">1</span>       <span class="mi">8</span>       <span class="mi">19</span>        <span class="mi">1</span>      <span class="n">active</span> <span class="n">sync</span>   <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb3</span>
+</pre></div>
+</div>
+<p>重新恢复 RAID</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># mdadm --manage /dev/md0 -a /dev/sda3</span>
+<span class="n">mdadm</span><span class="p">:</span> <span class="n">re</span><span class="o">-</span><span class="n">added</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda3</span>
+</pre></div>
+</div>
+<p>再次查看 RAID 状态：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># mdadm -D /dev/md0</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">md0</span><span class="p">:</span>
+     <span class="o">...</span>
+
+             <span class="n">State</span> <span class="p">:</span> <span class="n">clean</span><span class="p">,</span> <span class="n">degraded</span><span class="p">,</span> <span class="n">recovering</span>
+    <span class="n">Active</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">1</span>
+   <span class="n">Working</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">2</span>
+    <span class="n">Failed</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">0</span>
+     <span class="n">Spare</span> <span class="n">Devices</span> <span class="p">:</span> <span class="mi">1</span>
+
+     <span class="o">...</span>
+
+    <span class="n">Rebuild</span> <span class="n">Status</span> <span class="p">:</span> <span class="mi">24</span><span class="o">%</span> <span class="n">complete</span>
+
+    <span class="o">...</span>
+
+    <span class="n">Number</span>   <span class="n">Major</span>   <span class="n">Minor</span>   <span class="n">RaidDevice</span> <span class="n">State</span>
+       <span class="mi">0</span>       <span class="mi">8</span>        <span class="mi">3</span>        <span class="mi">0</span>      <span class="n">spare</span> <span class="n">rebuilding</span>   <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda3</span>
+       <span class="mi">1</span>       <span class="mi">8</span>       <span class="mi">19</span>        <span class="mi">1</span>      <span class="n">active</span> <span class="n">sync</span>   <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h3>其他方式<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>/proc/mdstat 显示软 RAID 状态：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /proc/mdstat</span>
+<span class="n">Personalities</span> <span class="p">:</span> <span class="p">[</span><span class="n">raid1</span><span class="p">]</span> <span class="p">[</span><span class="n">raid6</span><span class="p">]</span> <span class="p">[</span><span class="n">raid5</span><span class="p">]</span> <span class="p">[</span><span class="n">raid4</span><span class="p">]</span>
+<span class="n">md0</span> <span class="p">:</span> <span class="n">active</span> <span class="n">raid1</span> <span class="n">sda3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="n">sdb3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      <span class="mi">5829140480</span> <span class="n">blocks</span> <span class="nb">super</span> <span class="mf">1.2</span> <span class="p">[</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="n">UU</span><span class="p">]</span>
+      <span class="n">bitmap</span><span class="p">:</span> <span class="mi">2</span><span class="o">/</span><span class="mi">44</span> <span class="n">pages</span> <span class="p">[</span><span class="mi">8</span><span class="n">KB</span><span class="p">],</span> <span class="mi">65536</span><span class="n">KB</span> <span class="n">chunk</span>
+
+<span class="n">unused</span> <span class="n">devices</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">none</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="interface.html" class="btn btn-neutral float-right" title="各种接口简述" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smart.html" class="btn btn-neutral" title="通过 SMART 查看和跟踪硬盘健康状态" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

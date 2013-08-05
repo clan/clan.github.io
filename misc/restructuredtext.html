@@ -1,0 +1,733 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>reStructuredText 备忘 &mdash; blog.clanzx.net 0.1 文档</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/blog.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="索引"
+              href="../genindex.html"/>
+        <link rel="search" title="搜索" href="../search.html"/>
+    <link rel="top" title="blog.clanzx.net 0.1 文档" href="../index.html"/>
+        <link rel="next" title="房贷还款计算的 python 程序" href="debit.html"/>
+        <link rel="prev" title="魔方解法" href="rubiks_cube.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> blog.clanzx.net
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">硬件猎奇</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/intro.html">综述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/ipmi.html">IPMI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/memory.html">内存</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/smart.html">通过 SMART 查看和跟踪硬盘健康状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/raid.html">RAID 维护备忘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/interface.html">各种接口简述</a></li>
+</ul>
+<p class="caption"><span class="caption-text">软件探秘</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../software/init.html">初始化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/svc.html">服务维护/管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ops.html">日常维护</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/virtualization.html">虚拟化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/shell.html">Shell 及常用命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/ssl.html">SSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/nss.html">名字服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/db.html">数据库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/web.html">WEB 服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/analysis.html">数据分析</a></li>
+</ul>
+<p class="caption"><span class="caption-text">网络漫游</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-neigh.html">链路层地址（ARP/Neighbor）相关信息</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/arp.html">ARP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/address.html">IP 地址</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ipv6-dad.html">Linux IPv6 DAD 相关配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/ip-config.html">Linux 下的多 IP 地址配置方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/rp_filter.html">Linux rp_filter 配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/route.html">路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/openvpn.html">使用 openvpn 实现 SSL VPN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/netfilter-recent.html">iptables recent 模块配置</a></li>
+</ul>
+<p class="caption"><span class="caption-text">开发构建</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/scms.html">配置管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/lang.html">语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/debug.html">调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/kernel.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/nlp.html">自然语言处理</a></li>
+</ul>
+<p class="caption"><span class="caption-text">天南海北</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cards.html">各种卡片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rubiks_cube.html">魔方解法</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">reStructuredText 备忘</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">段落</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">文本格式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#roles">Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#directives">Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">数学公式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debit.html">房贷还款计算的 python 程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nexus5.html">Nexus 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sites.html">WEB 网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="illusion.html">错觉</a></li>
+</ul>
+<p class="caption"><span class="caption-text">读书笔记</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../books/evolution.html">进化 - 从孤胆极客到高效团队</a></li>
+</ul>
+<p class="caption"><span class="caption-text">索引/表</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">索引</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">blog.clanzx.net</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>reStructuredText 备忘</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/misc/restructuredtext.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="restructuredtext">
+<h1>reStructuredText 备忘<a class="headerlink" href="#restructuredtext" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">&#64;2019-02-13 新版功能: </span>创建</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 &#64;2019-02-16 版更改: </span>增加更多角色及示例</p>
+</div>
+<div class="section" id="id1">
+<h2>段落<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="93%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>#</td>
+<td>with overline, for parts</td>
+</tr>
+<tr class="row-even"><td>*</td>
+<td>with overline, for chapters</td>
+</tr>
+<tr class="row-odd"><td>=</td>
+<td>for sections</td>
+</tr>
+<tr class="row-even"><td>-</td>
+<td>for subsections</td>
+</tr>
+<tr class="row-odd"><td>^</td>
+<td>for subsubsections</td>
+</tr>
+<tr class="row-even"><td>&quot;</td>
+<td>for paragraphs</td>
+</tr>
+</tbody>
+</table>
+<p>保留换行的段落：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">|</span> <span class="n">保留换行</span>
+<span class="o">|</span> <span class="n">的段落</span>
+</pre></div>
+</div>
+<p>示例如下：</p>
+<div class="line-block">
+<div class="line">保留换行</div>
+<div class="line">的段落</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>文本格式<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="35%" />
+<col width="43%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><em>text</em></td>
+<td>*text*</td>
+<td>强调（斜体）</td>
+</tr>
+<tr class="row-even"><td><strong>text</strong></td>
+<td>**text**</td>
+<td>着重强调（黑体）</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">test</span></code></td>
+<td>``test``</td>
+<td>代码示例</td>
+</tr>
+<tr class="row-even"><td><cite>test</cite></td>
+<td>`test`</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>限制：</p>
+<ul class="simple">
+<li>不能嵌套</li>
+<li>文本首尾不能有空格</li>
+<li>如果前后无空格，则需要使用“\ ”转义，例如 test<em>code</em>test</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>列表<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>无序列表</td>
+<td>* -</td>
+</tr>
+<tr class="row-even"><td>有序列表</td>
+<td>#. 0.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="roles">
+<h2>Roles<a class="headerlink" href="#roles" title="永久链接至标题">¶</a></h2>
+<p>参考 <a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html">Roles</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>:any:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>:ref:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:doc:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>:download:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:numref:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>:envvar:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:token:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>:keyword:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:option:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>:term:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:math:</td>
+<td><span class="math notranslate nohighlight">\(a^2 + b^2 = c^2\)</span></td>
+</tr>
+<tr class="row-even"><td>:eq:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:abbr:</td>
+<td><abbr title="Last in, First out">LIFO</abbr></td>
+</tr>
+<tr class="row-even"><td>:command:</td>
+<td><strong class="command">rm</strong></td>
+</tr>
+<tr class="row-odd"><td>:dfn:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>:file:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:guilabel:</td>
+<td><span class="guilabel">A</span></td>
+</tr>
+<tr class="row-even"><td>:kbd:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>:mailheader:</td>
+<td><em class="mailheader">Content-Type</em></td>
+</tr>
+<tr class="row-even"><td>:makevar:</td>
+<td><strong class="makevar">CC</strong></td>
+</tr>
+<tr class="row-odd"><td>:manpage:</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>:menuselection:</td>
+<td><span class="menuselection">Start ‣ Programs</span></td>
+</tr>
+<tr class="row-odd"><td>:mimetype:</td>
+<td><em class="mimetype">text/html</em></td>
+</tr>
+<tr class="row-even"><td>:newsgroup:</td>
+<td><em class="newsgroup">comp.lang.c</em></td>
+</tr>
+<tr class="row-odd"><td>:program:</td>
+<td><strong class="program">dir.exe</strong></td>
+</tr>
+<tr class="row-even"><td>:regexp:</td>
+<td><code class="regexp docutils literal notranslate"><span class="pre">[a-Z]+</span></code></td>
+</tr>
+<tr class="row-odd"><td>:samp:</td>
+<td><code class="samp docutils literal notranslate"><span class="pre">print</span> <span class="pre">1</span> <span class="pre">+</span> <em><span class="pre">variable</span></em></code></td>
+</tr>
+<tr class="row-even"><td>:pep:</td>
+<td><span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0008"><strong>PEP 8</strong></a></td>
+</tr>
+<tr class="row-odd"><td>:rfc:</td>
+<td><span class="target" id="index-1"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc1.html"><strong>RFC 1</strong></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="directives">
+<h2>Directives<a class="headerlink" href="#directives" title="永久链接至标题">¶</a></h2>
+<p>参考 <a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html">Directives</a></p>
+<ul>
+<li><p class="first">toctree</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> .. toctree::
+    :maxdepth: 5
+    :numbered:
+    :caption: Table of Contents
+    :name: mastertoc
+    :totlesonly:
+    :glob:
+    :reversed:
+    :hidden:
+    :includehidden:
+
+genindex, modindex, search, _*** 不能作为文档名。
+</pre></div>
+</div>
+</li>
+<li><p class="first">contents</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">contents</span><span class="p">::</span> <span class="n">a</span> <span class="n">title</span> <span class="k">for</span> <span class="n">the</span> <span class="n">contents</span>
+   <span class="p">:</span><span class="n">depth</span><span class="p">:</span><span class="mi">2</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">attention</p>
+<div class="admonition attention">
+<p class="first admonition-title">注意</p>
+<p class="last">attention</p>
+</div>
+</li>
+<li><p class="first">caution</p>
+<div class="admonition caution">
+<p class="first admonition-title">警告</p>
+<p class="last">caution</p>
+</div>
+</li>
+<li><p class="first">danger</p>
+<div class="admonition danger">
+<p class="first admonition-title">危险</p>
+<p class="last">danger</p>
+</div>
+</li>
+<li><p class="first">error</p>
+<div class="admonition error">
+<p class="first admonition-title">错误</p>
+<p class="last">error</p>
+</div>
+</li>
+<li><p class="first">hint</p>
+<div class="admonition hint">
+<p class="first admonition-title">提示</p>
+<p class="last">hint</p>
+</div>
+</li>
+<li><p class="first">important</p>
+<div class="admonition important">
+<p class="first admonition-title">重要</p>
+<p class="last">important</p>
+</div>
+</li>
+<li><p class="first">note</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">note</p>
+</div>
+</li>
+<li><p class="first">tip</p>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">tip</p>
+</div>
+</li>
+<li><p class="first">warning</p>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last">warning</p>
+</div>
+</li>
+<li><p class="first">epigraph</p>
+<blockquote class="epigraph">
+<div><p>No matter where you go, there you are.</p>
+<p class="attribution">&mdash;Buckaroo Banzai</p>
+</div></blockquote>
+</li>
+<li><p class="first">compound</p>
+<div class="compound">
+<p class="compound-first">The 'rm' command is very dangerous.  If you are logged
+in as root and enter</p>
+<div class="compound-middle highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span>
+<span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p class="compound-last">you will erase the entire contents of your file system.</p>
+</div>
+</li>
+<li><p class="first">topic</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.. topic:: Topic Title
+
+    Subsequent indented lines comprise
+    the body of the topic, and are
+    interpreted as body elements.
+</pre></div>
+</div>
+</li>
+<li><p class="first">sidebar</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.. sidebar:: Sidebar Title
+   :subtitle: Optional Sidebar Subtitle
+
+   Subsequent indented lines comprise
+   the body of the sidebar, and are
+   interpreted as body elements.
+</pre></div>
+</div>
+</li>
+<li><p class="first">versionadded</p>
+<div class="versionadded">
+<p><span class="versionmodified">2019-02-16 新版功能: </span>新增</p>
+</div>
+</li>
+<li><p class="first">versionchanged</p>
+<div class="versionchanged">
+<p><span class="versionmodified">在 2019-02-17 版更改: </span>修改</p>
+</div>
+</li>
+<li><p class="first">deprecated</p>
+<div class="deprecated">
+<p><span class="versionmodified">3.1 版后已移除: </span>Using new ...</p>
+</div>
+</li>
+<li><p class="first">seealso</p>
+</li>
+<li><p class="first">rubric</p>
+</li>
+<li><p class="first">centered</p>
+</li>
+<li><p class="first">hlist</p>
+<table class="hlist"><tr><td><ul class="simple">
+<li>A list of</li>
+<li>short items</li>
+</ul>
+</td><td><ul class="simple">
+<li>that should be</li>
+<li>displayed</li>
+</ul>
+</td><td><ul class="simple">
+<li>horizontally</li>
+</ul>
+</td></tr></table>
+</li>
+<li><p class="first">highilght</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">highlight</span><span class="p">::</span> <span class="n">c</span>
+   <span class="p">:</span><span class="n">linenothreshold</span><span class="p">:</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">code-block</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">ruby</span>
+   <span class="p">:</span><span class="n">linenos</span><span class="p">:</span>
+   <span class="p">:</span><span class="n">lineno</span><span class="o">-</span><span class="n">start</span><span class="p">:</span> <span class="mi">1</span>
+   <span class="p">:</span><span class="n">emphasize</span><span class="o">-</span><span class="n">lines</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span><span class="mi">5</span>
+   <span class="p">:</span><span class="n">caption</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">py</span>
+   <span class="p">:</span><span class="n">name</span><span class="p">:</span> <span class="n">a</span><span class="o">-</span><span class="n">py</span>
+   <span class="p">:</span><span class="n">dedent</span><span class="p">:</span> <span class="mi">4</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">literalinclude</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">literalinclude</span><span class="p">::</span> <span class="n">example</span><span class="o">.</span><span class="n">rb</span>
+   <span class="p">:</span><span class="n">language</span><span class="p">:</span> <span class="n">ruby</span>
+   <span class="p">:</span><span class="n">emphasize</span><span class="o">-</span><span class="n">lines</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="o">-</span><span class="mi">18</span>
+   <span class="p">:</span><span class="n">linenos</span><span class="p">:</span>
+   <span class="p">:</span><span class="n">encoding</span><span class="p">:</span> <span class="n">lation</span><span class="o">-</span><span class="mi">1</span>
+   <span class="p">:</span><span class="n">pyobject</span><span class="p">:</span> <span class="n">Timer</span><span class="o">.</span><span class="n">start</span>
+   <span class="p">:</span><span class="n">lines</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="o">-</span>
+   <span class="p">:</span><span class="n">start</span><span class="o">-</span><span class="n">after</span><span class="p">:</span>
+   <span class="p">:</span><span class="n">end</span><span class="o">-</span><span class="n">before</span><span class="p">:</span>
+   <span class="p">:</span><span class="n">prepend</span><span class="p">:</span>
+   <span class="p">:</span><span class="n">append</span><span class="p">:</span>
+   <span class="p">:</span><span class="n">diff</span><span class="p">:</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">glossary</p>
+</li>
+<li><p class="first">sectionauthor</p>
+<p>需要配置 <em>show_authors</em>。</p>
+</li>
+<li><p class="first">codeauthor</p>
+</li>
+<li><p class="first">index</p>
+</li>
+<li><p class="first">only</p>
+</li>
+<li><p class="first">math</p>
+</li>
+<li><p class="first">productionlist</p>
+</li>
+<li><p class="first">graphviz</p>
+<img src="../_images/graphviz-311043392b27777a79b4e1aaf407e007ad1e4813.png" alt="digraph foo {
+    &quot;bar&quot; -&gt; &quot;baz&quot;;
+}" />
+</li>
+<li><p class="first">graph</p>
+<blockquote>
+<div><img src="../_images/graphviz-6e5c1b01edb4b8acd0d8915841ef30d33709b834.png" alt="graph foo {
+&quot;bar&quot; -- &quot;baz&quot;;
+}" />
+</div></blockquote>
+</li>
+<li><p class="first">digraph</p>
+<blockquote>
+<div><img src="../_images/graphviz-51e6434f979c0e4a2cf50b05c0c43ff0604bdd6a.png" alt="digraph foo {
+&quot;bar&quot; -&gt; &quot;baz&quot;;
+}" />
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>数学公式<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}n_{\mathrm{offset}} = \sum_{k=0}^{N-1} s_k n_k\\\mathcal{L}_{QCD}=-\frac{1}{4}F_{\mu\nu}^a
+F_a^{\mu\nu}-\sum\limits_f{\overline\psi_a^f(i\gamma^\mu\partial_\mu+m_f-g\gamma^\mu
+A_\mu)^{\alpha\beta}\psi_\beta^f}\\F_{\mu\nu}^a=(\partial_\mu A_\nu^a-\partial_\nu A_\mu^a-gf_{bc}^a
+A_\mu^b A_\nu^c)\end{aligned}\end{align} \]</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="debit.html" class="btn btn-neutral float-right" title="房贷还款计算的 python 程序" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rubiks_cube.html" class="btn btn-neutral" title="魔方解法" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, @clan https://github.com/clan/clan.github.io/.
+      最后更新于 2019-03-23 11:43.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/ga.js"></script>
+      <script type="text/javascript" src="../_static/js/baidu.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

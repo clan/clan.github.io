@@ -1,0 +1,320 @@
+Linux 设备驱动
+==============
+
+.. versionadded:: @2019-01-19
+   创建
+.. versionadded:: @2019-01-21
+   增加更多模块信息解释
+
+`find /sys -name modalias -print0 | xargs -0 more` 可以查看所有的设备对应的
+modalias 信息。
+
+如何判断设备驱动存在？
+----------------------
+
+**下面的内容仅对内核没有内置该驱动时才有效。**
+
+*/lib/modules/$(uname -r)/modules.alias* 包含所有 **非内置** 驱动程序支持的
+设备详情（:manpage:`glob(7)` 匹配）。对 PCI 设备，示例如下： ::
+
+    alias pci:v00001000d00000014sv*sd*bc*sc*i* megaraid_sas
+
+其中 *v00001000* 和 *d00000014* 分别对应 PCI 设备的厂商 ID 和设备 ID。
+因此，如果在 modules.alias 文件中未找到该 PCI 设备对应的内容，则表示该内核
+不支持该设备（或着驱动程序内置在内核中）。
+此时需要从第三方获取该设备的驱动或在该内核下编译驱动或更新到
+支持该设备的内核。
+
+同理，其他类型的设备通过该设备对应的 modalias 内容是否能匹配上某一个驱动的
+alias 规则来判断是否有该设备的驱动。
+
+如下命令输出当前系统所有的设备类型： ::
+
+    # for id in $(find /sys -name modalias -print0 | xargs -0 awk -F: '{print $1}' | sort -u); do echo $id; done
+    acpi
+    cpu
+    dmi
+    input
+    pci
+    platform
+    scsi
+    usb
+    wmi
+
+.. TODO:: 补全更多常见设备的 modalias 细节
+
+如下的命令可查看哪个模块提供了对该 modalias 的支持： ::
+
+    for id in $(find /sys -name modalias -print0 | xargs -0 cat | sort -u); do
+        echo "${id}"
+        modprobe --show-depends "$id"|sed 's/^/  /'
+    done
+
+其输出示例如下： ::
+
+   acpi:ACPI0004:
+   acpi:ACPI000C:
+     insmod /lib/modules/4.x.y-z/kernel/drivers/acpi/acpi_pad.ko
+   acpi:ACPI000D:PNP0C01:
+     insmod /lib/modules/4.x.y-z/kernel/drivers/hwmon/hwmon.ko
+     insmod /lib/modules/4.x.y-z/kernel/drivers/hwmon/acpi_power_meter.ko
+   ...
+   pci:v00001000d0000005Dsv00001028sd00001F47bc01sc04i00
+     insmod /lib/modules/4.x.y-z/kernel/drivers/scsi/scsi_mod.ko
+     insmod /lib/modules/4.x.y-z/kernel/drivers/scsi/megaraid/megaraid_sas.ko
+   ...
+   usb:v152Dp0567d0323dc00dsc00dp00ic08isc06ip62in00
+     insmod /lib/modules/4.x.y-z/kernel/drivers/scsi/scsi_mod.ko
+     insmod /lib/modules/4.x.y-z/kernel/drivers/usb/common/usb-common.ko
+     insmod /lib/modules/4.x.y-z/kernel/drivers/usb/core/usbcore.ko
+     insmod /lib/modules/4.x.y-z/kernel/drivers/usb/storage/usb-storage.ko
+
+从第三方获取的内核一般放置在对应内核的相应目录下，然后通过 `depmod -a`
+更新相应的模块信息。
+
+`modinfo` 可以查看已有驱动所支持设备的信息。例如： ::
+
+    $ modinfo /lib/modules/$(uname -r)/kernel/drivers/scsi/megaraid/megaraid_sas.ko | grep alias
+    alias:          pci:v00001000d00000053sv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000052sv*sd*bc*sc*i*
+    alias:          pci:v00001000d000000CFsv*sd*bc*sc*i*
+    alias:          pci:v00001000d000000CEsv*sd*bc*sc*i*
+    alias:          pci:v00001000d0000005Fsv*sd*bc*sc*i*
+    alias:          pci:v00001000d0000005Dsv*sd*bc*sc*i*
+    alias:          pci:v00001000d0000002Fsv*sd*bc*sc*i*
+    alias:          pci:v00001000d0000005Bsv*sd*bc*sc*i*
+    alias:          pci:v00001028d00000015sv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000413sv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000071sv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000073sv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000079sv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000078sv*sd*bc*sc*i*
+    alias:          pci:v00001000d0000007Csv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000060sv*sd*bc*sc*i*
+    alias:          pci:v00001000d00000411sv*sd*bc*sc*i*
+
+通过在指定版本的内核源代码里相应设备驱动的源代码里搜索该设备的 PCI ID
+（搜索不一定是严格匹配，需要在读懂该部分代码的前提下判断），如果无
+结果则意味着该版本内核暂未提供对该设备的支持。
+
+PCI 设备
+--------
+
+.. index:: PCI
+
+`lspci` 查看所有的 PCI 设备。例如： ::
+
+    # lspci
+    ...
+    04:00.0 RAID bus controller: LSI Logic / Symbios Logic MegaRAID SAS-3 3008 [Fury] (rev 02)
+    ...
+
+`lspci -k` 查看所有的 PCI 设备，同时显示对应设备的驱动模块名。例如： ::
+
+    # lspci
+    ...
+    04:00.0 RAID bus controller: LSI Logic / Symbios Logic MegaRAID SAS-3 3008 [Fury] (rev 02)
+            Subsystem: Dell PERC H330 Adapter
+            Kernel driver in use: megaraid_sas
+    ...
+
+`lspci -nn -k` 显示 PCI 设备的厂商和设备 ID。例如： ::
+
+    # lspci -nn -k
+    ...
+    04:00.0 RAID bus controller [0104]: LSI Logic / Symbios Logic MegaRAID SAS-3 3008 [Fury] [1000:005f] (rev 02)
+            Subsystem: Dell PERC H330 Adapter [1028:1f44]
+            Kernel driver in use: megaraid_sas
+    ...
+
+`lspci -t -nn -v` 以树形列表显示 PCI 设备之间的连接关系。
+
+`less /proc/bus/pci/devices` 也可以看到所有 PCI 设备的原始信息，第二列对应 PCI
+设备的厂商 ID 和设备 ID（每 ID 4 位 16 进制数），最后一列对应内核模块名（
+如果为空，则表示该设备未加载任何驱动程序）。
+
+PCI 设备 ID 的文字描述一般在 */usr/share/misc/pci.ids* 文件中。该文件的官方路径
+为 `The PCI ID Repository <http://pci-ids.ucw.cz/>`_  /
+`GitHub <https://github.com/pciutils/pciids>`_ 。
+
+*/sys/devices/pci.../modalias* 文件（pci 后省略号对应相应的 PCI 位置）
+可以看到相应 PCI 设备对应的驱动查找信息。例如： ::
+
+    # cat /sys/devices/pci0000:00/0000:00:03.0/0000:04:00.0/modalias
+    pci:v00001000d0000005Fsv00001028sd00001F44bc01sc04i00
+
+分别解释如下：
+
+* pci0000:00 对应 PCI 总线 ID。
+* 0000:00:03.0/0000:04:00.0  对应设备索引。
+* v... 对应 PCI 设备厂商 ID。
+* d... 对应 PCI 设备设备 ID。
+* sv... 对应子系统厂商 ID。
+* sd... 对应子系统设备 ID。
+* bc... 对应 `bus class <https://pci-ids.ucw.cz/read/PD/>`_ 。
+
+    * 00  Unclassified device
+    * 01  Mass storage controller
+    * 02  Network controller
+    * 03  Display controller
+    * 04  Multimedia controller
+    * 05  Memory controller
+    * 06  Bridge
+    * 07  Communication controller
+    * 08  Generic system peripheral
+    * 09  Input device controller
+    * 0a  Docking station
+    * 0b  Processor
+    * 0c  Serial bus controller
+    * 0d  Wireless controller
+    * 0e  Intelligent controller
+    * 0f  Satellite communications controller
+    * 10  Encryption controller
+    * 11  Signal processing controller
+    * 12  Processing accelerators
+    * 13  Non-Essential Instrumentation
+    * 40  Coprocessor
+
+* sc... 对应 bus subclass。
+* i... 对应 Programming interface。
+
+USB 设备
+--------
+
+.. index:: USB
+
+`lsusb` 查看所有的 USB 设备。例如： ::
+
+    # lsusb
+    Bus 004 Device 007: ID 152d:0567 JMicron Technology Corp. / JMicron USA Technology Corp. JMS567 SATA 6Gb/s bridge
+    Bus 003 Device 004: ID 413c:a001 Dell Computer Corp. Hub
+    Bus 001 Device 002: ID 8087:800a Intel Corp.
+    Bus 006 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+    Bus 004 Device 008: ID 152d:0567 JMicron Technology Corp. / JMicron USA Technology Corp. JMS567 SATA 6Gb/s bridge
+    Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+    Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    Bus 002 Device 002: ID 8087:8002 Intel Corp.
+    Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    Bus 005 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+更多参数参考帮助文档即可。
+
+驱动搜索信息 ::
+
+    # cat /sys/devices/pci0000:00/0000:00:14.0/usb4/4-5/4-5:1.0/modalias
+    usb:v152Dp0567d0323dc00dsc00dp00ic08isc06ip62in00
+
+各字段解释如下：
+
+* v... 设备厂商 ID
+* p... 设备型号 ID
+* d... bcddevice
+* dc... `device class <https://usb-ids.gowdy.us/read/UC/>`_  或
+  `Defined Class Codes <https://www.usb.org/defined-class-codes>`_ ：
+
+    * 00    (Defined at Interface level)
+    * 01    Audio
+    * 02    Communications and CDC
+    * 03    Human Interface Device
+    * 05    Physical Interface Device
+    * 06    Imaging
+    * 07    Printer
+    * 08    Mass Storage
+    * 09    Hub
+    * 0a    CDC Data
+    * 0b    Chip/SmartCard
+    * 0d    Content Security
+    * 0e    Video
+    * 0f    Personal Healthcare
+    * 10    Audio/Video Devices
+    * 11    Billboard Device Class
+    * 12    USB Type-C Bridge Class
+    * 58    Xbox
+    * dc    Diagnostic
+    * e0    Wireless
+    * ef    Miscellaneous Device
+    * fe    Application Specific Interface
+    * ff    Vendor Specific Class
+
+* dsc... device subclass，参考 `Defined Class Codes <https://www.usb.org/defined-class-codes>`_ 。
+* dp...  device protocol
+* ic...  interface class，意义参考 dc。
+* isc... interface subclass，参考 dsc。
+* ip...  interface protocol
+
+有时，设备类/子类在接口类/子类处定义。例如，对 USB Camera， ::
+
+    usb:v046Dp0826d0010dcEFdsc02dp01ic01isc01ip00in00
+    usb:v046Dp0826d0010dcEFdsc02dp01ic01isc02ip00in01
+    usb:v046Dp0826d0010dcEFdsc02dp01ic0Eisc01ip00in02
+    usb:v046Dp0826d0010dcEFdsc02dp01ic0Eisc02ip00in03
+
+v046D: Logitech, Inc.
+p0826: HD Webcam C525
+
+Interface class 0E01 is video control, 0E02 is video streaming (aka camera),
+0101 is audio control device and 0102 is audio streaming (aka microphone).
+Thus this is a camera with microphone included.
+
+USB 设备 ID 的文字描述一般在 */usr/share/misc/usb.ids* 文件中。该文件的官方路径
+为 `The USB ID Repository <http://www.linux-usb.org/usb-ids.html>`_ 。
+
+DMI
+---
+
+参考 `System Management BIOS <https://www.dmtf.org/standards/smbios>`_ 。
+
+.. index:: DMI
+
+对某台 Dell PowerEdge R730xd，信息如下： ::
+
+    # cat /sys/devices/virtual/dmi/id/modalias
+    dmi:bvnDellInc.:bvr2.4.3:bd01/17/2017:svnDellInc.:pnPowerEdgeR730xd:pvr:rvnDellInc.:rn0WCJNT:rvrA06:cvnDellInc.:ct23:cvr:
+
+各字段解释如下：
+
+
+dmi:bvnIBM:bvr1UETB6WW(1.66):bd06/15/2005:svnIBM:pn2371H4G:pvrThinkPadX40:rvnIBM:rn2371H4G:rvrNotAvailable:cvnIBM:ct10:cvrNotAvailable:
+
+* bvn  DellInc.  BIOS 厂商
+* bvr  2.4.3 BIOS 版本
+* bd   01/17/2017 BIOS 日期
+* svn  DellInc. 系统厂商
+* pn   PowerEdgeR730xd 产品名
+* pvr  产品版本
+* rvn  DellInc. 主板厂商
+* rn   0WCJNT 主板名
+* rvr  A06 主板版本
+* cvn  DellInc. 机壳厂商
+* ct   23 机壳类型（十进制表示）
+
+    * 3 Desktop
+    * 4 Low Profile Desktop
+    * 5 Pizza Box
+    * 6 Mini Tower
+    * 7 Tower
+    * 8 Portable
+    * 9 Laptop
+    * 10 Notebook
+    * 11 Hand Held
+    * 12 Docking Station
+    * 13 All In One
+    * 14 Sub Notebook
+    * 15 Space-saving
+    * 16 Lunch Box
+    * 17 Main Server Chassis
+    * 18 Expansion Chassis
+    * 19 Sub Chassis
+    * 20 Bus Expansion Chassis
+    * 21 Peripheral Chassis
+    * 22 RAID Chassis
+    * 23 Rack Mount Chassis
+    * 24 Sealed-case PC
+    * 25 Multi-system
+    * 26 CompactPCI
+    * 27 AdvancedTCA
+    * 28 Blade
+    * 29 Blade Enclosing
+
+* cvr  机壳版本

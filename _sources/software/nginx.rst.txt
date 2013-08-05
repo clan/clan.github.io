@@ -1,0 +1,18 @@
+Nginx
+=====
+
+.. versionadded:: @20190301
+   创建，Location 匹配优先级
+
+Location
+--------
+
+Location 匹配优先级（参考 `官方文档
+<http://nginx.org/en/docs/http/ngx_http_core_module.html#location>`_
+）如下：
+
+#. = (exactly) : location = /path
+#. ^~ (forward match) : location ^~ /path
+#. ~ (regular expression case sensitive) : location ~ /path/
+#. ~* (regular expression case insensitive) : location ~* .(jpg|png|bmp)
+#. / : location /path
